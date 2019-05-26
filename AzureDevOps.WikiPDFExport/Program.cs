@@ -38,5 +38,8 @@ namespace azuredevops_export_wiki
 
         [Option('o', "output", Required = false, HelpText = "Path and Filename of the export file, e.g. c:\\export.pdf ")]
         public string Output { get; set; }
+
+        [Option('d', "debug", Required = false, HelpText = "Debug mode that exports the converted html file")]
+        public bool Debug { get; set; }
     }
 }

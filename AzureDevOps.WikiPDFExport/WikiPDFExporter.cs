@@ -77,7 +77,8 @@ namespace azuredevops_export_wiki
                 }
             };
 
-            byte[] pdf = converter.Convert(doc);
+            converter.Convert(doc);
+            Log($"PDF created at: {output}");
         }
 
         private string ConvertMarkdownToHTML(List<string> files)
@@ -143,25 +144,28 @@ namespace azuredevops_export_wiki
                 var anchor = $"<span id=\"{relativePath}\">{relativePath}</span><h1>{file.Name.Replace(".md","")}</h1>";
                 html = anchor + html;
 
-                
-
                 if (_options.BreakPage)
                 {
                     //if not one the last page
                     if (i + 1 < files.Count)
                     {
+                        Log("Adding new page to PDF");
                         html = "<div style='page-break-after: always;'>" + html + "</div>";
                     }
                 }
 
-
-
-                Log($"html: {html}");
+                Log($"html:\n{html}");
                 sb.Append(html);
             }
 
             var result = sb.ToString();
-            File.WriteAllText(Path.Combine(_path, "html.html") , result);
+
+            if (_options.Debug)
+            {
+                var htmlPath = Path.Combine(_path, "html.html");
+                Log($"Writing converted html to path: {htmlPath}");
+                File.WriteAllText(htmlPath, result);
+            }
             return result;
         }
 
