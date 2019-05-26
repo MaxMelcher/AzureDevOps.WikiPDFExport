@@ -7,7 +7,7 @@
             "type": "process",
             "args": [
                 "build",
-                "${workspaceFolder}/azuredevops-export-wiki.csproj"
+                "${workspaceFolder}/AzureDevOps.WikiPDFExport/azuredevops-export-wiki.csproj"
             ],
             "problemMatcher": "$tsc"
         },

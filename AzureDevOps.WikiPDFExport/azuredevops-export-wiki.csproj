@@ -7,8 +7,15 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="CommonMark.NET" Version="0.15.1" />
-    <PackageReference Include="DinkToPdf" Version="1.0.8" />
+    <ContentWithTargetPath Include="libwkhtmltox.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <TargetPath>libwkhtmltox.dll</TargetPath>
+    </ContentWithTargetPath>
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Include="CommandLineParser" Version="2.5.0" />
+    <PackageReference Include="CommonMark.NET" Version="0.15.1" />
+    <PackageReference Include="RndUsr0.DinkToPdf" Version="1.0.9-20190207.1" />
+  </ItemGroup>
 </Project>
