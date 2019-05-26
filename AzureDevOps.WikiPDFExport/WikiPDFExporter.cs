@@ -114,14 +114,27 @@ namespace azuredevops_export_wiki
                         && node.Inline != null
                         && node.Inline.Tag == InlineTag.Link)
                     {
-                        if (!node.Inline.TargetUrl.StartsWith("http") && node.Inline.TargetUrl.EndsWith(".md"))
+                        //if the link is not a link pointing to a web resource, 
+                        //try to resolve it within the wiki repository
+                        if (!node.Inline.TargetUrl.StartsWith("http"))
                         {
                             var path = Path.Combine(file.Directory.FullName, node.Inline.TargetUrl);
-                            var relPath = path.Substring(_path.Length);
+
+                            string relPath = "";
+                            if (path.StartsWith("/"))
+                            {
+                                relPath = file.Directory.FullName + node.Inline.TargetUrl.Replace("/", "\\");
+                            }
+                            else
+                            {
+                                relPath = path.Substring(_path.Length);
+                            }
+
                             relPath = relPath.Replace("/", "\\");
                             relPath = relPath.Replace("\\", "");
-                            relPath = relPath.Replace(".", "-");
+
                             relPath = relPath.ToLower();
+
                             node.Inline.TargetUrl = $"#{relPath}";
                         }
                     }
@@ -139,9 +152,9 @@ namespace azuredevops_export_wiki
                 //add html anchor
                 var relativePath = file.FullName.Substring(_path.Length);
                 relativePath = relativePath.Replace("\\", "");
-                relativePath = relativePath.Replace(".", "-");
+                
                 relativePath = relativePath.ToLower();
-                var anchor = $"<span id=\"{relativePath}\">{relativePath}</span><h1>{file.Name.Replace(".md","")}</h1>";
+                var anchor = $"<span id=\"{relativePath}\">{relativePath}</span><h1>{file.Name.Replace(".md", "")}</h1>";
                 html = anchor + html;
 
                 if (_options.BreakPage)
