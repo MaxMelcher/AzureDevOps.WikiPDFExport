@@ -13,40 +13,69 @@ using System.Text.RegularExpressions;
 using Markdig.Helpers;
 using Microsoft.Extensions.Logging;
 using System.Web;
+using Microsoft.ApplicationInsights;
+using System.Threading;
+using Microsoft.ApplicationInsights.Extensibility;
+using Microsoft.ApplicationInsights.DataContracts;
 
 namespace azuredevops_export_wiki
 {
     public class WikiPDFExporter : IWikiPDFExporter
     {
         private Options _options;
+        private TelemetryClient _telemetryClient;
         private string _path;
 
         public WikiPDFExporter(Options options)
         {
             _options = options;
+
+            //initialize AppInsights
+            TelemetryConfiguration.Active.InstrumentationKey = "ba33d2f5-1137-446b-8624-3ad0af50a7be";
+            _telemetryClient = new TelemetryClient();
         }
 
         public void Export()
         {
-            var timer = Stopwatch.StartNew();
-            _path = _options.Path;
-
-            if (_path == null)
+            try
             {
-                Log("Using current folder for export, -path is not set.");
-                _path = Directory.GetCurrentDirectory();
+                using (var operation = _telemetryClient.StartOperation<RequestTelemetry>("export"))
+                {
+                    var timer = Stopwatch.StartNew();
+
+                    _path = _options.Path;
+                    if (_path == null)
+                    {
+                        Log("Using current folder for export, -path is not set.");
+                        _path = Directory.GetCurrentDirectory();
+                    }
+                    else
+                    {
+                        _path = Path.GetFullPath(_path);
+                    }
+
+                    var files = ReadOrderFiles(_path);
+                    _telemetryClient.TrackEvent("Pages", null, new Dictionary<string,double>(){{"Pages", files.Count}});
+                    
+                    var html = ConvertMarkdownToHTML(files);
+
+                    ConvertHTMLToPDF(html);
+
+                    Console.ForegroundColor = ConsoleColor.Green;
+                    Console.WriteLine($"Export done in {timer.Elapsed}");
+
+                    _telemetryClient.StopOperation(operation);
+                    _telemetryClient.Flush();
+                    Thread.Sleep(TimeSpan.FromSeconds(5));
+                }
             }
-            else
+            catch (Exception ex)
             {
-                _path = Path.GetFullPath(_path);
+                Log($"Something bad happend.\n{ex}", LogLevel.Error);
+                _telemetryClient.TrackException(ex);
+                _telemetryClient.Flush();
+                Thread.Sleep(TimeSpan.FromSeconds(5));
             }
-
-            var files = ReadOrderFiles(_path);
-            var html = ConvertMarkdownToHTML(files);
-
-            ConvertHTMLToPDF(html);
-
-            Console.WriteLine($"Export done in {timer.Elapsed}");
         }
 
         private void ConvertHTMLToPDF(string html)
@@ -122,7 +151,7 @@ namespace azuredevops_export_wiki
 
                 var anchor = $"<a id=\"{relativePath}\">&nbsp;</a>";
 
-                
+
 
                 Log($"\tAnchor: {relativePath}");
 
@@ -135,7 +164,7 @@ namespace azuredevops_export_wiki
                     var heading = $"<h1>{filename}</h1>";
                     html = heading + html;
                 }
-                
+
                 if (_options.BreakPage)
                 {
                     //if not one the last page
