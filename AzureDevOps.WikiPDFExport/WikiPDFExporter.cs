@@ -3,9 +3,16 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Text;
-using CommonMark;
-using CommonMark.Syntax;
+using Markdig;
 using DinkToPdf;
+using Markdig.Syntax.Inlines;
+using Markdig.Syntax;
+using System.Linq;
+using Markdig.Renderers;
+using System.Text.RegularExpressions;
+using Markdig.Helpers;
+using Microsoft.Extensions.Logging;
+using System.Web;
 
 namespace azuredevops_export_wiki
 {
@@ -22,9 +29,6 @@ namespace azuredevops_export_wiki
         public void Export()
         {
             var timer = Stopwatch.StartNew();
-
-            Console.WriteLine("Reading .order file");
-
             _path = _options.Path;
 
             if (_path == null)
@@ -47,6 +51,8 @@ namespace azuredevops_export_wiki
 
         private void ConvertHTMLToPDF(string html)
         {
+            Log("Converting HTML to PDF");
+            Log("Ignore errors like 'Qt: Could not initialize OLE (error 80010106)'", LogLevel.Warning);
             var converter = new BasicConverter(new PdfTools());
 
             var output = _options.Output;
@@ -83,90 +89,53 @@ namespace azuredevops_export_wiki
 
         private string ConvertMarkdownToHTML(List<MarkdownFile> files)
         {
+            Log("Converting Markdown to HTML");
             StringBuilder sb = new StringBuilder();
             for (var i = 0; i < files.Count; i++)
             {
                 var mf = files[i];
                 var file = new FileInfo(files[i].AbsolutePath);
-                Log($"file {file.Name}");
+
+                Log($"parsing file {file.Name}", LogLevel.Debug);
                 var htmlfile = file.FullName.Replace(".md", ".html");
-
                 var md = File.ReadAllText(file.FullName);
-                var document = CommonMark.CommonMarkConverter.Parse(md);
+                var document = (MarkdownObject)Markdown.Parse(md);
 
-                // walk the document node tree and replace relative image links
-                //and relative links to markdown pages
-                foreach (var node in document.AsEnumerable())
-                {
-                    if (
-                        node.IsOpening
-                        && node.Inline != null
-                        && node.Inline.Tag == InlineTag.Image)
-                    {
-                        if (!node.Inline.TargetUrl.StartsWith("http"))
-                        {
-                            var path = Path.Combine(file.Directory.FullName, node.Inline.TargetUrl);
-                            node.Inline.TargetUrl = $"file:///{path}";
-                        }
-                    }
-
-                    if (
-                        node.IsOpening
-                        && node.Inline != null
-                        && node.Inline.Tag == InlineTag.Link)
-                    {
-                        //if the link is not a link pointing to a web resource, 
-                        //try to resolve it within the wiki repository
-                        if (!node.Inline.TargetUrl.StartsWith("http"))
-                        {
-                            string absPath = file.Directory.FullName + "/" + node.Inline.TargetUrl.Replace("/", "\\");
-
-                            //the file is a markdown file, create a link to it
-                            var isMarkdown = false;
-                            var fileInfo = new FileInfo(absPath);
-                            if (fileInfo.Exists && fileInfo.Extension.Equals(".md", StringComparison.InvariantCultureIgnoreCase))
-                            {
-                                isMarkdown = true;
-                            }
-
-                            fileInfo = new FileInfo($"{absPath}.md");
-                            if (fileInfo.Exists && fileInfo.Extension.Equals(".md", StringComparison.InvariantCultureIgnoreCase))
-                            {
-                                isMarkdown = true;
-                            }
-
-                            //only markdown files get a pdf internal link
-                            if (isMarkdown)
-                            {
-                                var relPath = mf.RelativePath + "\\" + node.Inline.TargetUrl;
-                                relPath = relPath.Replace("/", "\\");
-                                relPath = relPath.Replace("\\", "");
-
-                                relPath = relPath.ToLower();
-
-                                node.Inline.TargetUrl = $"#{relPath}";
-                            }
-                        }
-                    }
-                }
+                //adjust the links
+                CorrectLinksAndImages(document, file, mf);
 
                 string html = null;
-                using (var writer = new System.IO.StringWriter())
+                var builder = new StringBuilder();
+                using (var writer = new System.IO.StringWriter(builder))
                 {
                     // write the HTML output
-                    CommonMarkConverter.ProcessStage3(document, writer);
-                    html = writer.ToString();
-                    Log(html);
+                    var renderer = new HtmlRenderer(writer);
+                    renderer.Render(document);
                 }
+                html = builder.ToString();
 
                 //add html anchor
                 var relativePath = file.FullName.Substring(_path.Length);
                 relativePath = relativePath.Replace("\\", "");
-
                 relativePath = relativePath.ToLower();
-                var anchor = $"<span id=\"{relativePath}\">{relativePath}</span><h1>{file.Name.Replace(".md", "")}</h1>";
+                relativePath = relativePath.Replace(".md", "");
+
+                var anchor = $"<a id=\"{relativePath}\">&nbsp;</a>";
+
+                
+
+                Log($"\tAnchor: {relativePath}");
+
                 html = anchor + html;
 
+                if (_options.Heading)
+                {
+                    var filename = file.Name.Replace(".md", "");
+                    filename = HttpUtility.UrlDecode(filename);
+                    var heading = $"<h1>{filename}</h1>";
+                    html = heading + html;
+                }
+                
                 if (_options.BreakPage)
                 {
                     //if not one the last page
@@ -177,7 +146,10 @@ namespace azuredevops_export_wiki
                     }
                 }
 
-                Log($"html:\n{html}");
+                if (_options.Debug)
+                {
+                    Log($"html:\n{html}");
+                }
                 sb.Append(html);
             }
 
@@ -192,12 +164,59 @@ namespace azuredevops_export_wiki
             return result;
         }
 
+        public void CorrectLinksAndImages(MarkdownObject document, FileInfo file, MarkdownFile mf)
+        {
+            Log("Correcting Links and Images");
+            // walk the document node tree and replace relative image links
+            // and relative links to markdown pages
+            foreach (var link in document.Descendants().OfType<LinkInline>())
+            {
+                if (!link.Url.StartsWith("http"))
+                {
+                    string absPath = Path.GetFullPath(file.Directory.FullName + "/" + link.Url);
 
+                    //the file is a markdown file, create a link to it
+                    var isMarkdown = false;
+                    var fileInfo = new FileInfo(absPath);
+                    if (fileInfo.Exists && fileInfo.Extension.Equals(".md", StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        isMarkdown = true;
+                    }
+                    else if (fileInfo.Exists)
+                    {
+                        link.Url = $"file:///{absPath}";
+                    }
+
+                    fileInfo = new FileInfo($"{absPath}.md");
+                    if (fileInfo.Exists && fileInfo.Extension.Equals(".md", StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        isMarkdown = true;
+                    }
+
+                    //only markdown files get a pdf internal link
+                    if (isMarkdown)
+                    {
+                        var relPath = mf.RelativePath + "\\" + link.Url;
+                        relPath = relPath.Replace("/", "\\");
+                        relPath = relPath.Replace("\\", "");
+                        relPath = relPath.Replace(".md", "");
+                        relPath = relPath.ToLower();
+                        Log($"\tMarkdown link: {relPath}");
+                        link.Url = $"#{relPath}";
+                    }
+                }
+
+                CorrectLinksAndImages(link, file, mf);
+            }
+        }
 
         private List<MarkdownFile> ReadOrderFiles(string path)
         {
+            //read the .order file
+            //if there is an entry and a folder with the same name, dive deeper
             var directory = new DirectoryInfo(Path.GetFullPath(path));
-            var orderFiles = directory.GetFiles(".order", SearchOption.AllDirectories);
+            Log($"Reading .order file in directory {directory.Name}");
+            var orderFiles = directory.GetFiles(".order", SearchOption.TopDirectoryOnly);
 
             var result = new List<MarkdownFile>();
             foreach (var orderFile in orderFiles)
@@ -210,17 +229,45 @@ namespace azuredevops_export_wiki
                     mf.AbsolutePath = $"{orderFile.Directory.FullName}\\{order}.md";
                     mf.RelativePath = $"{relativePath}";
                     result.Add(mf);
+
+                    var childPath = Path.Combine(orderFile.Directory.FullName, order);
+                    if (Directory.Exists(childPath))
+                    {
+                        //recursion
+                        result.AddRange(ReadOrderFiles(childPath));
+                    }
                 }
             }
 
             return result;
         }
 
-        private void Log(string msg)
+        private void Log(string msg, LogLevel logLevel = LogLevel.Information)
         {
-            if (_options.Verbose)
+            if (_options.Debug && logLevel == LogLevel.Debug)
             {
                 Console.WriteLine(msg);
+            }
+
+            if (_options.Verbose && logLevel == LogLevel.Information)
+            {
+                Console.WriteLine(msg);
+            }
+
+            if (logLevel == LogLevel.Warning)
+            {
+                var color = Console.ForegroundColor;
+                Console.ForegroundColor = ConsoleColor.Yellow;
+                Console.WriteLine($"WARN: {msg}");
+                Console.ForegroundColor = color;
+            }
+
+            if (logLevel == LogLevel.Error)
+            {
+                var color = Console.ForegroundColor;
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine($"ERR: {msg}");
+                Console.ForegroundColor = color;
             }
         }
 

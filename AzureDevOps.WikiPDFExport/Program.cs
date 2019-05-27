@@ -41,5 +41,8 @@ namespace azuredevops_export_wiki
 
         [Option('g', "debug", Required = false, HelpText = "Debug mode that exports the converted html file")]
         public bool Debug { get; set; }
+
+        [Option('h', "heading", Required = false, HelpText = "Add heading per page")]
+        public bool Heading { get; set; }
     }
 }
