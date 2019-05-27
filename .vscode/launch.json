@@ -12,7 +12,7 @@
             "preLaunchTask": "build",
             // If you have changed target frameworks, make sure to update the program path.
             "program": "${workspaceFolder}/AzureDevOps.WikiPDFExport/bin/Debug/netcoreapp2.2/azuredevops-export-wiki.dll",
-            "args": ["-v", "-pC:\\Git\\AzureDevOps.WikiPDFExport\\AzureDevOps.WikiPDFExport.Test\\Tests\\Real", "-d"],
+            "args": ["-v", "-p..\\AzureDevOps.WikiPDFExport.Test\\Tests\\Real", "-d"],
             "cwd": "${workspaceFolder}/AzureDevOps.WikiPDFExport",
             // For more information about the 'console' field, see https://github.com/OmniSharp/omnisharp-vscode/blob/master/debugger-launchjson.md#console-terminal-window
             "console": "internalConsole",

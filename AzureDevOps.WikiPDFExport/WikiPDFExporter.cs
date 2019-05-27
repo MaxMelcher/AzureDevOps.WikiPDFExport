@@ -81,12 +81,13 @@ namespace azuredevops_export_wiki
             Log($"PDF created at: {output}");
         }
 
-        private string ConvertMarkdownToHTML(List<string> files)
+        private string ConvertMarkdownToHTML(List<MarkdownFile> files)
         {
             StringBuilder sb = new StringBuilder();
             for (var i = 0; i < files.Count; i++)
             {
-                var file = new FileInfo(files[i]);
+                var mf = files[i];
+                var file = new FileInfo(files[i].AbsolutePath);
                 Log($"file {file.Name}");
                 var htmlfile = file.FullName.Replace(".md", ".html");
 
@@ -118,24 +119,33 @@ namespace azuredevops_export_wiki
                         //try to resolve it within the wiki repository
                         if (!node.Inline.TargetUrl.StartsWith("http"))
                         {
-                            var path = Path.Combine(file.Directory.FullName, node.Inline.TargetUrl);
+                            string absPath = file.Directory.FullName + "/" + node.Inline.TargetUrl.Replace("/", "\\");
 
-                            string relPath = "";
-                            if (path.StartsWith("/"))
+                            //the file is a markdown file, create a link to it
+                            var isMarkdown = false;
+                            var fileInfo = new FileInfo(absPath);
+                            if (fileInfo.Exists && fileInfo.Extension.Equals(".md", StringComparison.InvariantCultureIgnoreCase))
                             {
-                                relPath = file.Directory.FullName + node.Inline.TargetUrl.Replace("/", "\\");
-                            }
-                            else
-                            {
-                                relPath = path.Substring(_path.Length);
+                                isMarkdown = true;
                             }
 
-                            relPath = relPath.Replace("/", "\\");
-                            relPath = relPath.Replace("\\", "");
+                            fileInfo = new FileInfo($"{absPath}.md");
+                            if (fileInfo.Exists && fileInfo.Extension.Equals(".md", StringComparison.InvariantCultureIgnoreCase))
+                            {
+                                isMarkdown = true;
+                            }
 
-                            relPath = relPath.ToLower();
+                            //only markdown files get a pdf internal link
+                            if (isMarkdown)
+                            {
+                                var relPath = mf.RelativePath + "\\" + node.Inline.TargetUrl;
+                                relPath = relPath.Replace("/", "\\");
+                                relPath = relPath.Replace("\\", "");
 
-                            node.Inline.TargetUrl = $"#{relPath}";
+                                relPath = relPath.ToLower();
+
+                                node.Inline.TargetUrl = $"#{relPath}";
+                            }
                         }
                     }
                 }
@@ -152,7 +162,7 @@ namespace azuredevops_export_wiki
                 //add html anchor
                 var relativePath = file.FullName.Substring(_path.Length);
                 relativePath = relativePath.Replace("\\", "");
-                
+
                 relativePath = relativePath.ToLower();
                 var anchor = $"<span id=\"{relativePath}\">{relativePath}</span><h1>{file.Name.Replace(".md", "")}</h1>";
                 html = anchor + html;
@@ -182,19 +192,24 @@ namespace azuredevops_export_wiki
             return result;
         }
 
-        private List<string> ReadOrderFiles(string path)
+
+
+        private List<MarkdownFile> ReadOrderFiles(string path)
         {
             var directory = new DirectoryInfo(Path.GetFullPath(path));
             var orderFiles = directory.GetFiles(".order", SearchOption.AllDirectories);
 
-            var result = new List<string>();
+            var result = new List<MarkdownFile>();
             foreach (var orderFile in orderFiles)
             {
                 var orders = File.ReadAllLines(orderFile.FullName);
-
+                var relativePath = orderFile.Directory.FullName.Substring(directory.FullName.Length);
                 foreach (var order in orders)
                 {
-                    result.Add($"{orderFile.Directory.FullName}\\{order}.md");
+                    MarkdownFile mf = new MarkdownFile();
+                    mf.AbsolutePath = $"{orderFile.Directory.FullName}\\{order}.md";
+                    mf.RelativePath = $"{relativePath}";
+                    result.Add(mf);
                 }
             }
 
@@ -208,5 +223,13 @@ namespace azuredevops_export_wiki
                 Console.WriteLine(msg);
             }
         }
+
+        public class MarkdownFile
+        {
+            public string AbsolutePath;
+            public string RelativePath;
+        }
     }
+
+
 }
