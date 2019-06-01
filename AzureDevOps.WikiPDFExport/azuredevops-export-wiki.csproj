@@ -11,6 +11,10 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <TargetPath>libwkhtmltox.dll</TargetPath>
     </ContentWithTargetPath>
+    <ContentWithTargetPath Include="licenses.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <TargetPath>licenses.txt</TargetPath>
+    </ContentWithTargetPath>
   </ItemGroup>
 
   <ItemGroup>

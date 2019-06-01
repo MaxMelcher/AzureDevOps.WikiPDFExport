@@ -33,6 +33,9 @@ namespace azuredevops_export_wiki
         [Option('d', "date", Required = false, HelpText = "Adds the current date in the footer")]
         public bool Date { get; set; }
 
+        [Option('s', "single", Required = false, HelpText = "Path to a single markdown file that should be converted.")]
+        public string Single { get; set; }
+
         [Option('p', "path", Required = false, HelpText = "Path to the wiki folder")]
         public string Path { get; set; }
 

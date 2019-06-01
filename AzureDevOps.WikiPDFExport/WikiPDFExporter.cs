@@ -54,9 +54,31 @@ namespace azuredevops_export_wiki
                         _path = Path.GetFullPath(_path);
                     }
 
-                    var files = ReadOrderFiles(_path);
-                    _telemetryClient.TrackEvent("Pages", null, new Dictionary<string,double>(){{"Pages", files.Count}});
-                    
+                    List<MarkdownFile> files = null;
+                    if (!string.IsNullOrEmpty(_options.Single))
+                    {
+                        
+                        var directory = new DirectoryInfo(Path.GetFullPath(_path));
+                        var filePath = Path.GetFullPath(_options.Single);
+
+                        var relativePath = filePath.Substring(directory.FullName.Length);
+
+                        files = new List<MarkdownFile>()
+                        {
+                            new MarkdownFile() {
+                                AbsolutePath = filePath,
+                                RelativePath = relativePath
+                            }
+                        };
+                    }
+                    else
+                    {
+
+                        files = ReadOrderFiles(_path);
+                    }
+
+                    _telemetryClient.TrackEvent("Pages", null, new Dictionary<string, double>() { { "Pages", files.Count } });
+
                     var html = ConvertMarkdownToHTML(files);
 
                     ConvertHTMLToPDF(html);
@@ -202,8 +224,17 @@ namespace azuredevops_export_wiki
             {
                 if (!link.Url.StartsWith("http"))
                 {
-                    string absPath = Path.GetFullPath(file.Directory.FullName + "/" + link.Url);
 
+                    string absPath = null;
+                    
+                    if (link.Url.StartsWith("/"))
+                    {
+                        absPath = Path.GetFullPath(_path + link.Url);
+                    }
+                    else
+                    {
+                        absPath = Path.GetFullPath(file.Directory.FullName + "/" + link.Url);
+                    }
                     //the file is a markdown file, create a link to it
                     var isMarkdown = false;
                     var fileInfo = new FileInfo(absPath);
