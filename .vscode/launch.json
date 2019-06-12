@@ -14,9 +14,14 @@
             "args": [
                 "-v",
                 "-p..\\AzureDevOps.WikiPDFExport.Test\\Tests\\Real",
-                "-d",
                 "-h",
                 "-b",
+                "--header-left=LEFT page: [page] of [topage]",
+                "--header-center=CENTER [section]",
+                "--header-right=RIGHT [date]",
+                "--footer-left=LEFT [subsection]",
+                "--footer-center=CENTER [DATE]",
+                "--footer-right=RIGHT page: [page] of [topage]",
                 //"-s..\\AzureDevOps.WikiPDFExport.Test\\Tests\\Real\\AzureDevOps.WikiPDFExport\\TEST%2DPAGE.md"
             ],
             "cwd": "${workspaceFolder}/AzureDevOps.WikiPDFExport",

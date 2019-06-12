@@ -17,6 +17,7 @@ using Microsoft.ApplicationInsights;
 using System.Threading;
 using Microsoft.ApplicationInsights.Extensibility;
 using Microsoft.ApplicationInsights.DataContracts;
+using System.Globalization;
 
 namespace azuredevops_export_wiki
 {
@@ -57,7 +58,7 @@ namespace azuredevops_export_wiki
                     List<MarkdownFile> files = null;
                     if (!string.IsNullOrEmpty(_options.Single))
                     {
-                        
+
                         var directory = new DirectoryInfo(Path.GetFullPath(_path));
                         var filePath = Path.GetFullPath(_options.Single);
 
@@ -127,8 +128,8 @@ namespace azuredevops_export_wiki
                         PagesCount = true,
                         HtmlContent = html,
                         WebSettings = { DefaultEncoding = "utf-8" },
-                        HeaderSettings = { FontSize = 9, Right = "Page [page] of [toPage]", Line = true, Spacing = 2.812},
-                        FooterSettings = { Left = $"{DateTime.Now.ToString("g")}"},
+                        HeaderSettings = { FontSize = 9, Left = _options.HeaderLeft, Center = _options.HeaderCenter, Right = _options.HeaderRight, Line = true, Spacing = 2.812},
+                        FooterSettings = { Left = _options.FooterLeft, Center = _options.FooterCenter, Right = _options.FooterRight },
                         UseLocalLinks = true
                     }
                 }
@@ -136,6 +137,18 @@ namespace azuredevops_export_wiki
 
             converter.Convert(doc);
             Log($"PDF created at: {output}");
+        }
+
+        //Replacing page parameters with dynamic values
+        //[PAGE] and [PAGETO] do not need to be replaced because they are handled by the PDF converter
+        private string ReplacePageParameters(string input)
+        {
+            Log("Replacing Page Parameters", LogLevel.Debug);
+            Log($"\tInput: {input}");
+            input = input.Replace("[DATE]", DateTime.Now.ToString("g"), true, CultureInfo.InvariantCulture);
+
+            Log($"\tOutput: {input}", LogLevel.Debug);
+            return input;
         }
 
         private string ConvertMarkdownToHTML(List<MarkdownFile> files)
@@ -173,8 +186,6 @@ namespace azuredevops_export_wiki
 
                 var anchor = $"<a id=\"{relativePath}\">&nbsp;</a>";
 
-
-
                 Log($"\tAnchor: {relativePath}");
 
                 html = anchor + html;
@@ -183,7 +194,7 @@ namespace azuredevops_export_wiki
                 {
                     var filename = file.Name.Replace(".md", "");
                     filename = HttpUtility.UrlDecode(filename);
-                    var heading = $"<h1>{filename}</h1>";
+                    var heading = $"<h1>Section {filename}</h1>";
                     html = heading + html;
                 }
 
@@ -226,7 +237,7 @@ namespace azuredevops_export_wiki
                 {
 
                     string absPath = null;
-                    
+
                     if (link.Url.StartsWith("/"))
                     {
                         absPath = Path.GetFullPath(_path + link.Url);

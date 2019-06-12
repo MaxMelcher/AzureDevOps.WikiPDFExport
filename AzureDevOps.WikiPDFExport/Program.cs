@@ -30,9 +30,6 @@ namespace azuredevops_export_wiki
         [Option('b', "breakPage", Required = false, HelpText = "Creates a new PDF page for every wiki page")]
         public bool BreakPage { get; set; }
 
-        [Option('d', "date", Required = false, HelpText = "Adds the current date in the footer")]
-        public bool Date { get; set; }
-
         [Option('s', "single", Required = false, HelpText = "Path to a single markdown file that should be converted.")]
         public string Single { get; set; }
 
@@ -47,5 +44,20 @@ namespace azuredevops_export_wiki
 
         [Option('h', "heading", Required = false, HelpText = "Add heading per page")]
         public bool Heading { get; set; }
+
+        [Option("footer-left", Required = false, HelpText = "Text in the footer on the left, supports placeholders")]
+        public string FooterLeft { get; set; }
+        [Option("footer-center", Required = false, HelpText = "Text in the footer on the center, supports placeholders")]
+        public string FooterCenter { get; set; }
+        [Option("footer-right", Required = false, HelpText = "Text in the footer on the right, supports placeholders")]
+        public string FooterRight { get; set; }
+
+        [Option("header-left", Required = false, HelpText = "Text in the header on the left, supports placeholders")]
+        public string HeaderLeft { get; set; }
+        [Option("header-center", Required = false, HelpText = "Text in the header on the center, supports placeholders")]
+        public string HeaderCenter { get; set; }
+        [Option("header-right", Required = false, HelpText = "Text in the header on the right, supports placeholders")]
+        public string HeaderRight { get; set; }
+
     }
 }
