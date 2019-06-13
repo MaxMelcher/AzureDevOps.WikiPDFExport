@@ -39,11 +39,14 @@ namespace azuredevops_export_wiki
         [Option('o', "output", Required = false, HelpText = "Path and Filename of the export file, e.g. c:\\export.pdf ")]
         public string Output { get; set; }
 
-        [Option('g', "debug", Required = false, HelpText = "Debug mode that exports the converted html file")]
+        [Option('d', "debug", Required = false, HelpText = "Debug mode that exports the converted html file")]
         public bool Debug { get; set; }
 
         [Option('h', "heading", Required = false, HelpText = "Add heading per page")]
         public bool Heading { get; set; }
+
+        [Option("pathToHeading", Required = false, HelpText = "Add path of the file to the header")]
+        public bool PathToHeading { get; set; }
 
         [Option("footer-left", Required = false, HelpText = "Text in the footer on the left, supports placeholders")]
         public string FooterLeft { get; set; }

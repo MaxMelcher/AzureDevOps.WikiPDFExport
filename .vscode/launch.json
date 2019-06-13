@@ -16,6 +16,8 @@
                 "-p..\\AzureDevOps.WikiPDFExport.Test\\Tests\\Real",
                 "-h",
                 "-b",
+                "-d",
+                "--pathToHeading",
                 "--header-left=LEFT page: [page] of [topage]",
                 "--header-center=CENTER [section]",
                 "--header-right=RIGHT [date]",

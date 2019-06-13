@@ -194,7 +194,15 @@ namespace azuredevops_export_wiki
                 {
                     var filename = file.Name.Replace(".md", "");
                     filename = HttpUtility.UrlDecode(filename);
-                    var heading = $"<h1>Section {filename}</h1>";
+                    var heading = $"<h1>{filename}</h1>";
+                    html = heading + html;
+                }
+
+                if (_options.PathToHeading)
+                {
+                    var filename = file.Name;
+                    filename = HttpUtility.UrlDecode(filename);
+                    var heading = $"<h2>{filename}</h2>";
                     html = heading + html;
                 }
 
