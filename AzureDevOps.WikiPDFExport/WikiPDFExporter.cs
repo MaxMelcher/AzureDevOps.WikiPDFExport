@@ -179,25 +179,27 @@ namespace azuredevops_export_wiki
                 html = builder.ToString();
 
                 //add html anchor
+                var anchorPath = file.FullName.Substring(_path.Length);
+                anchorPath = anchorPath.Replace("\\", "");
+                anchorPath = anchorPath.ToLower();
+                anchorPath = anchorPath.Replace(".md", "");
+
                 var relativePath = file.FullName.Substring(_path.Length);
-                relativePath = relativePath.Replace("\\", "");
-                relativePath = relativePath.ToLower();
-                relativePath = relativePath.Replace(".md", "");
 
-                var anchor = $"<a id=\"{relativePath}\">&nbsp;</a>";
+                var anchor = $"<a id=\"{anchorPath}\">&nbsp;</a>";
 
-                Log($"\tAnchor: {relativePath}");
+                Log($"\tAnchor: {anchorPath}");
 
                 html = anchor + html;
 
                 if (_options.PathToHeading)
                 {
                     var filename = file.Name;
-                    filename = HttpUtility.UrlDecode(filename);
+                    filename = HttpUtility.UrlDecode(relativePath);
                     var heading = $"<b>{filename}</b>";
                     html = heading + html;
                 }
-                
+
                 if (_options.Heading)
                 {
                     var filename = file.Name.Replace(".md", "");
