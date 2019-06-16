@@ -190,6 +190,14 @@ namespace azuredevops_export_wiki
 
                 html = anchor + html;
 
+                if (_options.PathToHeading)
+                {
+                    var filename = file.Name;
+                    filename = HttpUtility.UrlDecode(filename);
+                    var heading = $"<b>{filename}</b>";
+                    html = heading + html;
+                }
+                
                 if (_options.Heading)
                 {
                     var filename = file.Name.Replace(".md", "");
@@ -198,13 +206,7 @@ namespace azuredevops_export_wiki
                     html = heading + html;
                 }
 
-                if (_options.PathToHeading)
-                {
-                    var filename = file.Name;
-                    filename = HttpUtility.UrlDecode(filename);
-                    var heading = $"<h2>{filename}</h2>";
-                    html = heading + html;
-                }
+
 
                 if (_options.BreakPage)
                 {
