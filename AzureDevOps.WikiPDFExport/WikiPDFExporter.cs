@@ -163,7 +163,12 @@ namespace azuredevops_export_wiki
                 Log($"parsing file {file.Name}", LogLevel.Debug);
                 var htmlfile = file.FullName.Replace(".md", ".html");
                 var md = File.ReadAllText(file.FullName);
-                var document = (MarkdownObject)Markdown.Parse(md);
+
+                //setup the markdown pipeline to support tables
+                var pipeline = new MarkdownPipelineBuilder().UsePipeTables().Build();
+
+                //parse the markdown document so we can alter it later
+                var document = (MarkdownObject)Markdown.Parse(md, pipeline);
 
                 //adjust the links
                 CorrectLinksAndImages(document, file, mf);
@@ -174,6 +179,7 @@ namespace azuredevops_export_wiki
                 {
                     // write the HTML output
                     var renderer = new HtmlRenderer(writer);
+                    pipeline.Setup(renderer); 
                     renderer.Render(document);
                 }
                 html = builder.ToString();
