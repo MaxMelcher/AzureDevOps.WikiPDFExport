@@ -24,7 +24,7 @@ The tool currently supports the following:
 * Creates PDF bookmarks to all pages for easier navigation within the PDF
 * If you link to other wiki pages, the link in the PDF will work, too. 
 * Everything self-contained. Download the .exe file, run it, done.
-* Tool can be used as part of a build, see [Build Task](/AzureDevOps.WikiPDFExport/Build-Task)
+* Tool can be used as part of a build, see [BuildTask](AzureDevOps.WikiPDFExport/Build-Task.md)
 * It is fast. A PDF with 160 pages is created in less than a second.
 
 ## Requirements
@@ -96,7 +96,7 @@ So far the following limitations are known:
 * The tool lacks proper testing because I only have two wikis available
 
 ## License
-See [license](/AzureDevOps.WikiPDFExport/License)
+See [license](/AzureDevOps.WikiPDFExport/License.md)
 
 ## Telemetry
 The tool uses Application Insights for basic telemetry:
