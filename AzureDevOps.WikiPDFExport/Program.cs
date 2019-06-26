@@ -62,5 +62,7 @@ namespace azuredevops_export_wiki
         [Option("header-right", Required = false, HelpText = "Text in the header on the right, supports placeholders")]
         public string HeaderRight { get; set; }
 
+        [Option("css", Required = false, HelpText = "Path to a css file that is used for styling the PDF")]
+        public string CSS { get; set; }
     }
 }

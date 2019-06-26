@@ -16,7 +16,7 @@
                 "-p..\\AzureDevOps.WikiPDFExport.Test\\Tests\\Real",
                 "-h",
                 "-b",
-                "-d",
+                "--debug",
                 "--pathToHeading",
                 "--header-left=LEFT page: [page] of [topage]",
                 "--header-center=CENTER [section]",
@@ -24,6 +24,7 @@
                 "--footer-left=LEFT [subsection]",
                 "--footer-center=CENTER [DATE]",
                 "--footer-right=RIGHT page: [page] of [topage]",
+                "--css=..\\AzureDevOps.WikiPDFExport.Test\\Tests\\Real\\styles.css"
                 //"-s..\\AzureDevOps.WikiPDFExport.Test\\Tests\\Real\\AzureDevOps.WikiPDFExport\\TEST%2DPAGE.md"
             ],
             "cwd": "${workspaceFolder}/AzureDevOps.WikiPDFExport",

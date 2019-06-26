@@ -1,0 +1,29 @@
+body
+{
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-size: 10pt;
+}
+
+h1
+{
+    font-size: 25pt;
+    color: red;
+}
+
+h2
+{
+    font-size: 20pt;
+    color: blue;
+}
+
+h3
+{
+    font-size: 15pt;
+    color: green;
+}
+
+h4
+{
+    font-size: 12pt;
+    color: pink;
+}

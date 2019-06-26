@@ -82,6 +82,18 @@ namespace azuredevops_export_wiki
 
                     var html = ConvertMarkdownToHTML(files);
 
+                    if (!string.IsNullOrEmpty(_options.CSS))
+                    {
+                        html = AddCssStyles(html);
+                    }
+
+                    if (_options.Debug)
+                    {
+                        var htmlPath = Path.Combine(_path, "html.html");
+                        Log($"Writing converted html to path: {htmlPath}");
+                        File.WriteAllText(htmlPath, html);
+                    }
+
                     ConvertHTMLToPDF(html);
 
                     Console.ForegroundColor = ConsoleColor.Green;
@@ -99,6 +111,25 @@ namespace azuredevops_export_wiki
                 _telemetryClient.Flush();
                 Thread.Sleep(TimeSpan.FromSeconds(5));
             }
+        }
+
+        private string AddCssStyles(string html)
+        {
+            var path = Path.GetFullPath(_options.CSS);
+
+            if (!File.Exists(path))
+            {
+                return html;
+            }
+
+            var styles = File.ReadAllText(path);
+
+            var start = $"<style>";
+            var stop = $"</style>";
+
+            html = start + styles + stop + html;
+
+            return html;
         }
 
         private void ConvertHTMLToPDF(string html)
@@ -179,7 +210,7 @@ namespace azuredevops_export_wiki
                 {
                     // write the HTML output
                     var renderer = new HtmlRenderer(writer);
-                    pipeline.Setup(renderer); 
+                    pipeline.Setup(renderer);
                     renderer.Render(document);
                 }
                 html = builder.ToString();
@@ -235,12 +266,7 @@ namespace azuredevops_export_wiki
 
             var result = sb.ToString();
 
-            if (_options.Debug)
-            {
-                var htmlPath = Path.Combine(_path, "html.html");
-                Log($"Writing converted html to path: {htmlPath}");
-                File.WriteAllText(htmlPath, result);
-            }
+
             return result;
         }
 
