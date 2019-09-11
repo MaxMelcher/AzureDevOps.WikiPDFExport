@@ -162,6 +162,21 @@ namespace azuredevops_export_wiki
                 headerSettings.HtmUrl = _options.HeaderUrl;
             }
 
+            var footerSettings = new FooterSettings
+            {
+                Line = !_options.HideFooterLine
+            };
+            if (string.IsNullOrEmpty(_options.FooterUrl))
+            {
+                footerSettings.Left = _options.FooterLeft;
+                footerSettings.Center = _options.FooterCenter;
+                footerSettings.Right = _options.FooterRight;
+            } 
+            else
+            {
+                footerSettings.HtmUrl = _options.FooterUrl;
+            }
+
             var doc = new HtmlToPdfDocument()
             {
                 GlobalSettings = {
@@ -177,7 +192,7 @@ namespace azuredevops_export_wiki
                         HtmlContent = html,
                         WebSettings = { DefaultEncoding = "utf-8" },
                         HeaderSettings = headerSettings,
-                        FooterSettings = { Left = _options.FooterLeft, Center = _options.FooterCenter, Right = _options.FooterRight },
+                        FooterSettings = footerSettings,
                         UseLocalLinks = true
                     }
                 }

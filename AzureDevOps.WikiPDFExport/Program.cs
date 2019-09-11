@@ -54,6 +54,10 @@ namespace azuredevops_export_wiki
         public string FooterCenter { get; set; }
         [Option("footer-right", Required = false, HelpText = "Text in the footer on the right, supports placeholders")]
         public string FooterRight { get; set; }
+        [Option("footer-url", Required = false, HelpText = "URL to an html file containing the footer")]
+        public string FooterUrl { get; set; }        
+        [Option("footer-hide-line", Required = false, HelpText = "Hide the line below the footer")]
+        public bool HideFooterLine { get; set; }
 
         [Option("header-left", Required = false, HelpText = "Text in the header on the left, supports placeholders")]
         public string HeaderLeft { get; set; }
