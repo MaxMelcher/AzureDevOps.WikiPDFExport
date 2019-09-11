@@ -63,8 +63,8 @@ namespace azuredevops_export_wiki
         public string HeaderRight { get; set; }
         [Option("header-url", Required = false, HelpText = "URL to an html file containing the header, does not work together with header-right, header-left or header-center")]
         public string HeaderUrl { get; set; }
-        [Option("header-line", Required = false, HelpText = "Draw a line below the header")]
-        public bool ShowHeaderLine { get; set; }
+        [Option("header-hide-line", Required = false, HelpText = "Hide the line below the header")]
+        public bool HideHeaderLine { get; set; }
 
         [Option("css", Required = false, HelpText = "Path to a css file that is used for styling the PDF")]
         public string CSS { get; set; }

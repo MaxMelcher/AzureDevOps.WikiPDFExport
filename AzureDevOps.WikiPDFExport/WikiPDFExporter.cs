@@ -148,7 +148,7 @@ namespace azuredevops_export_wiki
             //somehow the options HeaderSettings.Left/Right/Center don't work in combination with HeaderSettings.HtmlURL
             var headerSettings = new HeaderSettings{
                 FontSize = 9, 
-                Line = _options.ShowHeaderLine, 
+                Line = !_options.HideHeaderLine, 
                 Spacing = 2.812,
             };
             if (string.IsNullOrEmpty(_options.HeaderUrl))
