@@ -145,6 +145,23 @@ namespace azuredevops_export_wiki
                 output = Path.Combine(Directory.GetCurrentDirectory(), "export.pdf");
             }
 
+            //somehow the options HeaderSettings.Left/Right/Center don't work in combination with HeaderSettings.HtmlURL
+            var headerSettings = new HeaderSettings{
+                FontSize = 9, 
+                Line = _options.ShowHeaderLine, 
+                Spacing = 2.812,
+            };
+            if (string.IsNullOrEmpty(_options.HeaderUrl))
+            {
+                headerSettings.Left = _options.HeaderLeft;
+                headerSettings.Center = _options.HeaderCenter;
+                headerSettings.Right = _options.HeaderRight;
+            } 
+            else
+            {
+                headerSettings.HtmUrl = _options.HeaderUrl;
+            }
+
             var doc = new HtmlToPdfDocument()
             {
                 GlobalSettings = {
@@ -159,7 +176,7 @@ namespace azuredevops_export_wiki
                         PagesCount = true,
                         HtmlContent = html,
                         WebSettings = { DefaultEncoding = "utf-8" },
-                        HeaderSettings = { FontSize = 9, Left = _options.HeaderLeft, Center = _options.HeaderCenter, Right = _options.HeaderRight, Line = true, Spacing = 2.812},
+                        HeaderSettings = headerSettings,
                         FooterSettings = { Left = _options.FooterLeft, Center = _options.FooterCenter, Right = _options.FooterRight },
                         UseLocalLinks = true
                     }
