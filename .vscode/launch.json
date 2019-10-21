@@ -24,7 +24,10 @@
                 "--footer-left=LEFT [subsection]",
                 "--footer-center=CENTER [DATE]",
                 "--footer-right=RIGHT page: [page] of [topage]",
-                "--css=..\\AzureDevOps.WikiPDFExport.Test\\Tests\\Real\\styles.css"
+                "--css=..\\AzureDevOps.WikiPDFExport.Test\\Tests\\Real\\styles.css",
+                //"--footer-hide-line"
+                //"--footer-url=C:\\Git\\AzureDevOps.WikiPDFExport\\AzureDevOps.WikiPDFExport\\bin\\Debug\\netcoreapp2.2\\example-footer.html",
+                //"--header-url=C:\\Git\\AzureDevOps.WikiPDFExport\\AzureDevOps.WikiPDFExport\\bin\\Debug\\netcoreapp2.2\\example-header.html"
                 //"-s..\\AzureDevOps.WikiPDFExport.Test\\Tests\\Real\\AzureDevOps.WikiPDFExport\\TEST%2DPAGE.md"
             ],
             "cwd": "${workspaceFolder}/AzureDevOps.WikiPDFExport",
