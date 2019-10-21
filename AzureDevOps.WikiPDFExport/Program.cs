@@ -54,6 +54,10 @@ namespace azuredevops_export_wiki
         public string FooterCenter { get; set; }
         [Option("footer-right", Required = false, HelpText = "Text in the footer on the right, supports placeholders")]
         public string FooterRight { get; set; }
+        [Option("footer-url", Required = false, HelpText = "URL to an html file containing the footer")]
+        public string FooterUrl { get; set; }        
+        [Option("footer-hide-line", Required = false, HelpText = "Hide the line below the footer")]
+        public bool HideFooterLine { get; set; }
 
         [Option("header-left", Required = false, HelpText = "Text in the header on the left, supports placeholders")]
         public string HeaderLeft { get; set; }
@@ -61,6 +65,10 @@ namespace azuredevops_export_wiki
         public string HeaderCenter { get; set; }
         [Option("header-right", Required = false, HelpText = "Text in the header on the right, supports placeholders")]
         public string HeaderRight { get; set; }
+        [Option("header-url", Required = false, HelpText = "URL to an html file containing the header, does not work together with header-right, header-left or header-center")]
+        public string HeaderUrl { get; set; }
+        [Option("header-hide-line", Required = false, HelpText = "Hide the line below the header")]
+        public bool HideHeaderLine { get; set; }
 
         [Option("css", Required = false, HelpText = "Path to a css file that is used for styling the PDF")]
         public string CSS { get; set; }
