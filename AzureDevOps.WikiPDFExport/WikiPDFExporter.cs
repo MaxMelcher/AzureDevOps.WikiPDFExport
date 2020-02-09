@@ -291,11 +291,28 @@ namespace azuredevops_export_wiki
                 {
                     var filename = file.Name.Replace(".md", "");
                     filename = HttpUtility.UrlDecode(filename);
-                    var heading = $"<h1>{filename}</h1>";
+                    var filenameEscapes = new Dictionary<string, string>
+                    {
+                        {"%3A", ":"},
+                        {"%3C", "<"},
+                        {"%3E", ">"},
+                        {"%2A", "*"},
+                        {"%3F", "?"},
+                        {"%7C", "|"},
+                        {"%2D", "-"},
+                        {"%22", "\""},
+                        {"-", " "}
+                    };
+
+                    var title = new StringBuilder(filename);
+                    foreach(var filenameEscape in filenameEscapes)
+                    {
+                        title.Replace(filenameEscape.Key, filenameEscape.Value);
+                    }
+
+                    var heading = $"<h1>{title.ToString()}</h1>";
                     html = heading + html;
                 }
-
-
 
                 if (_options.BreakPage)
                 {
