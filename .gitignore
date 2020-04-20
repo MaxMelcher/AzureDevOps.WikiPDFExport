@@ -29,3 +29,4 @@ _ReSharper*/
 .vs/
 #Nuget packages folder
 packages/
+AzureDevOps.WikiPDFExport.Test/Tests/Azure-Platform-Design/

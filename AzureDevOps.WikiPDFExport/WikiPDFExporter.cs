@@ -225,6 +225,13 @@ namespace azuredevops_export_wiki
 
                 Log($"parsing file {file.Name}", LogLevel.Debug);
                 var htmlfile = file.FullName.Replace(".md", ".html");
+
+                if (!File.Exists(file.FullName))
+                {
+                    Log($"File {file.FullName} specified in the order file was not found and will be skipped!", LogLevel.Error);
+                    continue;
+                }
+
                 var md = File.ReadAllText(file.FullName);
 
                 //setup the markdown pipeline to support tables
