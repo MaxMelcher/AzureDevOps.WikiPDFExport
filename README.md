@@ -25,6 +25,7 @@ The tool currently supports the following:
 * If you link to other wiki pages, the link in the PDF will work, too. 
 * Everything self-contained. Download the .exe file, run it, done.
 * Tool can be used as part of a build, see [BuildTask](AzureDevOps.WikiPDFExport/Build-Task.md)
+* Supports emoticons :) ⚠ ℹ
 * It is fast. A PDF with 160 pages is created in less than a second.
 
 ## Requirements
