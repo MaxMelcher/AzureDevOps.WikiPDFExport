@@ -6,7 +6,6 @@
     <RootNamespace>azuredevops_export_wiki</RootNamespace>
     <PublishTrimmed>true</PublishTrimmed>
     <PublishReadyToRun>true</PublishReadyToRun>
-    <RuntimeIdentifier>win-x64</RuntimeIdentifier>
   </PropertyGroup>
 
   <ItemGroup>
@@ -22,7 +21,7 @@
 
   <ItemGroup>
     <PackageReference Include="CommandLineParser" Version="2.5.0" />
-    <PackageReference Include="Markdig" Version="0.17.0" />
+    <PackageReference Include="Markdig" Version="0.20.0" />
     <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.6.1" />
     <PackageReference Include="Microsoft.Extensions.Logging" Version="2.2.0" />
     <PackageReference Include="RndUsr0.DinkToPdf" Version="1.0.9-20190207.1" />

@@ -18,6 +18,7 @@ using System.Threading;
 using Microsoft.ApplicationInsights.Extensibility;
 using Microsoft.ApplicationInsights.DataContracts;
 using System.Globalization;
+using Markdig.Extensions.Emoji;
 
 namespace azuredevops_export_wiki
 {
@@ -87,6 +88,9 @@ namespace azuredevops_export_wiki
                         html = AddCssStyles(html);
                     }
 
+                    //adding the correct charset for unicode smileys and all that fancy stuff
+                    html = "<html><head><meta http-equiv=Content-Type content=\"text/html; charset=utf-8\"></head>\r\n" + html + "</html>";
+
                     if (_options.Debug)
                     {
                         var htmlPath = Path.Combine(_path, "html.html");
@@ -146,9 +150,10 @@ namespace azuredevops_export_wiki
             }
 
             //somehow the options HeaderSettings.Left/Right/Center don't work in combination with HeaderSettings.HtmlURL
-            var headerSettings = new HeaderSettings{
-                FontSize = 9, 
-                Line = !_options.HideHeaderLine, 
+            var headerSettings = new HeaderSettings
+            {
+                FontSize = 9,
+                Line = !_options.HideHeaderLine,
                 Spacing = 2.812,
             };
             if (string.IsNullOrEmpty(_options.HeaderUrl))
@@ -156,7 +161,7 @@ namespace azuredevops_export_wiki
                 headerSettings.Left = _options.HeaderLeft;
                 headerSettings.Center = _options.HeaderCenter;
                 headerSettings.Right = _options.HeaderRight;
-            } 
+            }
             else
             {
                 headerSettings.HtmUrl = _options.HeaderUrl;
@@ -171,7 +176,7 @@ namespace azuredevops_export_wiki
                 footerSettings.Left = _options.FooterLeft;
                 footerSettings.Center = _options.FooterCenter;
                 footerSettings.Right = _options.FooterRight;
-            } 
+            }
             else
             {
                 footerSettings.HtmUrl = _options.FooterUrl;
@@ -218,6 +223,9 @@ namespace azuredevops_export_wiki
         {
             Log("Converting Markdown to HTML");
             StringBuilder sb = new StringBuilder();
+
+            
+
             for (var i = 0; i < files.Count; i++)
             {
                 var mf = files[i];
@@ -235,7 +243,10 @@ namespace azuredevops_export_wiki
                 var md = File.ReadAllText(file.FullName);
 
                 //setup the markdown pipeline to support tables
-                var pipeline = new MarkdownPipelineBuilder().UsePipeTables().Build();
+                var pipeline = new MarkdownPipelineBuilder()
+                .UsePipeTables()
+                .UseEmojiAndSmiley()
+                .Build();
 
                 //parse the markdown document so we can alter it later
                 var document = (MarkdownObject)Markdown.Parse(md, pipeline);
