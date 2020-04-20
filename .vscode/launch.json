@@ -13,7 +13,7 @@
             "program": "${workspaceFolder}/AzureDevOps.WikiPDFExport/bin/Debug/netcoreapp3.1/azuredevops-export-wiki.dll",
             "args": [
                 "-v",
-                "-p..\\AzureDevOps.WikiPDFExport.Test\\Tests\\Azure-Platform-Design",
+                "-p..\\AzureDevOps.WikiPDFExport.Test\\Tests\\real",
                 "-h",
                 "-b",
                 "--debug",
