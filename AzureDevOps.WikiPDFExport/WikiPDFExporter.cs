@@ -244,6 +244,8 @@ namespace azuredevops_export_wiki
 
                 // remove scalings from image links
                 //md = Regex.Replace(md, @"\.(.*?) =.*x.*\)", @".$1)", RegexOptions.Singleline);
+                var regexImageScalings = @"(?<=png|jpg|jpeg)(.*?) =.*x.[^\)]*";
+                md = Regex.Replace(md, regexImageScalings, String.Empty);
 
                 //setup the markdown pipeline to support tables
                 var pipeline = new MarkdownPipelineBuilder()
