@@ -250,6 +250,7 @@ namespace azuredevops_export_wiki
                 var pipeline = new MarkdownPipelineBuilder()
                 .UsePipeTables()
                 .UseEmojiAndSmiley()
+                .UseAdvancedExtensions()
                 .Build();
 
                 //parse the markdown document so we can alter it later
