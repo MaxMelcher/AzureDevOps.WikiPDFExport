@@ -349,50 +349,52 @@ namespace azuredevops_export_wiki
             // and relative links to markdown pages
             foreach (var link in document.Descendants().OfType<LinkInline>())
             {
-                if (!link.Url.StartsWith("http"))
+                if (link.Url != null)
                 {
+                    if (!link.Url.StartsWith("http"))
+                    {
 
-                    string absPath = null;
+                        string absPath = null;
 
-                    if (link.Url.StartsWith("/"))
-                    {
-                        absPath = Path.GetFullPath(_path + link.Url);
-                    }
-                    else
-                    {
-                        absPath = Path.GetFullPath(file.Directory.FullName + "/" + link.Url);
-                    }
-                    //the file is a markdown file, create a link to it
-                    var isMarkdown = false;
-                    var fileInfo = new FileInfo(absPath);
-                    if (fileInfo.Exists && fileInfo.Extension.Equals(".md", StringComparison.InvariantCultureIgnoreCase))
-                    {
-                        isMarkdown = true;
-                    }
-                    else if (fileInfo.Exists)
-                    {
-                        link.Url = $"file:///{absPath}";
-                    }
+                        if (link.Url.StartsWith("/"))
+                        {
+                            absPath = Path.GetFullPath(_path + link.Url);
+                        }
+                        else
+                        {
+                            absPath = Path.GetFullPath(file.Directory.FullName + "/" + link.Url);
+                        }
+                        //the file is a markdown file, create a link to it
+                        var isMarkdown = false;
+                        var fileInfo = new FileInfo(absPath);
+                        if (fileInfo.Exists && fileInfo.Extension.Equals(".md", StringComparison.InvariantCultureIgnoreCase))
+                        {
+                            isMarkdown = true;
+                        }
+                        else if (fileInfo.Exists)
+                        {
+                            link.Url = $"file:///{absPath}";
+                        }
 
-                    fileInfo = new FileInfo($"{absPath}.md");
-                    if (fileInfo.Exists && fileInfo.Extension.Equals(".md", StringComparison.InvariantCultureIgnoreCase))
-                    {
-                        isMarkdown = true;
-                    }
+                        fileInfo = new FileInfo($"{absPath}.md");
+                        if (fileInfo.Exists && fileInfo.Extension.Equals(".md", StringComparison.InvariantCultureIgnoreCase))
+                        {
+                            isMarkdown = true;
+                        }
 
-                    //only markdown files get a pdf internal link
-                    if (isMarkdown)
-                    {
-                        var relPath = mf.RelativePath + "\\" + link.Url;
-                        relPath = relPath.Replace("/", "\\");
-                        relPath = relPath.Replace("\\", "");
-                        relPath = relPath.Replace(".md", "");
-                        relPath = relPath.ToLower();
-                        Log($"\tMarkdown link: {relPath}");
-                        link.Url = $"#{relPath}";
+                        //only markdown files get a pdf internal link
+                        if (isMarkdown)
+                        {
+                            var relPath = mf.RelativePath + "\\" + link.Url;
+                            relPath = relPath.Replace("/", "\\");
+                            relPath = relPath.Replace("\\", "");
+                            relPath = relPath.Replace(".md", "");
+                            relPath = relPath.ToLower();
+                            Log($"\tMarkdown link: {relPath}");
+                            link.Url = $"#{relPath}";
+                        }
                     }
                 }
-
                 CorrectLinksAndImages(link, file, mf);
             }
         }
