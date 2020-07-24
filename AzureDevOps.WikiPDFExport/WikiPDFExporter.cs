@@ -10,7 +10,6 @@ using Markdig.Syntax;
 using System.Linq;
 using Markdig.Renderers;
 using System.Text.RegularExpressions;
-using Markdig.Helpers;
 using Microsoft.Extensions.Logging;
 using System.Web;
 using Microsoft.ApplicationInsights;
@@ -18,7 +17,9 @@ using System.Threading;
 using Microsoft.ApplicationInsights.Extensibility;
 using Microsoft.ApplicationInsights.DataContracts;
 using System.Globalization;
-using Markdig.Extensions.Emoji;
+using PuppeteerSharp;
+using System.Threading.Tasks;
+using azuredevops_export_wiki.MermaidConainer;
 
 namespace azuredevops_export_wiki
 {
@@ -37,7 +38,7 @@ namespace azuredevops_export_wiki
             _telemetryClient = new TelemetryClient();
         }
 
-        public void Export()
+        public async Task Export()
         {
             try
             {
@@ -88,8 +89,41 @@ namespace azuredevops_export_wiki
                         html = AddCssStyles(html);
                     }
 
-                    //adding the correct charset for unicode smileys and all that fancy stuff
-                    html = "<html><head><meta http-equiv=Content-Type content=\"text/html; charset=utf-8\"></head>\r\n" + html + "</html>";
+                    var htmlStart = "<html>";
+                    var htmlEnd = "</html>";
+                    var head = "<head><meta http-equiv=Content-Type content=\"text/html; charset=utf-8\"></head>";
+
+                    if (!_options.ConvertMermaid)
+                    {
+                        // adding the correct charset for unicode smileys and all that fancy stuff
+                        html = $"{htmlStart}{head}{html}{htmlEnd}";
+                    }
+                    else
+                    {
+                        var mermaid = $"<script>{File.ReadAllText("mermaid.min.js")}</script>";
+                        var mermaidInitialize = "<script>mermaid.initialize({ startOnLoad:true });</script>";
+
+                        // adding the correct charset for unicode smileys and all that fancy stuff, and include mermaid.js
+                        html = $"{htmlStart}{head}{html}{mermaid}{mermaidInitialize}{htmlEnd}";
+
+                        if (string.IsNullOrEmpty(_options.ChromeExecutablePath))
+                        {
+                            RevisionInfo revisionInfo = await new BrowserFetcher().DownloadAsync(BrowserFetcher.DefaultRevision);
+                        }
+
+                        var launchOptions = new LaunchOptions
+                        {
+                            ExecutablePath = _options.ChromeExecutablePath ?? string.Empty,
+                            Headless = true
+                        };
+
+                        using (var browser = await Puppeteer.LaunchAsync(launchOptions))
+                        {
+                            var page = await browser.NewPageAsync();
+                            await page.SetContentAsync(html);
+                            html = await page.GetContentAsync();
+                        }
+                    }
 
                     if (_options.Debug)
                     {
@@ -247,11 +281,17 @@ namespace azuredevops_export_wiki
                 md = Regex.Replace(md, regexImageScalings, @"($2){width=$6 height=$7}");
 
                 //setup the markdown pipeline to support tables
-                var pipeline = new MarkdownPipelineBuilder()
-                .UsePipeTables()
-                .UseEmojiAndSmiley()
-                .UseAdvancedExtensions()
-                .Build();
+                var pipelineBuilder = new MarkdownPipelineBuilder()
+                    .UsePipeTables()
+                    .UseEmojiAndSmiley()
+                    .UseAdvancedExtensions();
+
+                if (_options.ConvertMermaid)
+                {
+                    pipelineBuilder = pipelineBuilder.UseMermaidContainers();
+                }
+
+                var pipeline = pipelineBuilder.Build();
 
                 //parse the markdown document so we can alter it later
                 var document = (MarkdownObject)Markdown.Parse(md, pipeline);

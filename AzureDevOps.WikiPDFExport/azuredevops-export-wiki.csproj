@@ -17,6 +17,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <TargetPath>licenses.txt</TargetPath>
     </ContentWithTargetPath>
+    <Content Include="mermaid.min.js">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 
   <ItemGroup>
@@ -25,5 +28,6 @@
     <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.6.1" />
     <PackageReference Include="Microsoft.Extensions.Logging" Version="2.2.0" />
     <PackageReference Include="RndUsr0.DinkToPdf" Version="1.0.9-20190207.1" />
+    <PackageReference Include="PuppeteerSharp" Version="2.0.3" />
   </ItemGroup>
 </Project>
