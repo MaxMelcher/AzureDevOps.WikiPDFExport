@@ -60,6 +60,12 @@ Path to a single markdown file to convert to PDF. If you want to write your chan
 ### -p / --path
 Path to the wiki folder. If not provided, the current folder of the executable is used.
 
+### -m / --mermaid
+Convert mermaid diagrams to SVG. Will download latest chromium, if chrome-path is not defined.
+
+### --chrome-path
+Path of the chrome or chromium executable. It'll be used if mermaid diagrams support is turned on
+
 ### -v / --verbose
 Verbose mode. Logging will added to the console window
 
@@ -112,3 +118,4 @@ In this tool uses open source libraries that do the actual work - I just combine
 1. [MarkDig](https://github.com/lunet-io/markdig/) to parse markdown files to HTML.
 1. [DinkToPdf](https://github.com/rdvojmoc/DinkToPdf) to export HTML to PDF
 1. [dotnet-warp](https://github.com/Hubert-Rybak/dotnet-warp) to release a self-contained exe file
+1. [puppeteer-sharp](https://github.com/hardkoded/puppeteer-sharp) to convert mermaid markdown to SVG
