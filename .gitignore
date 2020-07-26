@@ -30,3 +30,4 @@ _ReSharper*/
 #Nuget packages folder
 packages/
 AzureDevOps.WikiPDFExport.Test/Tests/Azure-Platform-Design/
+AzureDevOps.WikiPDFExport/.local-chromium/

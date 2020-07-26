@@ -1,12 +1,12 @@
 using Markdig;
 using Markdig.Renderers;
 
-namespace azuredevops_export_wiki.MermaidConainer
+namespace azuredevops_export_wiki.MermaidContainer
 {
     /// <summary>
     /// Mermaid container extension to setup the markdown pipeline builder and the markdown pipeline.
     /// </summary>
-    public class MermaidConainerExtension : IMarkdownExtension
+    public class MermaidContainerExtension : IMarkdownExtension
     {
         public void Setup(MarkdownPipelineBuilder pipeline)
         {

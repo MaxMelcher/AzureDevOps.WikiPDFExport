@@ -1,7 +1,7 @@
 using Markdig.Parsers;
 using System.Globalization;
 
-namespace azuredevops_export_wiki.MermaidConainer
+namespace azuredevops_export_wiki.MermaidContainer
 {
     /// <summary>
     /// Parses the mermaid containers.

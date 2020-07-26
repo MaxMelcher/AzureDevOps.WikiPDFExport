@@ -1,6 +1,6 @@
 using Markdig;
 
-namespace azuredevops_export_wiki.MermaidConainer
+namespace azuredevops_export_wiki.MermaidContainer
 {
     /// <summary>
     /// Provides extension methods for <see cref="MarkdownPipeline"/> to enable several Markdown extensions.
@@ -14,7 +14,7 @@ namespace azuredevops_export_wiki.MermaidConainer
         /// <returns>The modified pipeline</returns>
         public static MarkdownPipelineBuilder UseMermaidContainers(this MarkdownPipelineBuilder pipeline)
         {
-            pipeline.Extensions.AddIfNotAlready<MermaidConainerExtension>();
+            pipeline.Extensions.AddIfNotAlready<MermaidContainerExtension>();
             return pipeline;
         }
     }

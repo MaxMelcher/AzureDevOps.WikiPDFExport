@@ -19,7 +19,7 @@ using Microsoft.ApplicationInsights.DataContracts;
 using System.Globalization;
 using PuppeteerSharp;
 using System.Threading.Tasks;
-using azuredevops_export_wiki.MermaidConainer;
+using azuredevops_export_wiki.MermaidContainer;
 
 namespace azuredevops_export_wiki
 {

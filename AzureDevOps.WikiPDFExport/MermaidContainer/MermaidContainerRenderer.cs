@@ -1,6 +1,6 @@
 using Markdig.Renderers.Html;
 
-namespace azuredevops_export_wiki.MermaidConainer
+namespace azuredevops_export_wiki.MermaidContainer
 {
     /// <summary>
     /// Renders the mermaid containers as HTML.

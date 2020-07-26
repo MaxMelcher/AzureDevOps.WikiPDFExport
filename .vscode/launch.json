@@ -15,7 +15,7 @@
                 "-p..\\AzureDevOps.WikiPDFExport.Test\\Tests\\AzureDevOps.WikiPDFExport.wiki",
                 "-h",
                 "-b",
-                //"-m",
+                "-m",
                 "--debug",
                 "--pathToHeading",
                 "--header-left=LEFT page: [page] of [topage]",
