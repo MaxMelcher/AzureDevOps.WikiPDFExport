@@ -64,7 +64,7 @@ Path to the wiki folder. If not provided, the current folder of the executable i
 Convert mermaid diagrams to SVG. Will download latest chromium, if chrome-path is not defined.
 
 ### --chrome-path
-Path of the chrome or chromium executable. It'll be used if mermaid diagrams support is turned on
+Path of the chrome or chromium executable. It'll be used if mermaid diagrams support is turned on (-m/--mermaid). If not specified, a headless version will be downloaded. 
 
 ### -v / --verbose
 Verbose mode. Logging will added to the console window
