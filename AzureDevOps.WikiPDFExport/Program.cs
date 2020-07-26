@@ -1,24 +1,24 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
-using System.Text;
+﻿using System.Threading.Tasks;
 using CommandLine;
-using DinkToPdf;
 
 namespace azuredevops_export_wiki
 {
     partial class Program
     {
-        static void Main(string[] args)
+        static async Task Main(string[] args)
         {
+            await Parser.Default.ParseArguments<Options>(args)
+                .MapResult(
+                    ExecuteWikiPDFExporter,
+                    e => Task.FromResult(-1));
+        }
 
-            Parser.Default.ParseArguments<Options>(args)
-                               .WithParsed<Options>(options =>
-                               {
-                                   WikiPDFExporter exporter = new WikiPDFExporter(options);
-                                   exporter.Export();
-                               });
+        static async Task<int> ExecuteWikiPDFExporter(Options options)
+        {
+            WikiPDFExporter exporter = new WikiPDFExporter(options);
+            await exporter.Export();
+
+            return 0;
         }
     }
 
@@ -72,5 +72,11 @@ namespace azuredevops_export_wiki
 
         [Option("css", Required = false, HelpText = "Path to a css file that is used for styling the PDF")]
         public string CSS { get; set; }
+
+        [Option('m', "mermaid", Required = false, HelpText = "Convert mermaid diagrams to SVG. Will download latest chromium, if chrome-path is not defined")]
+        public bool ConvertMermaid { get; set; }
+
+        [Option("chrome-path", Required = false, HelpText = "Path of the chrome or chromium executable. It'll be used if mermaid diagrams support is turned on")]
+        public string ChromeExecutablePath {get; set;}
     }
 }

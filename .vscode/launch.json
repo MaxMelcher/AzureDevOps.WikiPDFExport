@@ -15,6 +15,7 @@
                 "-p..\\AzureDevOps.WikiPDFExport.Test\\Tests\\AzureDevOps.WikiPDFExport.wiki",
                 "-h",
                 "-b",
+                "-m",
                 "--debug",
                 "--pathToHeading",
                 "--header-left=LEFT page: [page] of [topage]",
@@ -28,6 +29,8 @@
                 //"--footer-url=C:\\Git\\AzureDevOps.WikiPDFExport\\AzureDevOps.WikiPDFExport\\bin\\Debug\\netcoreapp3.1\\example-footer.html",
                 //"--header-url=C:\\Git\\AzureDevOps.WikiPDFExport\\AzureDevOps.WikiPDFExport\\bin\\Debug\\netcoreapp3.1\\example-header.html"
                 //"-s..\\AzureDevOps.WikiPDFExport.Test\\Tests\\Real\\AzureDevOps.WikiPDFExport\\TEST%2DPAGE.md"
+                //"-s..\\AzureDevOps.WikiPDFExport\\TEST%2DPAGE.md",
+                //"--chrome-path=c:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe"
             ],
             "cwd": "${workspaceFolder}/AzureDevOps.WikiPDFExport",
             "console": "internalConsole",

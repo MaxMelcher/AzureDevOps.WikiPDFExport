@@ -45,3 +45,18 @@ _italic_
 [link](https://microsoft.com) 
 `code`
 
+```csharp
+    public WikiPDFExporter(Options options)
+    {
+        _options = options;
+
+        //initialize AppInsights
+        TelemetryConfiguration.Active.InstrumentationKey = "ba33d2f5-1137-446b-8624-3ad0af50a7be";
+        _telemetryClient = new TelemetryClient();
+    }
+```
+
+::: mermaid
+ graph LR;
+ A[Wiki supports Mermaid] --> B[Visit https://mermaidjs.github.io/ for Mermaid syntax];
+:::
