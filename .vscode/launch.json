@@ -30,6 +30,7 @@
                 //"--header-url=C:\\Git\\AzureDevOps.WikiPDFExport\\AzureDevOps.WikiPDFExport\\bin\\Debug\\netcoreapp3.1\\example-header.html"
                 //"-s..\\AzureDevOps.WikiPDFExport.Test\\Tests\\Real\\AzureDevOps.WikiPDFExport\\TEST%2DPAGE.md"
                 //"-s..\\AzureDevOps.WikiPDFExport\\TEST%2DPAGE.md",
+                //"--mermaidjs-path=mermaid.min.js",
                 //"--chrome-path=c:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe"
             ],
             "cwd": "${workspaceFolder}/AzureDevOps.WikiPDFExport",

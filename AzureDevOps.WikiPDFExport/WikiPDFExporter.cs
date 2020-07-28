@@ -100,7 +100,10 @@ namespace azuredevops_export_wiki
                     }
                     else
                     {
-                        var mermaid = $"<script>{File.ReadAllText("mermaid.min.js")}</script>";
+                        string mermaid = !string.IsNullOrEmpty(_options.MermaidJsPath) ?
+                            $"<script>{File.ReadAllText(_options.MermaidJsPath)}</script>"
+                            : @"<script src=""https://cdnjs.cloudflare.com/ajax/libs/mermaid/8.6.4/mermaid.js""></script>";
+                        
                         var mermaidInitialize = "<script>mermaid.initialize({ startOnLoad:true });</script>";
 
                         // adding the correct charset for unicode smileys and all that fancy stuff, and include mermaid.js
