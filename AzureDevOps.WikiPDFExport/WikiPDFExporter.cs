@@ -102,7 +102,7 @@ namespace azuredevops_export_wiki
                     {
                         string mermaid = !string.IsNullOrEmpty(_options.MermaidJsPath) ?
                             $"<script>{File.ReadAllText(_options.MermaidJsPath)}</script>"
-                            : @"<script src=""https://cdnjs.cloudflare.com/ajax/libs/mermaid/8.6.4/mermaid.js""></script>";
+                            : @"<script src=""https://cdnjs.cloudflare.com/ajax/libs/mermaid/8.6.4/mermaid.min.js""></script>";
                         
                         var mermaidInitialize = "<script>mermaid.initialize({ startOnLoad:true });</script>";
 
