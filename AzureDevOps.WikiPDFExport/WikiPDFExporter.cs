@@ -36,6 +36,11 @@ namespace azuredevops_export_wiki
             //initialize AppInsights
             TelemetryConfiguration.Active.InstrumentationKey = "ba33d2f5-1137-446b-8624-3ad0af50a7be";
             _telemetryClient = new TelemetryClient();
+
+            if (_options.DisableTelemetry)
+            {
+                TelemetryConfiguration.Active.DisableTelemetry = true;
+            }
         }
 
         public async Task Export()
