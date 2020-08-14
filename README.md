@@ -97,6 +97,9 @@ Headers and footers can be added to the document by the --header-* and
    * [sitepage]   Replaced by the number of the page in the current site being converted
    * [sitepages]  Replaced by the number of pages in the current site being converted
 
+### --disableTelemetry
+Disables the telemetry tracking, see [Telemetry](#telemetry)
+
 ## Limitations
 
 So far the following limitations are known:
