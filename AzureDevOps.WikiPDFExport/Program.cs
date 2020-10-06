@@ -36,7 +36,7 @@ namespace azuredevops_export_wiki
         [Option('p', "path", Required = false, HelpText = "Path to the wiki folder")]
         public string Path { get; set; }
 
-        [Option("attachments-path", Required = false, HelpText = "Optional absolute path to the folder containing the attachment files, such as images.")]
+        [Option("attachments-path", Required = false, HelpText = "Optional path to the folder containing the attachment files, such as images.")]
         public string AttachmentsPath { get; set; }
 
         [Option('o', "output", Required = false, HelpText = "Path and Filename of the export file, e.g. c:\\export.pdf ")]
