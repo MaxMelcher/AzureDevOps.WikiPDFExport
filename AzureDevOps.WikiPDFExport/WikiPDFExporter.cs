@@ -401,10 +401,26 @@ namespace azuredevops_export_wiki
                 {
                     if (!link.Url.StartsWith("http"))
                     {
-
                         string absPath = null;
 
-                        if (link.Url.StartsWith("/"))
+                        if (link.Url.StartsWith("/.attachments") || link.Url.StartsWith(".attachments"))
+                        {
+                            if (string.IsNullOrEmpty(this._options.AttachmentsPath))
+                            {
+                                absPath = Path.Combine(this._path, link.Url);
+                            }
+                            else
+                            {
+                                string linkUrl = link.Url.Substring(".attachments".Length);
+                                if (Path.IsPathRooted(link.Url))
+                                {
+                                    linkUrl = linkUrl.Substring(1);
+                                }
+
+                                absPath = Path.Combine(this._options.AttachmentsPath, linkUrl);
+                            }
+                        }
+                        else if (link.Url.StartsWith("/"))
                         {
                             absPath = Path.GetFullPath(_path + link.Url);
                         }
@@ -412,6 +428,7 @@ namespace azuredevops_export_wiki
                         {
                             absPath = Path.GetFullPath(file.Directory.FullName + "/" + link.Url);
                         }
+                        
                         //the file is a markdown file, create a link to it
                         var isMarkdown = false;
                         var fileInfo = new FileInfo(absPath);

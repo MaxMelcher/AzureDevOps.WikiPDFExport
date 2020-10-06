@@ -1,7 +1,7 @@
-<html><head><meta http-equiv=Content-Type content="text/html; charset=utf-8"></head>
-<style>body
+<html><head><meta http-equiv=Content-Type content="text/html; charset=utf-8"></head><style>
+body
 {
-    font-family: 'Segoe UI Emoji', Tahoma, Geneva, Verdana, sans-serif;
+    font-family: "Segoe UI Emoji", Tahoma, Geneva, Verdana, sans-serif;
     font-size: 10pt;
 }
 
@@ -27,7 +27,7 @@ h4
 {
     font-size: 12pt;
     color: pink;
-}</style><h1>Admin Layout and Customization</h1><b>\Admin-Layout-and-Customization.md</b><a id="admin-layout-and-customization">&nbsp;</a><h1>Admin Layout</h1>
+}</style><h1>Admin Layout and Customization</h1><b>\Admin-Layout-and-Customization.md</b><a id="admin-layout-and-customization">&nbsp;</a><h1 id="admin-layout">Admin Layout</h1>
 <p>When the package is installed, a default admin layout is applied on all of the admin pages. Default Admin Layout now support Sidebar and Top Navigation, but only one can be enabled at a time. Default Admin Layout has the following configurations in the sampletoGlobalConfig table:</p>
 <p><strong>AdminLayout:</strong>
 This key is used to set the Default Layout page for Admin pages. The default value is:</p>
@@ -49,37 +49,37 @@ This key is used to enable/disable Sidebar on Admin on the Admin pages. The defa
 <blockquote>
 <p>true</p>
 </blockquote>
-<h1>Custom Admin Layout</h1>
+<h1 id="custom-admin-layout">Custom Admin Layout</h1>
 <p>There is an option to change the Layout for Admin pages and design it according to your Web Application. There are few things which you first need to set.</p>
 <p><strong>NOTE: The admin layout body is designed in Bootstrap 3. So, you must design your custom admin layout in Bootstrap 3.</strong></p>
-<h2>Changing Layout Page</h2>
+<h2 id="changing-layout-page">Changing Layout Page</h2>
 <p>To change the Layout page, you need to change the default Admin Layout. Change the value for Global Config: 'AdminLayout'. Set its value to the path of your new layout page.</p>
-<h2>Admin Bundles</h2>
+<h2 id="admin-bundles">Admin Bundles</h2>
 <p>You should add the following CSS and Javascript bundles in your admin layout:</p>
-<h3>- CSS Bundles:</h3>
+<h3 id="css-bundles">- CSS Bundles:</h3>
 <p>Add the following bundles in the header tag of your Layout page:</p>
 <pre><code class="language-cs">@Styles.Render(&quot;~/bundles/sampletoBootstrap3css&quot;)
 @Styles.Render(&quot;~/bundles/sampletocommoncss&quot;)
 @Styles.Render(&quot;~/bundles/sampletoSitecss&quot;)
 </code></pre>
-<h3>- Javscript Bundles:</h3>
+<h3 id="javscript-bundles">- Javscript Bundles:</h3>
 <p>Add the following bundles at the end of body tag in your Layout page:</p>
 <pre><code class="language-cs">@Scripts.Render(&quot;~/bundles/sampletocommonscripts&quot;)
 @Scripts.Render(&quot;~/bundles/sampletoBootstrap3js&quot;)
 @Scripts.Render(&quot;~/bundles/sampletoTemplateCommonscripts&quot;)
 </code></pre>
 <p>For more details, see the <a href="https://sample.visualstudio.com/sampleto%20Framework/_wiki/wikis/sampleto%20Documentation?pagePath=%2Fsampleto%20Framework%20Manual%2FBuilding%20an%20App%20with%20sampleto%20Framework%2FBundling%20and%20Optimization&amp;pageId=103&amp;wikiVersion=GBmaster">Bundles and Optimzation</a>.</p>
-<h2>Admin Sections</h2>
+<h2 id="admin-sections">Admin Sections</h2>
 <p>You should add the following CSS and Script sections in your admin layout:</p>
-<h3>- CSS Section:</h3>
+<h3 id="css-section">- CSS Section:</h3>
 <p>Add the following section in the header tag of your Layout page:</p>
 <pre><code class="language-cs">@RenderSection(&quot;css&quot;, required: false)
 </code></pre>
-<h3>- Script Section:</h3>
+<h3 id="script-section">- Script Section:</h3>
 <p>Add the following section at the end of body tag in your Layout page:</p>
 <pre><code class="language-cs">@RenderSection(&quot;scripts&quot;, required: false)
 </code></pre>
-<h2>Getting Logo and App Name</h2>
+<h2 id="getting-logo-and-app-name">Getting Logo and App Name</h2>
 <p>To show the Logo and App Name, you have to get the following Global Configs from <a href="https://sample.visualstudio.com/sampleto%20Framework/_wiki/wikis/sampleto%20Documentation?pagePath=%2Fsampleto%20Framework%20Manual%2FBuilding%20an%20App%20with%20sampleto%20Framework%2FApplication%20Configurations&amp;pageId=18&amp;wikiVersion=GBmaster">sampleto Configuration Provider</a>.</p>
 <ol>
 <li>Admin Logo and App Name
@@ -118,12 +118,12 @@ This key is used to enable/disable Sidebar on Admin on the Admin pages. The defa
         
     &lt;/a&gt;
 </code></pre>
-<h2>Getting Navigations</h2>
-<h3>- Default Navigation View:</h3>
+<h2 id="getting-navigations">Getting Navigations</h2>
+<h3 id="default-navigation-view">- Default Navigation View:</h3>
 <p>You can use the default navigations or create your own view for navigations. In order to use the default view, you must add the following line of code:</p>
 <pre><code class="language-cs">@Html.Action(&quot;GetMenuParital&quot;, &quot;Menu&quot;, new { menuTypeId = &quot;PRIMARY&quot;, viewName = &quot;~/Areas/Admin/Views/Shared/AdminLayout/_top_menu.cshtml&quot;, appId = @sampleto.Framework.Web.Constant.Constants.AdminAppId })
 </code></pre>
-<h3>- Custom Navigation View:</h3>
+<h3 id="custom-navigation-view">- Custom Navigation View:</h3>
 <p>In order to create your own view for navigation, you must follow these instructions:</p>
 <ol>
 <li>Create a Partial View and strongly bind it with IEnumerable of 'MenuItemvm':</li>
@@ -136,7 +136,7 @@ This key is used to enable/disable Sidebar on Admin on the Admin pages. The defa
 </ol>
 <pre><code class="language-cs">@Html.Action(&quot;GetMenuParital&quot;, &quot;Menu&quot;, new { menuTypeId = &quot;PRIMARY&quot;, viewName = [Path_To_Your_Navigations_PartialView], appId = @sampleto.Framework.Web.Constant.Constants.AdminAppId })
 </code></pre>
-<h2>Global Hidden Variables</h2>
+<h2 id="global-hidden-variables">Global Hidden Variables</h2>
 <p>There are few global variables which are needed on every admin page. These variables contain the Multilingual Texts in the form of the hidden field. These contain confirmation alert texts, buttons texts, etc. Add the following line of code at the start of body tag in your Layout page.</p>
 <pre><code class="language-cs">@Html.Partial(&quot;~/Areas/Admin/Views/Shared/AdminLayout/_top_global_vars.cshtml&quot;)
 </code></pre>
