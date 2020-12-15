@@ -69,6 +69,9 @@ Path of the mermaid.js file. It'll be used if mermaid diagrams support is turned
 ### --chrome-path
 Path of the chrome or chromium executable. It'll be used if mermaid diagrams support is turned on (-m/--mermaid). If not specified, a headless version will be downloaded.
 
+### --css 
+Path to the stylesheet to overwrite the look of certain components in the PDF. See [styles.css](styles.css) for examples. To get the html file, use the [--debug flag](#-d----debug) to inspect and style it.
+
 ### -v / --verbose
 Verbose mode. Logging will added to the console window
 
