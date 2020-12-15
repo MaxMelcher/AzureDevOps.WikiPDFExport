@@ -60,6 +60,9 @@ Path to a single markdown file to convert to PDF. If you want to write your chan
 ### -p / --path
 Path to the wiki folder. If not provided, the current folder of the executable is used.
 
+### --attachments-path
+Path to the .attachments folder.  If not provided, the .attachments is assumed to be located under the folder of the wiki (-p/--path).
+
 ### -m / --mermaid
 Convert mermaid diagrams to SVG. Will download latest chromium, if chrome-path is not defined.
 

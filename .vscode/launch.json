@@ -12,7 +12,8 @@
             "program": "${workspaceFolder}/AzureDevOps.WikiPDFExport/bin/Debug/netcoreapp3.1/azuredevops-export-wiki.dll",
             "args": [
                 "-v",
-                "-p..\\AzureDevOps.WikiPDFExport.Test\\Tests\\AzureDevOps.WikiPDFExport.wiki",
+                "-p..\\AzureDevOps.WikiPDFExport.Test\\Tests\\Code",
+                "--attachments-path=\"\"",
                 "-h",
                 "-b",
 //              "-m",
