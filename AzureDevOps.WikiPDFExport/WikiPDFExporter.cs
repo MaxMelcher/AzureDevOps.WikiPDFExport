@@ -108,7 +108,7 @@ namespace azuredevops_export_wiki
                         string mermaid = !string.IsNullOrEmpty(_options.MermaidJsPath) ?
                             $"<script>{File.ReadAllText(_options.MermaidJsPath)}</script>"
                             : @"<script src=""https://cdnjs.cloudflare.com/ajax/libs/mermaid/8.6.4/mermaid.min.js""></script>";
-                        
+
                         var mermaidInitialize = "<script>mermaid.initialize({ startOnLoad:true });</script>";
 
                         // adding the correct charset for unicode smileys and all that fancy stuff, and include mermaid.js
@@ -266,7 +266,7 @@ namespace azuredevops_export_wiki
             Log("Converting Markdown to HTML");
             StringBuilder sb = new StringBuilder();
 
-            
+
 
             for (var i = 0; i < files.Count; i++)
             {
@@ -358,7 +358,7 @@ namespace azuredevops_export_wiki
                     };
 
                     var title = new StringBuilder(filename);
-                    foreach(var filenameEscape in filenameEscapes)
+                    foreach (var filenameEscape in filenameEscapes)
                     {
                         title.Replace(filenameEscape.Key, filenameEscape.Value);
                     }
@@ -403,22 +403,11 @@ namespace azuredevops_export_wiki
                     {
                         string absPath = null;
 
-                        if (link.Url.StartsWith("/.attachments") || link.Url.StartsWith(".attachments"))
+                        //handle --attachments-path case
+                        if (!string.IsNullOrEmpty(this._options.AttachmentsPath) && link.Url.StartsWith("/.attachments") || link.Url.StartsWith(".attachments"))
                         {
-                            if (string.IsNullOrEmpty(this._options.AttachmentsPath))
-                            {
-                                absPath = Path.Combine(this._path, link.Url);
-                            }
-                            else
-                            {
-                                string linkUrl = link.Url.Substring(".attachments".Length);
-                                if (Path.IsPathRooted(link.Url))
-                                {
-                                    linkUrl = linkUrl.Substring(1);
-                                }
-
-                                absPath = Path.Combine(this._options.AttachmentsPath, linkUrl);
-                            }
+                            var linkUrl = link.Url.Split('/').Last();
+                            absPath = Path.GetFullPath(Path.Combine(this._options.AttachmentsPath, linkUrl));
                         }
                         else if (link.Url.StartsWith("/"))
                         {
@@ -428,7 +417,7 @@ namespace azuredevops_export_wiki
                         {
                             absPath = Path.GetFullPath(file.Directory.FullName + "/" + link.Url);
                         }
-                        
+
                         //the file is a markdown file, create a link to it
                         var isMarkdown = false;
                         var fileInfo = new FileInfo(absPath);

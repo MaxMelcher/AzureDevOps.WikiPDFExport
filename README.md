@@ -58,7 +58,8 @@ Path to a single markdown file to convert to PDF. If you want to write your chan
 -p parameter is required, too.
 
 ### -p / --path
-Path to the wiki folder. If not provided, the current folder of the executable is used.
+Path to the wiki folder. If not provided, the current folder of the executable is used.  
+If you only want to convert a subfolder and have images, then you must provide the path to the attachments folder wtih --attachments-path. 
 
 ### --attachments-path
 Path to the .attachments folder.  If not provided, the .attachments is assumed to be located under the folder of the wiki (-p/--path).

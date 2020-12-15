@@ -1,0 +1,245 @@
+<html><head><meta http-equiv=Content-Type content="text/html; charset=utf-8"></head><style>body {
+    font-family: "Segoe UI Emoji", Tahoma, Geneva, Verdana, sans-serif;
+    font-size: 10pt;
+}
+
+h1 {
+    font-size: 25pt;
+    color: red;
+}
+
+h2 {
+    font-size: 20pt;
+    color: blue;
+}
+
+h3 {
+    font-size: 15pt;
+    color: green;
+}
+
+h4 {
+    font-size: 12pt;
+    color: pink;
+}
+
+img {
+    max-width: 100%;
+    max-height: 800px;
+}</style><h1>Admin Layout and Customization</h1><b>\Admin-Layout-and-Customization.md</b><a id="admin-layout-and-customization">&nbsp;</a><h1 id="admin-layout">Admin Layout</h1>
+<p>When the package is installed, a default admin layout is applied on all of the admin pages. Default Admin Layout now support Sidebar and Top Navigation, but only one can be enabled at a time. Default Admin Layout has the following configurations in the sampletoGlobalConfig table:</p>
+<p><strong>AdminLayout:</strong>
+This key is used to set the Default Layout page for Admin pages. The default value is:</p>
+<blockquote>
+<p>~/Areas/Admin/Views/Layouts/_AdminLayout.cshtml</p>
+</blockquote>
+<p><strong>AdminLogo:</strong>
+This key is used to set the Logo on the Admin pages. The default value is:</p>
+<blockquote>
+<p>/Areas/Admin/Content/Images/sample_logo.png</p>
+</blockquote>
+<p><strong>AdminName:</strong>
+This key is used to set the App Name on the Admin pages. The default value is:</p>
+<blockquote>
+<p>sampleto Admin Panel</p>
+</blockquote>
+<p><strong>EnableAdminSideBar:</strong>
+This key is used to enable/disable Sidebar on Admin on the Admin pages. The default value is:</p>
+<blockquote>
+<p>true</p>
+</blockquote>
+<h1 id="custom-admin-layout">Custom Admin Layout</h1>
+<p>There is an option to change the Layout for Admin pages and design it according to your Web Application. There are few things which you first need to set.</p>
+<p><strong>NOTE: The admin layout body is designed in Bootstrap 3. So, you must design your custom admin layout in Bootstrap 3.</strong></p>
+<h2 id="changing-layout-page">Changing Layout Page</h2>
+<p>To change the Layout page, you need to change the default Admin Layout. Change the value for Global Config: 'AdminLayout'. Set its value to the path of your new layout page.</p>
+<h2 id="admin-bundles">Admin Bundles</h2>
+<p>You should add the following CSS and Javascript bundles in your admin layout:</p>
+<h3 id="css-bundles">- CSS Bundles:</h3>
+<p>Add the following bundles in the header tag of your Layout page:</p>
+<pre><code class="language-cs">@Styles.Render(&quot;~/bundles/sampletoBootstrap3css&quot;)
+@Styles.Render(&quot;~/bundles/sampletocommoncss&quot;)
+@Styles.Render(&quot;~/bundles/sampletoSitecss&quot;)
+</code></pre>
+<h3 id="javscript-bundles">- Javscript Bundles:</h3>
+<p>Add the following bundles at the end of body tag in your Layout page:</p>
+<pre><code class="language-cs">@Scripts.Render(&quot;~/bundles/sampletocommonscripts&quot;)
+@Scripts.Render(&quot;~/bundles/sampletoBootstrap3js&quot;)
+@Scripts.Render(&quot;~/bundles/sampletoTemplateCommonscripts&quot;)
+</code></pre>
+<p>For more details, see the <a href="https://sample.visualstudio.com/sampleto%20Framework/_wiki/wikis/sampleto%20Documentation?pagePath=%2Fsampleto%20Framework%20Manual%2FBuilding%20an%20App%20with%20sampleto%20Framework%2FBundling%20and%20Optimization&amp;pageId=103&amp;wikiVersion=GBmaster">Bundles and Optimzation</a>.</p>
+<h2 id="admin-sections">Admin Sections</h2>
+<p>You should add the following CSS and Script sections in your admin layout:</p>
+<h3 id="css-section">- CSS Section:</h3>
+<p>Add the following section in the header tag of your Layout page:</p>
+<pre><code class="language-cs">@RenderSection(&quot;css&quot;, required: false)
+</code></pre>
+<h3 id="script-section">- Script Section:</h3>
+<p>Add the following section at the end of body tag in your Layout page:</p>
+<pre><code class="language-cs">@RenderSection(&quot;scripts&quot;, required: false)
+</code></pre>
+<h2 id="getting-logo-and-app-name">Getting Logo and App Name</h2>
+<p>To show the Logo and App Name, you have to get the following Global Configs from <a href="https://sample.visualstudio.com/sampleto%20Framework/_wiki/wikis/sampleto%20Documentation?pagePath=%2Fsampleto%20Framework%20Manual%2FBuilding%20an%20App%20with%20sampleto%20Framework%2FApplication%20Configurations&amp;pageId=18&amp;wikiVersion=GBmaster">sampleto Configuration Provider</a>.</p>
+<ol>
+<li>Admin Logo and App Name
+<ul>
+<li>'<em>AdminLogo</em>' will contain the Admin App Logo</li>
+<li>'<em>AdminName</em>' will contain the Admin App Name</li>
+</ul>
+</li>
+<li>Client Logo and App Name
+<ul>
+<li>'<em>ClientLogo</em>' will contain the Client Web App Logo</li>
+<li>'<em>ClientName</em>' will contain the Client Web App Name</li>
+</ul>
+</li>
+</ol>
+<p>Example:</p>
+<pre><code class="language-html">&lt;a class=&quot;navbar-brand&quot; href=&quot;/&quot;&gt;
+        @{
+            var logo = sampleto.Framework.Core.Config.ConfigurationProvider.GetConfig(&quot;AdminLogo&quot;);
+
+            if (string.IsNullOrEmpty(logo))
+            {
+                logo = &quot;/Areas/Admin/Content/sampleto/Images/sample_logo.png&quot;;
+            }
+
+            &lt;img onerror=&quot;this.onerror = null; this.src='/Areas/Admin/Content/sampleto/Images/sample_logo.png';&quot; src=&quot;@logo&quot; width=&quot;40&quot; alt=&quot;logo&quot; /&gt;
+
+            var clientName = sampleto.Framework.Core.Config.ConfigurationProvider.GetConfig(&quot;AdminName&quot;);
+
+            if (string.IsNullOrEmpty(clientName))
+            {
+                clientName = &quot;sampleto Framework Web&quot;;
+            }
+            &lt;span&gt;@clientName&lt;/span&gt;
+        }
+        
+    &lt;/a&gt;
+</code></pre>
+<h2 id="getting-navigations">Getting Navigations</h2>
+<h3 id="default-navigation-view">- Default Navigation View:</h3>
+<p>You can use the default navigations or create your own view for navigations. In order to use the default view, you must add the following line of code:</p>
+<pre><code class="language-cs">@Html.Action(&quot;GetMenuParital&quot;, &quot;Menu&quot;, new { menuTypeId = &quot;PRIMARY&quot;, viewName = &quot;~/Areas/Admin/Views/Shared/AdminLayout/_top_menu.cshtml&quot;, appId = @sampleto.Framework.Web.Constant.Constants.AdminAppId })
+</code></pre>
+<h3 id="custom-navigation-view">- Custom Navigation View:</h3>
+<p>In order to create your own view for navigation, you must follow these instructions:</p>
+<ol>
+<li>Create a Partial View and strongly bind it with IEnumerable of 'MenuItemvm':</li>
+</ol>
+<pre><code class="language-cs">@model IEnumerable&lt;sampleto.Framework.ViewModels.Navigation.MenuItemVm&gt;
+</code></pre>
+<ol start="2">
+<li>Design your Navigtion as per your design requirements.</li>
+<li>Use the following line of code inorder to show display your navigations:</li>
+</ol>
+<pre><code class="language-cs">@Html.Action(&quot;GetMenuParital&quot;, &quot;Menu&quot;, new { menuTypeId = &quot;PRIMARY&quot;, viewName = [Path_To_Your_Navigations_PartialView], appId = @sampleto.Framework.Web.Constant.Constants.AdminAppId })
+</code></pre>
+<h2 id="global-hidden-variables">Global Hidden Variables</h2>
+<p>There are few global variables which are needed on every admin page. These variables contain the Multilingual Texts in the form of the hidden field. These contain confirmation alert texts, buttons texts, etc. Add the following line of code at the start of body tag in your Layout page.</p>
+<pre><code class="language-cs">@Html.Partial(&quot;~/Areas/Admin/Views/Shared/AdminLayout/_top_global_vars.cshtml&quot;)
+</code></pre>
+<p>Following variables are included in the above partial view:</p>
+<table>
+<thead>
+<tr>
+<th>Input</th>
+<th>Usage (C#)</th>
+<th>Resource File</th>
+<th>en Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>&lt;input type=&quot;hidden&quot; id=&quot;NoneText&quot; value=&quot;@Global.NoneText&quot; /&gt;</code></td>
+<td>Global.NoneText</td>
+<td>Global.resx</td>
+<td>None</td>
+</tr>
+<tr>
+<td><code>&lt;input type=&quot;hidden&quot; id=&quot;NoDataFoundText&quot; value=&quot;@Global.NoDataFoundText&quot; /&gt;</code></td>
+<td>Global.NoDataFoundText</td>
+<td>Global.resx</td>
+<td>No Data found</td>
+</tr>
+<tr>
+<td><code>&lt;input type=&quot;hidden&quot; id=&quot;ActivateText&quot; value=&quot;@Global.ActivateText&quot; /&gt;</code></td>
+<td>Global.ActivateText</td>
+<td>Global.resx</td>
+<td>Activate</td>
+</tr>
+<tr>
+<td><code>&lt;input type=&quot;hidden&quot; id=&quot;DeactivateText&quot; value=&quot;@Global.DeactivateText&quot; /&gt;</code></td>
+<td>Global.DeactivateText</td>
+<td>Global.resx</td>
+<td>Deactivate</td>
+</tr>
+<tr>
+<td><code>&lt;input type=&quot;hidden&quot; id=&quot;ActiveText&quot; value=&quot;@Global.ActiveText&quot; /&gt;</code></td>
+<td>Global.ActiveText</td>
+<td>Global.resx</td>
+<td>Active</td>
+</tr>
+<tr>
+<td><code>&lt;input type=&quot;hidden&quot; id=&quot;InactiveText&quot; value=&quot;@Global.InActiveText&quot; /&gt;</code></td>
+<td>Global.InActiveText</td>
+<td>Global.resx</td>
+<td>Inactive</td>
+</tr>
+<tr>
+<td><code>&lt;input type=&quot;hidden&quot; id=&quot;EditText&quot; value=&quot;@Global.EditText&quot; /&gt;</code></td>
+<td>Global.EditText</td>
+<td>Global.resx</td>
+<td>Edit</td>
+</tr>
+<tr>
+<td><code>&lt;input type=&quot;hidden&quot; id=&quot;DeleteText&quot; value=&quot;@Global.DeleteText&quot; /&gt;</code></td>
+<td>Global.DeleteText</td>
+<td>Global.resx</td>
+<td>Delete</td>
+</tr>
+<tr>
+<td><code>&lt;input type=&quot;hidden&quot; id=&quot;ConfirmDeleteRecordText&quot; value=&quot;@Global.ConfirmDeleteRecordText&quot; /&gt;</code></td>
+<td>Global.ConfirmDeleteRecordText</td>
+<td>Global.resx</td>
+<td>Are you sure to Delete the selected record?</td>
+</tr>
+<tr>
+<td><code>&lt;input type=&quot;hidden&quot; id=&quot;ConfirmDeactivateRecordText&quot; value=&quot;@Global.ConfirmDeactivateRecordText&quot; /&gt;</code></td>
+<td>Global.ConfirmDeactivateRecordText</td>
+<td>Global.resx</td>
+<td>Are you sure to Deactive the selected record?</td>
+</tr>
+<tr>
+<td><code>&lt;input type=&quot;hidden&quot; id=&quot;ConfirmActivateRecordText&quot; value=&quot;@Global.ConfirmActivateRecordText&quot; /&gt;</code></td>
+<td>Global.ConfirmActivateRecordText</td>
+<td>Global.resx</td>
+<td>Are you sure to Activate the selected record?</td>
+</tr>
+<tr>
+<td><code>&lt;input type=&quot;hidden&quot; id=&quot;OperationFailedText&quot; value=&quot;@Messages.OperationFailedText&quot; /&gt;</code></td>
+<td>Messages.OperationFailedText</td>
+<td>Messages.resx</td>
+<td>Operation Failed</td>
+</tr>
+<tr>
+<td><code>&lt;input type=&quot;hidden&quot; id=&quot;OperationPerformedSuccessfullyText&quot; value=&quot;@Messages.OperationPerformedSuccessfullyText&quot; /&gt;</code></td>
+<td>Messages.OperationPerformedSuccessfullyText</td>
+<td>Messages.resx</td>
+<td>Operation Performed Successfully</td>
+</tr>
+<tr>
+<td><code>&lt;input type=&quot;hidden&quot; id=&quot;ConfirmClearLoginHistoryText&quot; value=&quot;@Messages.ConfirmClearLoginHistoryText&quot; /&gt;</code></td>
+<td>Messages.ConfirmClearLoginHistoryText</td>
+<td>Messages.resx</td>
+<td>Are you sure to clear Login History?</td>
+</tr>
+<tr>
+<td><code>&lt;input type=&quot;hidden&quot; id=&quot;MissingRequiredFields&quot; value=&quot;@Messages.MissingRequiredFields&quot; /&gt;</code></td>
+<td>Messages.MissingRequiredFields</td>
+<td>Messages.resx</td>
+<td>Validation Failed, Please Provide Required Fields</td>
+</tr>
+</tbody>
+</table>
+</html>
