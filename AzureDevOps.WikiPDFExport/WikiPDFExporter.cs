@@ -465,7 +465,7 @@ namespace azuredevops_export_wiki
             foreach (var orderFile in orderFiles)
             {
                 var orders = File.ReadAllLines(orderFile.FullName);
-                var relativePath = orderFile.Directory.FullName.Substring(directory.FullName.Length);
+                var relativePath = orderFile.Directory.FullName.Length > directory.FullName.Length ? orderFile.Directory.FullName.Substring(directory.FullName.Length) : "/";
                 foreach (var order in orders)
                 {
                     MarkdownFile mf = new MarkdownFile();
