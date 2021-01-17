@@ -20,6 +20,7 @@ using System.Globalization;
 using PuppeteerSharp;
 using System.Threading.Tasks;
 using azuredevops_export_wiki.MermaidContainer;
+using Markdig.Parsers;
 
 namespace azuredevops_export_wiki
 {
@@ -75,14 +76,15 @@ namespace azuredevops_export_wiki
                         {
                             new MarkdownFile() {
                                 AbsolutePath = filePath,
-                                RelativePath = relativePath
+                                RelativePath = relativePath,
+                                Level = 0 // root level
                             }
                         };
                     }
                     else
                     {
 
-                        files = ReadOrderFiles(_path);
+                        files = ReadOrderFiles(_path, 0); // root level
                     }
 
                     _telemetryClient.TrackEvent("Pages", null, new Dictionary<string, double>() { { "Pages", files.Count } });
@@ -293,6 +295,9 @@ namespace azuredevops_export_wiki
                     .UsePipeTables()
                     .UseEmojiAndSmiley()
                     .UseAdvancedExtensions();
+ 
+                // determine the correct nesting of pages and related chapters
+                pipelineBuilder.BlockParsers.Replace<HeadingBlockParser>(new OffsetHeadingBlockParser(mf.Level+1));
 
                 if (_options.ConvertMermaid)
                 {
@@ -363,7 +368,7 @@ namespace azuredevops_export_wiki
                         title.Replace(filenameEscape.Key, filenameEscape.Value);
                     }
 
-                    var heading = $"<h1>{title.ToString()}</h1>";
+                    var heading = $"<h{mf.Level + 1}>{title}</h{mf.Level + 1}>";
                     html = heading + html;
                 }
 
@@ -453,7 +458,7 @@ namespace azuredevops_export_wiki
             }
         }
 
-        private List<MarkdownFile> ReadOrderFiles(string path)
+        private List<MarkdownFile> ReadOrderFiles(string path, int level)
         {
             //read the .order file
             //if there is an entry and a folder with the same name, dive deeper
@@ -465,19 +470,22 @@ namespace azuredevops_export_wiki
             foreach (var orderFile in orderFiles)
             {
                 var orders = File.ReadAllLines(orderFile.FullName);
-                var relativePath = orderFile.Directory.FullName.Length > directory.FullName.Length ? orderFile.Directory.FullName.Substring(directory.FullName.Length) : "/";
+                var relativePath = orderFile.Directory.FullName.Length > directory.FullName.Length ?
+                    orderFile.Directory.FullName.Substring(directory.FullName.Length) :
+                    "/";
                 foreach (var order in orders)
                 {
                     MarkdownFile mf = new MarkdownFile();
                     mf.AbsolutePath = $"{orderFile.Directory.FullName}\\{order}.md";
                     mf.RelativePath = $"{relativePath}";
+                    mf.Level = level;
                     result.Add(mf);
 
                     var childPath = Path.Combine(orderFile.Directory.FullName, order);
                     if (Directory.Exists(childPath))
                     {
                         //recursion
-                        result.AddRange(ReadOrderFiles(childPath));
+                        result.AddRange(ReadOrderFiles(childPath, level + 1));
                     }
                 }
             }
@@ -518,6 +526,12 @@ namespace azuredevops_export_wiki
         {
             public string AbsolutePath;
             public string RelativePath;
+            public int Level;
+
+            public override string ToString()
+            {
+                return $"[{Level}] {AbsolutePath}";
+            }
         }
     }
 
