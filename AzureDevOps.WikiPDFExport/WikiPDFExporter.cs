@@ -288,7 +288,6 @@ namespace azuredevops_export_wiki
 
                 // remove scalings from image links, width & height: file.png =600x500
                 var regexImageScalings = @"\((.[^\)]*?[png|jpg|jpeg]) =(\d+)x(\d+)\)";
-                var match = Regex.Match(md, regexImageScalings);
                 md = Regex.Replace(md, regexImageScalings, @"($1){width=$2 height=$3}");
 
                 // remove scalings from image links, width only: file.png =600x
