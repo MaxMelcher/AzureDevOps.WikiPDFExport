@@ -13,6 +13,7 @@
             "args": [
                 "-v",
                 "-p..\\AzureDevOps.WikiPDFExport.Test\\Tests\\AzureDevOps.WikiPDFExport.wiki",
+//                "-s..\\AzureDevOps.WikiPDFExport.Test\\Tests\\AzureDevOps.WikiPDFExport.wiki\\AzureDevOps.WikiPDFExport\\TEST%2DPAGE.md",
 //                "--attachments-path=..\\AzureDevOps.WikiPDFExport.Test\\Tests\\AzureDevOps.WikiPDFExport.wiki\\.attachments\\",
                 "-h",
                 "-b",
@@ -33,7 +34,8 @@
                 //"-s..\\AzureDevOps.WikiPDFExport\\TEST%2DPAGE.md",
                 //"--mermaidjs-path=mermaid.min.js",
                 //"--chrome-path=c:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe",
-                //"--disableTelemetry"
+                //"--disableTelemetry",
+                "-m"
             ],
             "cwd": "${workspaceFolder}/AzureDevOps.WikiPDFExport",
             "console": "internalConsole",

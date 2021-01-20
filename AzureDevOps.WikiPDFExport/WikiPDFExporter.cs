@@ -412,11 +412,17 @@ namespace azuredevops_export_wiki
                         if (!string.IsNullOrEmpty(this._options.AttachmentsPath) && link.Url.StartsWith("/.attachments") || link.Url.StartsWith(".attachments"))
                         {
                             var linkUrl = link.Url.Split('/').Last();
+
+                            //urls could be encoded and contain spaces - they are then not found on disk
+                            linkUrl = HttpUtility.UrlDecode(linkUrl);
+                            
                             absPath = Path.GetFullPath(Path.Combine(this._options.AttachmentsPath, linkUrl));
                         }
                         else if (link.Url.StartsWith("/"))
                         {
-                            absPath = Path.GetFullPath(_path + link.Url);
+                            //urls could be encoded and contain spaces - they are then not found on disk
+                            var linkUrl = HttpUtility.UrlDecode(link.Url);
+                            absPath = Path.GetFullPath(_path + linkUrl);
                         }
                         else
                         {
