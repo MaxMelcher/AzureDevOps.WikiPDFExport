@@ -44,9 +44,6 @@ Help - outputs the parameters that can be used
 ### -o / --output
 The path to the export file including the filename, e.g. c:\export.pdf
 
-### -d / --date 
-The current date will be added to the footer
-
 ### -b / --breakPage
 For every wiki page a new page in the PDF will be created
 
