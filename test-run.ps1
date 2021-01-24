@@ -15,7 +15,7 @@ foreach($wiki in $wikis)
     Write-Output "Running: $($wiki.FullName)"
 
     #run the converter
-    $output = dotnet run --project ".\AzureDevOps.WikiPDFExport\azuredevops-export-wiki.csproj" -- -p $wiki.FullName -o ".\tests\$($wiki.Name).pdf" > $null
+    $output = dotnet run --project ".\AzureDevOps.WikiPDFExport\azuredevops-export-wiki.csproj" -- -p $wiki.FullName -o ".\tests\$($wiki.Name).pdf"
 
     #extrac the time
     $export = $output  | ? {$_ -match 'Export done in (\d+):(\d+):(\d+).(\d+)'}
@@ -25,7 +25,7 @@ foreach($wiki in $wikis)
     $seconds = $matches[3]
     $millis = $matches[4]
 
-    Write-Output "$wiki.Name: $($hours):$($minutes):$($seconds):$($millis)"
+    Write-Output "$($wiki.Name): $($hours):$($minutes):$($seconds):$($millis)"
 
     #persist the time for later comparision
     $obj = [PSCustomObject]@{
