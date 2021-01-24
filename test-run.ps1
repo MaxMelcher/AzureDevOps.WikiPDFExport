@@ -7,7 +7,7 @@ $wikis = Get-ChildItem -Recurse .\AzureDevOps.WikiPDFExport.Test\Tests -Depth 0 
 $results = @()
 
 #todo: read the previous result file to compare deltas
-#todo: find a way to compare pdfs to find differences
+#todo: find a way to compare pdfs to find differences, maybe https://github.com/vslavik/diff-pdf
 
 #iterate over each wiki in the test folder
 foreach($wiki in $wikis)
