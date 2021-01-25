@@ -303,9 +303,9 @@ namespace azuredevops_export_wiki
                     .UsePipeTables()
                     .UseEmojiAndSmiley()
                     .UseAdvancedExtensions();
- 
+
                 // determine the correct nesting of pages and related chapters
-                pipelineBuilder.BlockParsers.Replace<HeadingBlockParser>(new OffsetHeadingBlockParser(mf.Level+1));
+                pipelineBuilder.BlockParsers.Replace<HeadingBlockParser>(new OffsetHeadingBlockParser(mf.Level + 1));
 
                 if (_options.ConvertMermaid)
                 {
@@ -423,7 +423,7 @@ namespace azuredevops_export_wiki
 
                             //urls could be encoded and contain spaces - they are then not found on disk
                             linkUrl = HttpUtility.UrlDecode(linkUrl);
-                            
+
                             absPath = Path.GetFullPath(Path.Combine(this._options.AttachmentsPath, linkUrl));
                         }
                         else if (link.Url.StartsWith("/"))
@@ -489,6 +489,13 @@ namespace azuredevops_export_wiki
                     "/";
                 foreach (var order in orders)
                 {
+                    //skip empty lines
+                    if (string.IsNullOrEmpty(order))
+                    {
+                        continue;
+                        //todo add log entry that we skipped an empty line
+                    }
+
                     MarkdownFile mf = new MarkdownFile();
                     mf.AbsolutePath = $"{orderFile.Directory.FullName}\\{order}.md";
                     mf.RelativePath = $"{relativePath}";
