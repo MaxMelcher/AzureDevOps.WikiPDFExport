@@ -26,7 +26,7 @@ The tool currently supports the following:
 * Everything self-contained. Download the .exe file, run it, done.
 * Tool can be used as part of a build, see [BuildTask](AzureDevOps.WikiPDFExport/Build-Task.md)
 * Supports emoticons :) ⚠ ℹ
-* It is fast. A PDF with 160 pages is created in less than a second.
+* It is fast. A PDF with 160 pages is created in less than a second. 1000 pages in ~8 seconds.
 
 ## Requirements
 

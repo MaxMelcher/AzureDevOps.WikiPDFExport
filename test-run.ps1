@@ -15,7 +15,7 @@ foreach($wiki in $wikis)
     Write-Output "Running: $($wiki.FullName)"
 
     #run the converter
-    $output = dotnet run --project ".\AzureDevOps.WikiPDFExport\azuredevops-export-wiki.csproj" -- -p $wiki.FullName -o ".\tests\$($wiki.Name).pdf"
+    $output = dotnet run --project ".\AzureDevOps.WikiPDFExport\azuredevops-export-wiki.csproj" -- -p $wiki.FullName -o ".\tests\$($wiki.Name).pdf" --disableTelemetry
 
     #extrac the time
     $export = $output  | ? {$_ -match 'Export done in (\d+):(\d+):(\d+).(\d+)'}
