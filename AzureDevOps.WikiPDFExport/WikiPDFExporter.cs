@@ -35,13 +35,16 @@ namespace azuredevops_export_wiki
             _options = options;
 
             //initialize AppInsights
-            TelemetryConfiguration.Active.InstrumentationKey = "ba33d2f5-1137-446b-8624-3ad0af50a7be";
-            _telemetryClient = new TelemetryClient();
-
+            var config = TelemetryConfiguration.CreateDefault();
+            config.InstrumentationKey = "ba33d2f5-1137-446b-8624-3ad0af50a7be";
+            
             if (_options.DisableTelemetry)
             {
-                TelemetryConfiguration.Active.DisableTelemetry = true;
+                config.DisableTelemetry = true;
             }
+            _telemetryClient = new TelemetryClient(config);
+
+
         }
 
         public async Task Export()
@@ -167,6 +170,7 @@ namespace azuredevops_export_wiki
 
             if (!File.Exists(path))
             {
+                Log("CSS file does not exist", LogLevel.Warning);
                 return html;
             }
 
