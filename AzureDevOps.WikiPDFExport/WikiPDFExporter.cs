@@ -121,7 +121,7 @@ namespace azuredevops_export_wiki
 
                         if (string.IsNullOrEmpty(_options.ChromeExecutablePath))
                         {
-                            RevisionInfo revisionInfo = await new BrowserFetcher().DownloadAsync(BrowserFetcher.DefaultRevision);
+                            RevisionInfo revisionInfo = await new BrowserFetcher().DownloadAsync(BrowserFetcher.DefaultChromiumRevision);
                         }
 
                         var launchOptions = new LaunchOptions
