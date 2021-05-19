@@ -107,10 +107,10 @@ Disables the telemetry tracking, see [Telemetry](#telemetry)
 ## Limitations
 
 So far the following limitations are known:
-* TOC (Table of Contents) tag is not supported and will exported as tag
+* TOC (Table of Contents) tag is not supported and removed from the pdf.
 * The tool, sometimes shows an error "Qt: Could not initialize OLE (error 80010106)" - this can be ignored.
 * If headers are not formatted properly (#Header instead of # Header), they are rendered incorrectly. I might fix that in the future.
-* The tool lacks proper testing because I only have two wikis available
+* The tool lacks proper testing because I only have two realistic wikis available. Want to contribute one?
 
 ## License
 See [license](/AzureDevOps.WikiPDFExport/License.md)
