@@ -37,7 +37,7 @@ namespace azuredevops_export_wiki
             //initialize AppInsights
             var config = TelemetryConfiguration.CreateDefault();
             config.InstrumentationKey = "ba33d2f5-1137-446b-8624-3ad0af50a7be";
-            
+
             if (_options.DisableTelemetry)
             {
                 config.DisableTelemetry = true;
@@ -86,7 +86,6 @@ namespace azuredevops_export_wiki
                     }
                     else
                     {
-
                         files = ReadOrderFiles(_path, 0); // root level
                     }
 
@@ -272,7 +271,11 @@ namespace azuredevops_export_wiki
             Log("Converting Markdown to HTML");
             StringBuilder sb = new StringBuilder();
 
-
+            //setup the markdown pipeline to support tables
+            var pipelineBuilder = new MarkdownPipelineBuilder()
+                .UsePipeTables()
+                .UseEmojiAndSmiley()
+                .UseAdvancedExtensions();
 
             for (var i = 0; i < files.Count; i++)
             {
@@ -290,6 +293,9 @@ namespace azuredevops_export_wiki
 
                 var md = File.ReadAllText(file.FullName);
 
+                //replace Table of Content
+                md = RemoveTableOfContent(md);
+
                 // remove scalings from image links, width & height: file.png =600x500
                 var regexImageScalings = @"\((.[^\)]*?[png|jpg|jpeg]) =(\d+)x(\d+)\)";
                 md = Regex.Replace(md, regexImageScalings, @"($1){width=$2 height=$3}");
@@ -302,11 +308,7 @@ namespace azuredevops_export_wiki
                 regexImageScalings = @"\((.[^\)]*?[png|jpg|jpeg]) =x(\d+)\)";
                 md = Regex.Replace(md, regexImageScalings, @"($1){height=$2}");
 
-                //setup the markdown pipeline to support tables
-                var pipelineBuilder = new MarkdownPipelineBuilder()
-                    .UsePipeTables()
-                    .UseEmojiAndSmiley()
-                    .UseAdvancedExtensions();
+
 
                 // determine the correct nesting of pages and related chapters
                 pipelineBuilder.BlockParsers.Replace<HeadingBlockParser>(new OffsetHeadingBlockParser(mf.Level + 1));
@@ -405,6 +407,16 @@ namespace azuredevops_export_wiki
 
 
             return result;
+        }
+
+        private string RemoveTableOfContent(string document)
+        {
+            if (document.Contains("TOC"))
+            {
+                Log("Removing Table of contents [[_TOC_]] from pdf");
+                document = document.Replace("[[_TOC_]]", "");
+            }
+            return document;
         }
 
         public void CorrectLinksAndImages(MarkdownObject document, FileInfo file, MarkdownFile mf)
