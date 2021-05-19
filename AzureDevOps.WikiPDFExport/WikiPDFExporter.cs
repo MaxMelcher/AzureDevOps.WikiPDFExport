@@ -147,6 +147,7 @@ namespace azuredevops_export_wiki
                     ConvertHTMLToPDF(html);
 
                     Console.ForegroundColor = ConsoleColor.Green;
+                    Console.WriteLine();
                     Console.WriteLine($"Export done in {timer.Elapsed}");
 
                     _telemetryClient.StopOperation(operation);
@@ -258,11 +259,11 @@ namespace azuredevops_export_wiki
         //[PAGE] and [PAGETO] do not need to be replaced because they are handled by the PDF converter
         private string ReplacePageParameters(string input)
         {
-            Log("Replacing Page Parameters", LogLevel.Debug);
-            Log($"\tInput: {input}");
+            Log("Replacing Page Parameters", LogLevel.Debug, 1);
+            Log($"Input: {input}", LogLevel.Debug, 1);
             input = input.Replace("[DATE]", DateTime.Now.ToString("g"), true, CultureInfo.InvariantCulture);
 
-            Log($"\tOutput: {input}", LogLevel.Debug);
+            Log($"Output: {input}", LogLevel.Debug, 1);
             return input;
         }
 
@@ -283,12 +284,12 @@ namespace azuredevops_export_wiki
                 var mf = files[i];
                 var file = new FileInfo(files[i].AbsolutePath);
 
-                Log($"parsing file {file.Name}", LogLevel.Debug);
+                Log($"{file.Name}", LogLevel.Information, 1);
                 var htmlfile = file.FullName.Replace(".md", ".html");
 
                 if (!File.Exists(file.FullName))
                 {
-                    Log($"File {file.FullName} specified in the order file was not found and will be skipped!", LogLevel.Error);
+                    Log($"File {file.FullName} specified in the order file was not found and will be skipped!", LogLevel.Error, 1);
                     continue;
                 }
 
@@ -346,7 +347,7 @@ namespace azuredevops_export_wiki
 
                 var anchor = $"<a id=\"{anchorPath}\">&nbsp;</a>";
 
-                Log($"\tAnchor: {anchorPath}");
+                Log($"Anchor: {anchorPath}", LogLevel.Information, 3);
 
                 html = anchor + html;
 
@@ -390,14 +391,16 @@ namespace azuredevops_export_wiki
                     //if not one the last page
                     if (i + 1 < files.Count)
                     {
-                        Log("Adding new page to PDF");
+                        Log("----------------------", LogLevel.Information);
+                        Log("Adding new page to PDF", LogLevel.Information);
+                        Log("----------------------", LogLevel.Information);
                         html = "<div style='page-break-after: always;'>" + html + "</div>";
                     }
                 }
 
                 if (_options.Debug)
                 {
-                    Log($"html:\n{html}");
+                    Log($"html:\n{html}", LogLevel.Debug, 1);
                 }
                 sb.Append(html);
             }
@@ -411,7 +414,7 @@ namespace azuredevops_export_wiki
         {
             if (document.Contains("TOC"))
             {
-                Log("Removing Table of contents [[_TOC_]] from pdf");
+                Log("Removing Table of contents [[_TOC_]] from pdf", LogLevel.Warning, 2);
                 document = document.Replace("[[_TOC_]]", "");
             }
             return document;
@@ -419,7 +422,7 @@ namespace azuredevops_export_wiki
 
         public void CorrectLinksAndImages(MarkdownObject document, FileInfo file, MarkdownFile mf)
         {
-            Log("Correcting Links and Images");
+            Log("Correcting Links and Images", LogLevel.Information, 2);
             // walk the document node tree and replace relative image links
             // and relative links to markdown pages
             foreach (var link in document.Descendants().OfType<LinkInline>())
@@ -477,7 +480,7 @@ namespace azuredevops_export_wiki
                             relPath = relPath.Replace("\\", "");
                             relPath = relPath.Replace(".md", "");
                             relPath = relPath.ToLower();
-                            Log($"\tMarkdown link: {relPath}");
+                            Log($"Markdown link: {relPath}", LogLevel.Information, 2);
                             link.Url = $"#{relPath}";
                         }
                     }
@@ -491,16 +494,23 @@ namespace azuredevops_export_wiki
             //read the .order file
             //if there is an entry and a folder with the same name, dive deeper
             var directory = new DirectoryInfo(Path.GetFullPath(path));
-            Log($"Reading .order file in directory {directory.Name}");
+            Log($"Reading .order file in directory {path}");
             var orderFiles = directory.GetFiles(".order", SearchOption.TopDirectoryOnly);
+
+            if (orderFiles.Count() > 0)
+            { Log("Order file found", LogLevel.Debug, 1); }
 
             var result = new List<MarkdownFile>();
             foreach (var orderFile in orderFiles)
             {
                 var orders = File.ReadAllLines(orderFile.FullName);
+                { Log($"Pages: {orders.Count()}", LogLevel.Information, 2); }
                 var relativePath = orderFile.Directory.FullName.Length > directory.FullName.Length ?
                     orderFile.Directory.FullName.Substring(directory.FullName.Length) :
                     "/";
+
+                
+
                 foreach (var order in orders)
                 {
                     //skip empty lines
@@ -516,6 +526,8 @@ namespace azuredevops_export_wiki
                     mf.Level = level;
                     result.Add(mf);
 
+                    { Log($"Adding page: {mf.AbsolutePath}", LogLevel.Information, 2); }
+
                     var childPath = Path.Combine(orderFile.Directory.FullName, order);
                     if (Directory.Exists(childPath))
                     {
@@ -528,23 +540,24 @@ namespace azuredevops_export_wiki
             return result;
         }
 
-        private void Log(string msg, LogLevel logLevel = LogLevel.Information)
+        private void Log(string msg, LogLevel logLevel = LogLevel.Information, int indent = 0)
         {
+            var indentString = new string(' ', indent * 2);
             if (_options.Debug && logLevel == LogLevel.Debug)
             {
-                Console.WriteLine(msg);
+                Console.WriteLine(indentString + msg);
             }
 
             if (_options.Verbose && logLevel == LogLevel.Information)
             {
-                Console.WriteLine(msg);
+                Console.WriteLine(indentString + msg);
             }
 
             if (logLevel == LogLevel.Warning)
             {
                 var color = Console.ForegroundColor;
                 Console.ForegroundColor = ConsoleColor.Yellow;
-                Console.WriteLine($"WARN: {msg}");
+                Console.WriteLine(indentString + $"WARN: {msg}");
                 Console.ForegroundColor = color;
             }
 
@@ -552,7 +565,7 @@ namespace azuredevops_export_wiki
             {
                 var color = Console.ForegroundColor;
                 Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine($"ERR: {msg}");
+                Console.WriteLine(indentString + $"ERR: {msg}");
                 Console.ForegroundColor = color;
             }
         }
