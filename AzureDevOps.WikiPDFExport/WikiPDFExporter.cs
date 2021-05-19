@@ -275,7 +275,8 @@ namespace azuredevops_export_wiki
             var pipelineBuilder = new MarkdownPipelineBuilder()
                 .UsePipeTables()
                 .UseEmojiAndSmiley()
-                .UseAdvancedExtensions();
+                .UseAdvancedExtensions()
+                .UseYamlFrontMatter();
 
             for (var i = 0; i < files.Count; i++)
             {
@@ -307,8 +308,6 @@ namespace azuredevops_export_wiki
                 // remove scalings from image links, height only: file.png =x600
                 regexImageScalings = @"\((.[^\)]*?[png|jpg|jpeg]) =x(\d+)\)";
                 md = Regex.Replace(md, regexImageScalings, @"($1){height=$2}");
-
-
 
                 // determine the correct nesting of pages and related chapters
                 pipelineBuilder.BlockParsers.Replace<HeadingBlockParser>(new OffsetHeadingBlockParser(mf.Level + 1));
@@ -404,7 +403,6 @@ namespace azuredevops_export_wiki
             }
 
             var result = sb.ToString();
-
 
             return result;
         }
