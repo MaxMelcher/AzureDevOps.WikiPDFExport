@@ -87,5 +87,8 @@ namespace azuredevops_export_wiki
 
         [Option("disableTelemetry", Required = false, HelpText = "Disable telemetry - page count and runtime are collected to detect performance degradation")]
         public bool DisableTelemetry { get; set; }
+
+        [Option("open", Required = false, HelpText = "Opens the PDF after conversion")]
+        public bool Open { get; set; }
     }
 }

@@ -93,11 +93,6 @@ namespace azuredevops_export_wiki
 
                     var html = ConvertMarkdownToHTML(files);
 
-                    if (!string.IsNullOrEmpty(_options.CSS))
-                    {
-                        html = AddCssStyles(html);
-                    }
-
                     var htmlStart = "<html>";
                     var htmlEnd = "</html>";
                     var head = "<head><meta http-equiv=Content-Type content=\"text/html; charset=utf-8\"></head>";
@@ -144,7 +139,7 @@ namespace azuredevops_export_wiki
                         File.WriteAllText(htmlPath, html);
                     }
 
-                    ConvertHTMLToPDF(html);
+                    var path = ConvertHTMLToPDF(html);
 
                     Console.ForegroundColor = ConsoleColor.Green;
                     Console.WriteLine();
@@ -152,6 +147,15 @@ namespace azuredevops_export_wiki
 
                     _telemetryClient.StopOperation(operation);
                     _telemetryClient.Flush();
+
+                    if (_options.Open)
+                    {
+                        Process fileopener = new Process();
+                        fileopener.StartInfo.FileName = "explorer";
+                        fileopener.StartInfo.Arguments = "\"" + path + "\"";
+                        fileopener.Start();
+                    }
+
                     Thread.Sleep(TimeSpan.FromSeconds(5));
                 }
             }
@@ -164,27 +168,7 @@ namespace azuredevops_export_wiki
             }
         }
 
-        private string AddCssStyles(string html)
-        {
-            var path = Path.GetFullPath(_options.CSS);
-
-            if (!File.Exists(path))
-            {
-                Log("CSS file does not exist", LogLevel.Warning);
-                return html;
-            }
-
-            var styles = File.ReadAllText(path);
-
-            var start = $"<style>";
-            var stop = $"</style>";
-
-            html = start + styles + stop + html;
-
-            return html;
-        }
-
-        private void ConvertHTMLToPDF(string html)
+        private string ConvertHTMLToPDF(string html)
         {
             Log("Converting HTML to PDF");
             Log("Ignore errors like 'Qt: Could not initialize OLE (error 80010106)'", LogLevel.Warning);
@@ -230,6 +214,13 @@ namespace azuredevops_export_wiki
                 footerSettings.HtmUrl = _options.FooterUrl;
             }
 
+            var cssPath = Path.GetFullPath(_options.CSS);
+
+            if (!File.Exists(cssPath))
+            {
+                Log($"CSS file does not exist at path {cssPath}", LogLevel.Warning);
+            }
+
             var doc = new HtmlToPdfDocument()
             {
                 GlobalSettings = {
@@ -243,7 +234,10 @@ namespace azuredevops_export_wiki
                     new ObjectSettings() {
                         PagesCount = true,
                         HtmlContent = html,
-                        WebSettings = { DefaultEncoding = "utf-8" },
+                        WebSettings = {
+                            DefaultEncoding = "utf-8",
+                            UserStyleSheet = cssPath
+                         },
                         HeaderSettings = headerSettings,
                         FooterSettings = footerSettings,
                         UseLocalLinks = true
@@ -253,6 +247,7 @@ namespace azuredevops_export_wiki
 
             converter.Convert(doc);
             Log($"PDF created at: {output}");
+            return output;
         }
 
         //Replacing page parameters with dynamic values
@@ -509,7 +504,7 @@ namespace azuredevops_export_wiki
                     orderFile.Directory.FullName.Substring(directory.FullName.Length) :
                     "/";
 
-                
+
 
                 foreach (var order in orders)
                 {

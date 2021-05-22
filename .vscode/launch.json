@@ -16,12 +16,12 @@
 //                "-p..\\AzureDevOps.WikiPDFExport.Test\\Tests\\Azure-Platform-Design",
 //                "-p..\\AzureDevOps.WikiPDFExport.Test\\Tests\\1k",
 //                "-s..\\AzureDevOps.WikiPDFExport.Test\\Tests\\Test-Emoticon\\emoji.md",
-                "--attachments-path=..\\AzureDevOps.WikiPDFExport.Test\\Tests\\Azure-Platform-Design\\.attachments\\",
+                "--attachments-path=..\\AzureDevOps.WikiPDFExport.Test\\Tests\\AzureDevOps.WikiPDFExport.wiki\\.attachments\\",
                 "-h",
                 "-b",
 //              "-m",
-                "--debug",
-            //    "--pathToHeading",
+              "--debug",
+            //  "--pathToHeading",
                 "--header-left=LEFT page: [page] of [topage]",
                 "--header-center=CENTER [section]",
                 "--header-right=RIGHT [date]",
@@ -29,6 +29,7 @@
                 "--footer-center=CENTER [DATE]",
                 "--footer-right=RIGHT page: [page] of [topage]",
                 "--css=..\\devopswikistyle.css",
+                "--open",
                 //"--footer-hide-line"
                 //"--footer-url=C:\\Git\\AzureDevOps.WikiPDFExport\\AzureDevOps.WikiPDFExport\\bin\\Debug\\netcoreapp3.1\\example-footer.html",
                 //"--header-url=C:\\Git\\AzureDevOps.WikiPDFExport\\AzureDevOps.WikiPDFExport\\bin\\Debug\\netcoreapp3.1\\example-header.html"
@@ -37,7 +38,7 @@
                 //"--mermaidjs-path=mermaid.min.js",
                 //"--chrome-path=c:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe",
                 //"--disableTelemetry",
-                "-m"
+                //"-m"
             ],
             "cwd": "${workspaceFolder}/AzureDevOps.WikiPDFExport",
             "console": "internalConsole",
