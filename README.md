@@ -38,8 +38,8 @@ The download is available [here](https://github.com/MaxMelcher/AzureDevOps.WikiP
 
 ## Configuration Options
 
-### -h / --help
-Help - outputs the parameters that can be used
+### --help
+Help - outputs all the flags/parameters
 
 ### -o / --output
 The path to the export file including the filename, e.g. c:\export.pdf
@@ -105,7 +105,6 @@ Headers and footers can be added to the document by the --header-* and
 Disables the telemetry tracking, see [Telemetry](#telemetry)
 ### --open
 Opens the PFD file after conversion. Great for development, not great in a build task.
-
 ### --filter
 Filters the pages depending on the page [yaml tags](https://docs.microsoft.com/en-us/azure/devops/project/wiki/wiki-markdown-guidance?view=azure-devops#yaml-tags).
 
