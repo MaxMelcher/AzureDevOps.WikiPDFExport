@@ -216,11 +216,20 @@ namespace azuredevops_export_wiki
                 footerSettings.HtmUrl = _options.FooterUrl;
             }
 
-            var cssPath = Path.GetFullPath(_options.CSS);
 
-            if (!File.Exists(cssPath))
+            var cssPath = "";
+            if (string.IsNullOrEmpty(_options.CSS))
             {
-                Log($"CSS file does not exist at path {cssPath}", LogLevel.Warning);
+                cssPath = "devopswikistyle.css";
+                Log("No CSS specified, using devopswikistyle.css", LogLevel.Information, 2);
+            }
+            else
+            {
+                cssPath = Path.GetFullPath(_options.CSS);
+                if (!File.Exists(cssPath))
+                {
+                    Log($"CSS file does not exist at path {cssPath}", LogLevel.Warning);
+                }
             }
 
             var doc = new HtmlToPdfDocument()
