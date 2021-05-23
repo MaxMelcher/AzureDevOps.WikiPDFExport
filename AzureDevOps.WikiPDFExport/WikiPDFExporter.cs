@@ -21,6 +21,8 @@ using PuppeteerSharp;
 using System.Threading.Tasks;
 using azuredevops_export_wiki.MermaidContainer;
 using Markdig.Parsers;
+using Markdig.Extensions.Yaml;
+using Markdig.Helpers;
 
 namespace azuredevops_export_wiki
 {
@@ -318,6 +320,19 @@ namespace azuredevops_export_wiki
                 //parse the markdown document so we can alter it later
                 var document = (MarkdownObject)Markdown.Parse(md, pipeline);
 
+                if (!string.IsNullOrEmpty(_options.Filter))
+                {
+                    if (!PageMatchesFilter(document))
+                    {
+                        Log("Page does not have correct tags - skip", LogLevel.Information, 3);
+                        continue;
+                    }
+                    else
+                    {
+                        Log("Page tags match the provided filter", LogLevel.Information, 3);
+                    }
+                }
+
                 //adjust the links
                 CorrectLinksAndImages(document, file, mf);
 
@@ -403,6 +418,66 @@ namespace azuredevops_export_wiki
             var result = sb.ToString();
 
             return result;
+        }
+
+        private bool PageMatchesFilter(MarkdownObject document)
+        {
+            if (!string.IsNullOrEmpty(_options.Filter))
+            {
+                Log($"Filter provided: {_options.Filter}", LogLevel.Information, 2);
+
+                var filters = _options.Filter.Split(",");
+                var frontmatter = document.Descendants<YamlFrontMatterBlock>().FirstOrDefault();
+
+                if (frontmatter == null)
+                {
+                    Log($"Page has no frontmatter tags", LogLevel.Information, 2);
+                    return false;
+                }
+
+                var frontmatterTags = new List<string>();
+                var lastTag = "";
+                foreach (StringLine frontmatterline in frontmatter.Lines)
+                {
+
+                    var splice = frontmatterline.Slice.ToString();
+                    var split = splice.Split(":");
+
+                    //title:test or <empty>:test2 or tags:<empty>
+                    if (split.Length == 2)
+                    {
+                        //title:
+                        if (string.IsNullOrEmpty(split[1]))
+                        {
+                            lastTag = split[0].Trim();
+                        }
+                        //title:test
+                        else if (!string.IsNullOrEmpty(split[0]))
+                        {
+                            frontmatterTags.Add($"{split[0].Trim()}:{split[1].Trim()}");
+                        }
+                        //:test2
+                        else
+                        {
+                            frontmatterTags.Add($"{lastTag}:{split[1].Trim()}");
+                        }
+                    }
+                    else if (split.Length == 1 && !string.IsNullOrEmpty(split[0]))
+                    {
+                        frontmatterTags.Add($"{lastTag}:{split[0].Trim().Substring(2)}");
+                    }
+                }
+
+                foreach (var filter in filters)
+                {
+                    if (frontmatterTags.Contains(filter, StringComparer.OrdinalIgnoreCase))
+                    {
+                        return true;
+                    }
+                }
+                return false;
+            }
+            return true;
         }
 
         private string RemoveTableOfContent(string document)
