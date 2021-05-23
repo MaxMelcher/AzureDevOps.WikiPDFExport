@@ -4,7 +4,7 @@
     <OutputType>Exe</OutputType>
     <TargetFramework>net5.0</TargetFramework>
     <RootNamespace>azuredevops_export_wiki</RootNamespace>
-    <PublishSingleFile>true</PublishSingleFile>
+    <PublishSingleFile>false</PublishSingleFile>
     <SelfContained>false</SelfContained>
     <RuntimeIdentifier>win-x64</RuntimeIdentifier>
     <PublishTrimmed>false</PublishTrimmed>
@@ -25,6 +25,10 @@
     <Content Include="mermaid.min.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <TargetPath>mermaid.min.js</TargetPath>
+    </Content>
+    <Content Include="devopswikistyle.css">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <TargetPath>devopswikistyle.css</TargetPath>
     </Content>
   </ItemGroup>
 

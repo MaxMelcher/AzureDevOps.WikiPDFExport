@@ -1,4 +1,4 @@
-## Quickstart
+## 🏎 Quickstart
 This tool exports a Azure DevOps wiki as PDF. Therefore, you need to git clone the target wiki to a computer. You can get the clone link of the wiki in the top right of the wiki homepage:
 ![Clone a wiki](images/CloneWiki.png)
 
@@ -16,7 +16,7 @@ Launched without parameters, the tool will detect all wiki files next to it and 
 
 If you need more control over the output, please see the Configuration Options below or by launching the tool with --help parameter.
 
-## Features
+## 💪 Features
 
 The tool currently supports the following:
 * Export all wiki pages (and sub pages) in the correct order including styles and formatting.
@@ -28,15 +28,16 @@ The tool currently supports the following:
 * Supports emoticons :) ⚠ ℹ
 * It is fast. A PDF with 160 pages is created in less than a second. 1000 pages in ~8 seconds.
 
-## Requirements
+## 🛰 Requirements
 
-The tool is developed as .NET Core 2.2 application, therefore you need to have the runtime installed. Download is available [here](https://dotnet.microsoft.com/download).
+The tool is developed as .NET 5 application, therefore you need to have the runtime installed. Download is available [here](https://dotnet.microsoft.com/download).
+Currently it requires a x64 runtime.
 
-## Download
+## 🔽 Download
 
 The download is available [here](https://github.com/MaxMelcher/AzureDevOps.WikiPDFExport/releases)
 
-## Configuration Options
+## ⚙ Configuration Options
 
 ### --help
 Help - outputs all the flags/parameters
@@ -108,7 +109,7 @@ Opens the PFD file after conversion. Great for development, not great in a build
 ### --filter
 Filters the pages depending on the page [yaml tags](https://docs.microsoft.com/en-us/azure/devops/project/wiki/wiki-markdown-guidance?view=azure-devops#yaml-tags).
 
-## Limitations
+## 😲 Limitations
 
 So far the following limitations are known:
 * TOC (Table of Contents) tag is not supported and removed from the pdf.
@@ -116,16 +117,16 @@ So far the following limitations are known:
 * If headers are not formatted properly (#Header instead of # Header), they are rendered incorrectly. I might fix that in the future.
 * The tool lacks proper testing because I only have two realistic wikis available. Want to contribute one?
 
-## License
+## ⚖ License
 See [license](/AzureDevOps.WikiPDFExport/License.md)
 
-## Telemetry
+## 🎯 Telemetry
 The tool uses Application Insights for basic telemetry:
 - The duration of the export and the count of wiki pages is tracked and submitted to Azure. 
 - In the case of an error, the exception is submitted. 
 - No wiki data/content is submitted.
 
-## Thanks
+## ♥ Thanks
 
 In this tool uses open source libraries that do the actual work - I just combined them to get the export as PDF:
 1. [CommandLineParser](https://github.com/commandlineparser/commandline) to parse the command line
