@@ -103,6 +103,11 @@ Headers and footers can be added to the document by the --header-* and
 
 ### --disableTelemetry
 Disables the telemetry tracking, see [Telemetry](#telemetry)
+### --open
+Opens the PFD file after conversion. Great for development, not great in a build task.
+
+### --filter
+Filters the pages depending on the page [yaml tags](https://docs.microsoft.com/en-us/azure/devops/project/wiki/wiki-markdown-guidance?view=azure-devops#yaml-tags).
 
 ## Limitations
 

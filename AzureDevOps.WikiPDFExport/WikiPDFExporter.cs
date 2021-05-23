@@ -21,6 +21,8 @@ using PuppeteerSharp;
 using System.Threading.Tasks;
 using azuredevops_export_wiki.MermaidContainer;
 using Markdig.Parsers;
+using Markdig.Extensions.Yaml;
+using Markdig.Helpers;
 
 namespace azuredevops_export_wiki
 {
@@ -93,11 +95,6 @@ namespace azuredevops_export_wiki
 
                     var html = ConvertMarkdownToHTML(files);
 
-                    if (!string.IsNullOrEmpty(_options.CSS))
-                    {
-                        html = AddCssStyles(html);
-                    }
-
                     var htmlStart = "<html>";
                     var htmlEnd = "</html>";
                     var head = "<head><meta http-equiv=Content-Type content=\"text/html; charset=utf-8\"></head>";
@@ -144,7 +141,7 @@ namespace azuredevops_export_wiki
                         File.WriteAllText(htmlPath, html);
                     }
 
-                    ConvertHTMLToPDF(html);
+                    var path = ConvertHTMLToPDF(html);
 
                     Console.ForegroundColor = ConsoleColor.Green;
                     Console.WriteLine();
@@ -152,6 +149,15 @@ namespace azuredevops_export_wiki
 
                     _telemetryClient.StopOperation(operation);
                     _telemetryClient.Flush();
+
+                    if (_options.Open)
+                    {
+                        Process fileopener = new Process();
+                        fileopener.StartInfo.FileName = "explorer";
+                        fileopener.StartInfo.Arguments = "\"" + path + "\"";
+                        fileopener.Start();
+                    }
+
                     Thread.Sleep(TimeSpan.FromSeconds(5));
                 }
             }
@@ -164,27 +170,7 @@ namespace azuredevops_export_wiki
             }
         }
 
-        private string AddCssStyles(string html)
-        {
-            var path = Path.GetFullPath(_options.CSS);
-
-            if (!File.Exists(path))
-            {
-                Log("CSS file does not exist", LogLevel.Warning);
-                return html;
-            }
-
-            var styles = File.ReadAllText(path);
-
-            var start = $"<style>";
-            var stop = $"</style>";
-
-            html = start + styles + stop + html;
-
-            return html;
-        }
-
-        private void ConvertHTMLToPDF(string html)
+        private string ConvertHTMLToPDF(string html)
         {
             Log("Converting HTML to PDF");
             Log("Ignore errors like 'Qt: Could not initialize OLE (error 80010106)'", LogLevel.Warning);
@@ -230,6 +216,13 @@ namespace azuredevops_export_wiki
                 footerSettings.HtmUrl = _options.FooterUrl;
             }
 
+            var cssPath = Path.GetFullPath(_options.CSS);
+
+            if (!File.Exists(cssPath))
+            {
+                Log($"CSS file does not exist at path {cssPath}", LogLevel.Warning);
+            }
+
             var doc = new HtmlToPdfDocument()
             {
                 GlobalSettings = {
@@ -243,7 +236,10 @@ namespace azuredevops_export_wiki
                     new ObjectSettings() {
                         PagesCount = true,
                         HtmlContent = html,
-                        WebSettings = { DefaultEncoding = "utf-8" },
+                        WebSettings = {
+                            DefaultEncoding = "utf-8",
+                            UserStyleSheet = cssPath
+                         },
                         HeaderSettings = headerSettings,
                         FooterSettings = footerSettings,
                         UseLocalLinks = true
@@ -253,6 +249,7 @@ namespace azuredevops_export_wiki
 
             converter.Convert(doc);
             Log($"PDF created at: {output}");
+            return output;
         }
 
         //Replacing page parameters with dynamic values
@@ -322,6 +319,19 @@ namespace azuredevops_export_wiki
 
                 //parse the markdown document so we can alter it later
                 var document = (MarkdownObject)Markdown.Parse(md, pipeline);
+
+                if (!string.IsNullOrEmpty(_options.Filter))
+                {
+                    if (!PageMatchesFilter(document))
+                    {
+                        Log("Page does not have correct tags - skip", LogLevel.Information, 3);
+                        continue;
+                    }
+                    else
+                    {
+                        Log("Page tags match the provided filter", LogLevel.Information, 3);
+                    }
+                }
 
                 //adjust the links
                 CorrectLinksAndImages(document, file, mf);
@@ -408,6 +418,66 @@ namespace azuredevops_export_wiki
             var result = sb.ToString();
 
             return result;
+        }
+
+        private bool PageMatchesFilter(MarkdownObject document)
+        {
+            if (!string.IsNullOrEmpty(_options.Filter))
+            {
+                Log($"Filter provided: {_options.Filter}", LogLevel.Information, 2);
+
+                var filters = _options.Filter.Split(",");
+                var frontmatter = document.Descendants<YamlFrontMatterBlock>().FirstOrDefault();
+
+                if (frontmatter == null)
+                {
+                    Log($"Page has no frontmatter tags", LogLevel.Information, 2);
+                    return false;
+                }
+
+                var frontmatterTags = new List<string>();
+                var lastTag = "";
+                foreach (StringLine frontmatterline in frontmatter.Lines)
+                {
+
+                    var splice = frontmatterline.Slice.ToString();
+                    var split = splice.Split(":");
+
+                    //title:test or <empty>:test2 or tags:<empty>
+                    if (split.Length == 2)
+                    {
+                        //title:
+                        if (string.IsNullOrEmpty(split[1]))
+                        {
+                            lastTag = split[0].Trim();
+                        }
+                        //title:test
+                        else if (!string.IsNullOrEmpty(split[0]))
+                        {
+                            frontmatterTags.Add($"{split[0].Trim()}:{split[1].Trim()}");
+                        }
+                        //:test2
+                        else
+                        {
+                            frontmatterTags.Add($"{lastTag}:{split[1].Trim()}");
+                        }
+                    }
+                    else if (split.Length == 1 && !string.IsNullOrEmpty(split[0]))
+                    {
+                        frontmatterTags.Add($"{lastTag}:{split[0].Trim().Substring(2)}");
+                    }
+                }
+
+                foreach (var filter in filters)
+                {
+                    if (frontmatterTags.Contains(filter, StringComparer.OrdinalIgnoreCase))
+                    {
+                        return true;
+                    }
+                }
+                return false;
+            }
+            return true;
         }
 
         private string RemoveTableOfContent(string document)
@@ -509,7 +579,7 @@ namespace azuredevops_export_wiki
                     orderFile.Directory.FullName.Substring(directory.FullName.Length) :
                     "/";
 
-                
+
 
                 foreach (var order in orders)
                 {
