@@ -13,7 +13,7 @@ Using Azure DevOps WikiPDFExport as build task is straightforward.
 ```
 #Download url to the export tool
 #!!! Update the url to the latest version!!!
-$url = "https://dev.azure.com/mmelcher/8036eca1-fd9e-4c0f-8bef-646b32fbda0b/_apis/git/repositories/e08d1ada-7794-4b89-a3ea-cb64a26683c3/Items?path=%2Fazuredevops-export-wiki.exe&versionDescriptor%5BversionOptions%5D=0&versionDescriptor%5BversionType%5D=0&versionDescriptor%5Bversion%5D=master&download=true&resolveLfs=true&%24format=octetStream&api-version=5.0-preview.1"
+$url = "https://github.com/MaxMelcher/AzureDevOps.WikiPDFExport/releases/download/v3.0.0/azuredevops-export-wiki.exe"
 
 #filename of the tool
 $output = "azuredevops-export-wiki.exe"
