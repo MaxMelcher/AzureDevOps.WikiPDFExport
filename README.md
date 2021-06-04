@@ -102,6 +102,12 @@ Headers and footers can be added to the document by the --header-* and
    * [sitepage]   Replaced by the number of the page in the current site being converted
    * [sitepages]  Replaced by the number of pages in the current site being converted
 
+### --header-url, --footer-url
+Provide a path to html files that will be added as header and footer. See [example-footer.html](example-footer.html), [example-header.html](example-header.html)
+
+### --HideHeaderLine, --hideFooterLine
+Removes the horizontal line in the header or footer. 
+
 ### --disableTelemetry
 Disables the telemetry tracking, see [Telemetry](#telemetry)
 ### --open
