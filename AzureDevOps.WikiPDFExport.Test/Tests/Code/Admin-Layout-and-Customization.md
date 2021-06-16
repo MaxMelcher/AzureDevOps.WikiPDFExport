@@ -1,3 +1,13 @@
+# Math
+
+Area of a circle is $\pi r^2$
+
+And, the area of a triangle is:
+
+$$
+A_{triangle}=\frac{1}{2}({b}\cdot{h})
+$$
+
 # Admin Layout
 When the package is installed, a default admin layout is applied on all of the admin pages. Default Admin Layout now support Sidebar and Top Navigation, but only one can be enabled at a time. Default Admin Layout has the following configurations in the sampletoGlobalConfig table:
 

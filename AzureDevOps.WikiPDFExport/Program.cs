@@ -76,6 +76,9 @@ namespace azuredevops_export_wiki
         [Option("css", Required = false, HelpText = "Path to a css file that is used for styling the PDF")]
         public string CSS { get; set; }
 
+        [Option("math", Required = false, HelpText = "Convert math/latex formulas")]
+        public bool Math { get; set; }
+
         [Option('m', "mermaid", Required = false, HelpText = "Convert mermaid diagrams to SVG. Will download latest chromium, if chrome-path is not defined")]
         public bool ConvertMermaid { get; set; }
 

@@ -95,16 +95,13 @@ namespace azuredevops_export_wiki
 
                     var html = ConvertMarkdownToHTML(files);
 
-                    var htmlStart = "<html>";
+                    var htmlStart = "<!DOCTYPE html><html>";
                     var htmlEnd = "</html>";
-                    var head = "<head><meta http-equiv=Content-Type content=\"text/html; charset=utf-8\"></head>";
+                    var headStart = "<head>";
+                    var head = "<meta http-equiv=Content-Type content=\"text/html; charset=utf-8\">";
+                    var headEnd = "</head>";
 
-                    if (!_options.ConvertMermaid)
-                    {
-                        // adding the correct charset for unicode smileys and all that fancy stuff
-                        html = $"{htmlStart}{head}{html}{htmlEnd}";
-                    }
-                    else
+                    if (_options.ConvertMermaid)
                     {
                         string mermaid = !string.IsNullOrEmpty(_options.MermaidJsPath) ?
                             $"<script>{File.ReadAllText(_options.MermaidJsPath)}</script>"
@@ -113,7 +110,7 @@ namespace azuredevops_export_wiki
                         var mermaidInitialize = "<script>mermaid.initialize({ startOnLoad:true });</script>";
 
                         // adding the correct charset for unicode smileys and all that fancy stuff, and include mermaid.js
-                        html = $"{htmlStart}{head}{html}{mermaid}{mermaidInitialize}{htmlEnd}";
+                        html = $"{html}{mermaid}{mermaidInitialize}";
 
                         if (string.IsNullOrEmpty(_options.ChromeExecutablePath))
                         {
@@ -132,6 +129,38 @@ namespace azuredevops_export_wiki
                             await page.SetContentAsync(html);
                             html = await page.GetContentAsync();
                         }
+                    }
+
+                    if (_options.Math)
+                    {
+                        var katex = "<script src=\"https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/katex.min.js\"></script><script src=\"https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/contrib/auto-render.min.js\" onload=\"renderMathInElement(document.body);\"></script>";
+                        var katexCss = "<link rel=\"stylesheet\" href=\"https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/katex.min.css\">";
+                        html = $"{htmlStart}{headStart}{head}{katexCss}{headEnd}{html}{katex}{htmlEnd}";
+
+                        if (string.IsNullOrEmpty(_options.ChromeExecutablePath))
+                        {
+                            RevisionInfo revisionInfo = await new BrowserFetcher().DownloadAsync(BrowserFetcher.DefaultChromiumRevision);
+                        }
+
+                        var launchOptions = new LaunchOptions
+                        {
+                            ExecutablePath = _options.ChromeExecutablePath ?? string.Empty,
+                            Headless = true
+                        };
+
+                        using (var browser = await Puppeteer.LaunchAsync(launchOptions))
+                        {
+                            var page = await browser.NewPageAsync();
+                            await page.SetContentAsync(html);
+                            html = await page.GetContentAsync();
+                        }
+                    }
+                    
+                    //both mermaid and katex do local rendering
+                    if (!_options.Math && !_options.ConvertMermaid)
+                    {
+                        // adding the correct charset for unicode smileys and all that fancy stuff
+                        html = $"{htmlStart}{head}{html}{htmlEnd}";
                     }
 
                     if (_options.Debug)
@@ -284,6 +313,11 @@ namespace azuredevops_export_wiki
                 .UseEmojiAndSmiley()
                 .UseAdvancedExtensions()
                 .UseYamlFrontMatter();
+
+            if (_options.Math)
+            {
+                pipelineBuilder.UseMathematics();
+            }
 
             for (var i = 0; i < files.Count; i++)
             {
