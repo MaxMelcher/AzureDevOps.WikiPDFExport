@@ -131,6 +131,46 @@ namespace azuredevops_export_wiki
                         }
                     }
 
+                    if (_options.HighlightCode)
+                    {
+                        string hightlightStyle = _options.HighlightStyle ?? "vs";
+                        string hightlight = $@"<link rel=""stylesheet"" href=""https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.1.0/styles/{hightlightStyle}.min.css"">
+                                                     <script src=""https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.1.0/highlight.min.js""></script>
+                                                     ";
+                        var hightlightInitialize = @"<script>hljs.highlightAll();</script>";
+
+                        // Avoid default highlight.js style to create a white background
+                        if (_options.HighlightStyle == null)
+                            hightlightInitialize += @"<style>
+                                                        .hljs {
+                                                            background: #f0f0f0;
+                                                        }
+                                                        pre {
+                                                            border-radius: 0px;
+                                                        }
+                                                    </style>";
+
+                        html = $"{html}{hightlight}{hightlightInitialize}";
+
+                        if (string.IsNullOrEmpty(_options.ChromeExecutablePath))
+                        {
+                            RevisionInfo revisionInfo = await new BrowserFetcher().DownloadAsync(BrowserFetcher.DefaultChromiumRevision);
+                        }
+
+                        var launchOptions = new LaunchOptions
+                        {
+                            ExecutablePath = _options.ChromeExecutablePath ?? string.Empty,
+                            Headless = true
+                        };
+
+                        using (var browser = await Puppeteer.LaunchAsync(launchOptions))
+                        {
+                            var page = await browser.NewPageAsync();
+                            await page.SetContentAsync(html);
+                            html = await page.GetContentAsync();
+                        }
+                    }
+
                     if (_options.Math)
                     {
                         var katex = "<script src=\"https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/katex.min.js\"></script><script src=\"https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/contrib/auto-render.min.js\" onload=\"renderMathInElement(document.body);\"></script>";
@@ -155,7 +195,7 @@ namespace azuredevops_export_wiki
                             html = await page.GetContentAsync();
                         }
                     }
-                    
+
                     //both mermaid and katex do local rendering
                     if (!_options.Math && !_options.ConvertMermaid)
                     {
