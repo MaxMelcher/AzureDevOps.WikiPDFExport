@@ -145,6 +145,9 @@ namespace azuredevops_export_wiki
                                                         .hljs {
                                                             background: #f0f0f0;
                                                         }
+                                                        pre {
+                                                            border-radius: 0px;
+                                                        }
                                                     </style>";
 
                         html = $"{html}{hightlight}{hightlightInitialize}";
@@ -192,7 +195,7 @@ namespace azuredevops_export_wiki
                             html = await page.GetContentAsync();
                         }
                     }
-                    
+
                     //both mermaid and katex do local rendering
                     if (!_options.Math && !_options.ConvertMermaid)
                     {
