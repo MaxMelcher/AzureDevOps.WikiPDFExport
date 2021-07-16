@@ -96,5 +96,11 @@ namespace azuredevops_export_wiki
 
         [Option("filter", Required = false, HelpText = "Only export if page has a tag with the specified filter. E.g. tags:service, category:azure would only export pages with both frontmatter tags present")]
         public string Filter { get; set; }
+
+        [Option('c', "highlight-code", Required = false, HelpText = "Highlight code blocks using highlight.js")]
+        public bool HighlightCode { get; set; }
+
+        [Option("hightlight-style", Required = false, HelpText = "hightlight.js style used for code blocks. Defaults to 'vs'. See https://github.com/highlightjs/highlight.js/tree/main/src/styles for a full list.")]
+        public string HighlightStyle { get;set; }
     }
 }
