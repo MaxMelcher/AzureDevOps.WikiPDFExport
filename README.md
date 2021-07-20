@@ -74,6 +74,12 @@ Path of the chrome or chromium executable. It'll be used if mermaid diagrams sup
 ### --css 
 Path to the stylesheet to overwrite the look of certain components in the PDF. See [styles.css](styles.css) for examples. To get the html file, use the [--debug flag](#-d----debug) to inspect and style it.
 
+### -c / --highlight-code 
+Highlight code blocks using highligh.js
+
+### --highlight-style 
+hightlight.js style used for code blocks. Defaults to 'vs'. See https://github.com/highlightjs/highlight.js/tree/main/src/styles for a full list.
+
 ### -v / --verbose
 Verbose mode. Logging will added to the console window
 
