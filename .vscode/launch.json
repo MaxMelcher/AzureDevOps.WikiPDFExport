@@ -43,6 +43,8 @@
                 //"-m"
                 //"--filter=tags:test,tags:license"
                 // "-c"
+                // "--organization=https://dev.azure.com/mmelcher",
+                // "--pat=xxx"
             ],
             "cwd": "${workspaceFolder}/AzureDevOps.WikiPDFExport",
             "console": "internalConsole",

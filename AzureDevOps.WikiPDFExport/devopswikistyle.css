@@ -335,4 +335,138 @@ div.is-caution td,div.is-warning th, div.is-warning td {
     border: none;
 }
 
+.mention-widget-workitem, .mention-widget-workitem-state, .mention-link {
+    box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+}
+
+.secondary-text {
+    color: rgba(0, 0, 0, .55)
+}
+.fontWeightSemiBold {
+    font-weight: 600;
+}
+
+a.mention-link, a.mention-link :hover {
+    text-decoration: none;
+}
+.mention-widget-workitem {
+    font-family: "Segoe UI", Tahoma, sans-serif;
+    font-size: 0.875rem;
+    padding: 2px 0.333em;
+    display: inline;
+    word-break: break-word;
+    margin: 0 1px;
+    /* FIXME: Commented until properly rendered in PDF. See https://github.com/wkhtmltopdf/wkhtmltopdf/issues/5068
+    border-radius: 25%; */
+    line-height: 24px;
+    font-style: normal;
+    font-weight: normal;
+    border-left: 2px solid transparent;
+}
+.mention-widget-workitem-title {
+    color: rgba(0, 0, 0, 0.9);
+}
+.mention-widget-workitem-state {
+    border-left: 1px solid;
+    border-left-color: rgba(200, 200, 200, 1);
+    padding: 0 8px 0 4px;
+    display: inline-flex;
+    align-items: center;
+    margin: 4px 2px 4px 8px;
+    line-height: 24px;
+    vertical-align: bottom;
+    color: rgba(0, 0, 0, 0.9);
+}
+.mention-widget-workitem-state .workitem-state-color {
+    border: 3px solid transparent;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    margin: 0 4px;
+    background-clip: padding-box;
+    box-sizing: border-box;
+}
+.work-item-type-icon-host {
+    display: inline-block;
+}
+.work-item-type-icon-host .work-item-type-icon {
+    min-width: 14px;
+    display: inline;
+}
+
+.bowtie-icon,
+i.bowtie-icon {
+    font-family: "bowtie";
+    font-size: 14px;
+    speak: none;
+    display: inline-block;
+    font-style: normal;
+    font-weight: normal;
+    font-variant: normal;
+    text-transform: none;
+    text-align: center;
+    text-decoration: none;
+    line-height: 16px;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+.bowtie-brand-github::before{content:"\e916 ";}
+.bowtie-package-fill::before{content:"\e95e ";}
+.bowtie-settings-gear::before{content:"\e98f ";}
+.bowtie-status-error-outline::before{content:"\ea03 ";}
+.bowtie-status-success-box::before{content:"\ea18 ";}
+.bowtie-symbol-airplane::before{content:"\eadb ";}
+.bowtie-symbol-ask::before{content:"\eac2 ";}
+.bowtie-symbol-asterisk::before{content:"\eade ";}
+.bowtie-symbol-book::before{content:"\eac7 ";}
+.bowtie-symbol-bug::before{content:"\eabc ";}
+.bowtie-symbol-car::before{content:"\eadc ";}
+.bowtie-symbol-color-palette::before{content:"\eae4 ";}
+.bowtie-symbol-crown::before{content:"\eabd ";}
+.bowtie-symbol-decision::before{content:"\eae1 ";}
+.bowtie-symbol-defect::before{content:"\eb0c ";}
+.bowtie-symbol-diamond::before{content:"\eadd ";}
+.bowtie-symbol-feedback-request::before{content:"\eae7 ";}
+.bowtie-symbol-feedback-response::before{content:"\eae8 ";}
+.bowtie-symbol-finance::before{content:"\ead8 ";}
+.bowtie-symbol-flame::before, .bowtie-symbol-chat_bubble::before{content:"\eac4 ";}
+.bowtie-symbol-government::before{content:"\eae0 ";}
+.bowtie-symbol-headphone::before{content:"\ead9 ";}
+.bowtie-symbol-impediment::before{content:"\eac1 ";}
+.bowtie-symbol-issue::before{content:"\eb0b ";}
+.bowtie-symbol-key::before{content:"\eada ";}
+.bowtie-symbol-list::before{content:"\eac5 ";}
+.bowtie-symbol-paint-brush::before{content:"\eae3 ";}
+.bowtie-symbol-parachute::before{content:"\eae2 ";}
+.bowtie-symbol-review::before{content:"\eabd ";}
+.bowtie-symbol-review-request::before{content:"\eae5 ";}
+.bowtie-symbol-review-response::before{content:"\eae6 ";}
+.bowtie-symbol-ribbon::before{content:"\ead7 ";}
+.bowtie-symbol-stickynote::before{content:"\eac0 ";}
+.bowtie-symbol-storage-database::before{content:"\eadf ";}
+.bowtie-symbol-task::before{content:"\eabf ";}
+.bowtie-symbol-trophy::before{content:"\eabe ";}
+.bowtie-test-case::before{content:"\eafa ";}
+.bowtie-test-fill::before{content:"\ea19 ";}
+.bowtie-test-parameter::before{content:"\eaca ";}
+.bowtie-test-plan::before{content:"\eac8 ";}
+.bowtie-test-step::before{content:"\eac9 ";}
+.bowtie-test-suite::before{content:"\eacb ";}
+.bowtie-tfvc-pull-request:before{content:"\ea3a ";}
+
+@font-face {
+font-family: "bowtie";
+font-style: normal;
+font-weight: normal;
+src: url("https://cdn.vsassets.io/v/M188_20210713.2/_content/Fonts/Icons/bowtie.eot");
+src: url("https://cdn.vsassets.io/v/M188_20210713.2/_content/Fonts/Icons/bowtie.eot?iefix")
+    format("embedded-opentype"),
+    url("https://cdn.vsassets.io/v/M188_20210713.2/_content/Fonts/Icons/bowtie.woff")
+    format("woff"),
+    url("https://cdn.vsassets.io/v/M188_20210713.2/_content/Fonts/Icons/bowtie.svg#bowtie")
+    format("svg");
+}
 
