@@ -42,7 +42,7 @@
                 //"--disableTelemetry",
                 //"-m"
                 //"--filter=tags:test,tags:license"
-                // "-c"
+                "-c"
             ],
             "cwd": "${workspaceFolder}/AzureDevOps.WikiPDFExport",
             "console": "internalConsole",

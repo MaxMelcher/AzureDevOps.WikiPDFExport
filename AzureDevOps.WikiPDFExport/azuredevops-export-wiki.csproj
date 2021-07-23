@@ -13,11 +13,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ContentWithTargetPath Include="libwkhtmltox.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <ExcludeFromSingleFile>false</ExcludeFromSingleFile>
-      <TargetPath>libwkhtmltox.dll</TargetPath>
-    </ContentWithTargetPath>
     <ContentWithTargetPath Include="licenses.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <TargetPath>licenses.txt</TargetPath>
@@ -37,7 +32,6 @@
     <PackageReference Include="Markdig" Version="0.24.0" />
     <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.17.0" />
     <PackageReference Include="Microsoft.Extensions.Logging" Version="5.0.0" />
-    <PackageReference Include="RndUsr0.DinkToPdf" Version="1.0.9-20190207.1" />
     <PackageReference Include="PuppeteerSharp" Version="4.0.0" />
   </ItemGroup>
 </Project>

@@ -4,7 +4,6 @@ using System.Diagnostics;
 using System.IO;
 using System.Text;
 using Markdig;
-using DinkToPdf;
 using Markdig.Syntax.Inlines;
 using Markdig.Syntax;
 using System.Linq;
@@ -210,7 +209,7 @@ namespace azuredevops_export_wiki
                         File.WriteAllText(htmlPath, html);
                     }
 
-                    var path = ConvertHTMLToPDF(html);
+                    var path = await ConvertHTMLToPDFAsync(html);
 
                     Console.ForegroundColor = ConsoleColor.Green;
                     Console.WriteLine();
@@ -239,11 +238,10 @@ namespace azuredevops_export_wiki
             }
         }
 
-        private string ConvertHTMLToPDF(string html)
+        private async Task<string> ConvertHTMLToPDFAsync(string html)
         {
             Log("Converting HTML to PDF");
             Log("Ignore errors like 'Qt: Could not initialize OLE (error 80010106)'", LogLevel.Warning);
-            var converter = new BasicConverter(new PdfTools());
 
             var output = _options.Output;
 
@@ -252,39 +250,42 @@ namespace azuredevops_export_wiki
                 output = Path.Combine(Directory.GetCurrentDirectory(), "export.pdf");
             }
 
-            //somehow the options HeaderSettings.Left/Right/Center don't work in combination with HeaderSettings.HtmlURL
-            var headerSettings = new HeaderSettings
-            {
-                FontSize = 9,
-                Line = !_options.HideHeaderLine,
-                Spacing = 2.812,
-            };
-            if (string.IsNullOrEmpty(_options.HeaderUrl))
-            {
-                headerSettings.Left = _options.HeaderLeft;
-                headerSettings.Center = _options.HeaderCenter;
-                headerSettings.Right = _options.HeaderRight;
-            }
-            else
-            {
-                headerSettings.HtmUrl = _options.HeaderUrl;
-            }
+            /*
+                        // todo: add header and footer functionality
 
-            var footerSettings = new FooterSettings
-            {
-                Line = !_options.HideFooterLine
-            };
-            if (string.IsNullOrEmpty(_options.FooterUrl))
-            {
-                footerSettings.Left = _options.FooterLeft;
-                footerSettings.Center = _options.FooterCenter;
-                footerSettings.Right = _options.FooterRight;
-            }
-            else
-            {
-                footerSettings.HtmUrl = _options.FooterUrl;
-            }
+                        //somehow the options HeaderSettings.Left/Right/Center don't work in combination with HeaderSettings.HtmlURL
+                        var headerSettings = new HeaderSettings
+                        {
+                            FontSize = 9,
+                            Line = !_options.HideHeaderLine,
+                            Spacing = 2.812,
+                        };
+                        if (string.IsNullOrEmpty(_options.HeaderUrl))
+                        {
+                            headerSettings.Left = _options.HeaderLeft;
+                            headerSettings.Center = _options.HeaderCenter;
+                            headerSettings.Right = _options.HeaderRight;
+                        }
+                        else
+                        {
+                            headerSettings.HtmUrl = _options.HeaderUrl;
+                        }
 
+                        var footerSettings = new FooterSettings
+                        {
+                            Line = !_options.HideFooterLine
+                        };
+                        if (string.IsNullOrEmpty(_options.FooterUrl))
+                        {
+                            footerSettings.Left = _options.FooterLeft;
+                            footerSettings.Center = _options.FooterCenter;
+                            footerSettings.Right = _options.FooterRight;
+                        }
+                        else
+                        {
+                            footerSettings.HtmUrl = _options.FooterUrl;
+                        }
+            */
 
             var cssPath = "";
             if (string.IsNullOrEmpty(_options.CSS))
@@ -301,31 +302,52 @@ namespace azuredevops_export_wiki
                 }
             }
 
-            var doc = new HtmlToPdfDocument()
-            {
-                GlobalSettings = {
-                    ColorMode = ColorMode.Color,
-                    Orientation = Orientation.Portrait,
-                    PaperSize = PaperKind.A4,
-                    Out = output,
+            /*
+                        var doc = new HtmlToPdfDocument()
+                        {
+                            GlobalSettings = {
+                                ColorMode = ColorMode.Color,
+                                Orientation = Orientation.Portrait,
+                                PaperSize = PaperKind.A4,
+                                Out = output,
 
-                },
-                Objects = {
-                    new ObjectSettings() {
-                        PagesCount = true,
-                        HtmlContent = html,
-                        WebSettings = {
-                            DefaultEncoding = "utf-8",
-                            UserStyleSheet = cssPath
-                         },
-                        HeaderSettings = headerSettings,
-                        FooterSettings = footerSettings,
-                        UseLocalLinks = true
-                    }
-                }
+                            },
+                            Objects = {
+                                new ObjectSettings() {
+                                    PagesCount = true,
+                                    HtmlContent = html,
+                                    WebSettings = {
+                                        DefaultEncoding = "utf-8",
+                                        UserStyleSheet = cssPath
+                                     },
+                                    HeaderSettings = headerSettings,
+                                    FooterSettings = footerSettings,
+                                    UseLocalLinks = true
+                                }
+                            }
+                        };
+
+                        converter.Convert(doc);
+            */
+
+            if (string.IsNullOrEmpty(_options.ChromeExecutablePath))
+            {
+                RevisionInfo revisionInfo = await new BrowserFetcher().DownloadAsync(BrowserFetcher.DefaultChromiumRevision);
+            }
+
+            var launchOptions = new LaunchOptions
+            {
+                ExecutablePath = _options.ChromeExecutablePath ?? string.Empty,
+                Headless = true
             };
 
-            converter.Convert(doc);
+            using (var browser = await Puppeteer.LaunchAsync(launchOptions))
+            {
+                var page = await browser.NewPageAsync();
+                await page.SetContentAsync(html);
+                await page.PdfAsync(output);
+            }
+
             Log($"PDF created at: {output}");
             return output;
         }
