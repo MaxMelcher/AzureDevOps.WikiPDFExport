@@ -97,8 +97,12 @@ namespace azuredevops_export_wiki
                     var htmlStart = "<!DOCTYPE html><html>";
                     var htmlEnd = "</html>";
                     var headStart = "<head>";
-                    var head = "<meta http-equiv=Content-Type content=\"text/html; charset=utf-8\">";
+                    var head = new List<string>();
+                    head.Add("<meta http-equiv=Content-Type content=\"text/html; charset=utf-8\">");
+            
+                    head.Add("<link rel=\"stylesheet\" href=\"https://unpkg.com/gutenberg-css@0.6\" media=\"print\">");
                     var headEnd = "</head>";
+
 
                     if (_options.ConvertMermaid)
                     {
@@ -110,24 +114,8 @@ namespace azuredevops_export_wiki
 
                         // adding the correct charset for unicode smileys and all that fancy stuff, and include mermaid.js
                         html = $"{html}{mermaid}{mermaidInitialize}";
-
-                        if (string.IsNullOrEmpty(_options.ChromeExecutablePath))
-                        {
-                            RevisionInfo revisionInfo = await new BrowserFetcher().DownloadAsync(BrowserFetcher.DefaultChromiumRevision);
-                        }
-
-                        var launchOptions = new LaunchOptions
-                        {
-                            ExecutablePath = _options.ChromeExecutablePath ?? string.Empty,
-                            Headless = true
-                        };
-
-                        using (var browser = await Puppeteer.LaunchAsync(launchOptions))
-                        {
-                            var page = await browser.NewPageAsync();
-                            await page.SetContentAsync(html);
-                            html = await page.GetContentAsync();
-                        }
+                        head.Add(mermaid);
+                        head.Add(mermaidInitialize);
                     }
 
                     if (_options.HighlightCode)
@@ -149,58 +137,22 @@ namespace azuredevops_export_wiki
                                                         }
                                                     </style>";
 
-                        html = $"{html}{hightlight}{hightlightInitialize}";
-
-                        if (string.IsNullOrEmpty(_options.ChromeExecutablePath))
-                        {
-                            RevisionInfo revisionInfo = await new BrowserFetcher().DownloadAsync(BrowserFetcher.DefaultChromiumRevision);
-                        }
-
-                        var launchOptions = new LaunchOptions
-                        {
-                            ExecutablePath = _options.ChromeExecutablePath ?? string.Empty,
-                            Headless = true
-                        };
-
-                        using (var browser = await Puppeteer.LaunchAsync(launchOptions))
-                        {
-                            var page = await browser.NewPageAsync();
-                            await page.SetContentAsync(html);
-                            html = await page.GetContentAsync();
-                        }
+                        //todo: add offline version of highlightjs 
+                        head.Add(hightlight);
+                        head.Add(hightlightInitialize);
                     }
 
                     if (_options.Math)
                     {
                         var katex = "<script src=\"https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/katex.min.js\"></script><script src=\"https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/contrib/auto-render.min.js\" onload=\"renderMathInElement(document.body);\"></script>";
                         var katexCss = "<link rel=\"stylesheet\" href=\"https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/katex.min.css\">";
-                        html = $"{htmlStart}{headStart}{head}{katexCss}{headEnd}{html}{katex}{htmlEnd}";
 
-                        if (string.IsNullOrEmpty(_options.ChromeExecutablePath))
-                        {
-                            RevisionInfo revisionInfo = await new BrowserFetcher().DownloadAsync(BrowserFetcher.DefaultChromiumRevision);
-                        }
-
-                        var launchOptions = new LaunchOptions
-                        {
-                            ExecutablePath = _options.ChromeExecutablePath ?? string.Empty,
-                            Headless = true
-                        };
-
-                        using (var browser = await Puppeteer.LaunchAsync(launchOptions))
-                        {
-                            var page = await browser.NewPageAsync();
-                            await page.SetContentAsync(html);
-                            html = await page.GetContentAsync();
-                        }
+                        head.Add(katex);
+                        head.Add(katexCss);
                     }
 
-                    //both mermaid and katex do local rendering
-                    if (!_options.Math && !_options.ConvertMermaid)
-                    {
-                        // adding the correct charset for unicode smileys and all that fancy stuff
-                        html = $"{htmlStart}{head}{html}{htmlEnd}";
-                    }
+                    //build the html for rendering
+                    html = $"{htmlStart}{headStart}{string.Concat(head)}{headEnd}{html}{htmlEnd}";
 
                     if (_options.Debug)
                     {
@@ -241,51 +193,12 @@ namespace azuredevops_export_wiki
         private async Task<string> ConvertHTMLToPDFAsync(string html)
         {
             Log("Converting HTML to PDF");
-            Log("Ignore errors like 'Qt: Could not initialize OLE (error 80010106)'", LogLevel.Warning);
-
             var output = _options.Output;
 
             if (output == null)
             {
                 output = Path.Combine(Directory.GetCurrentDirectory(), "export.pdf");
             }
-
-            /*
-                        // todo: add header and footer functionality
-
-                        //somehow the options HeaderSettings.Left/Right/Center don't work in combination with HeaderSettings.HtmlURL
-                        var headerSettings = new HeaderSettings
-                        {
-                            FontSize = 9,
-                            Line = !_options.HideHeaderLine,
-                            Spacing = 2.812,
-                        };
-                        if (string.IsNullOrEmpty(_options.HeaderUrl))
-                        {
-                            headerSettings.Left = _options.HeaderLeft;
-                            headerSettings.Center = _options.HeaderCenter;
-                            headerSettings.Right = _options.HeaderRight;
-                        }
-                        else
-                        {
-                            headerSettings.HtmUrl = _options.HeaderUrl;
-                        }
-
-                        var footerSettings = new FooterSettings
-                        {
-                            Line = !_options.HideFooterLine
-                        };
-                        if (string.IsNullOrEmpty(_options.FooterUrl))
-                        {
-                            footerSettings.Left = _options.FooterLeft;
-                            footerSettings.Center = _options.FooterCenter;
-                            footerSettings.Right = _options.FooterRight;
-                        }
-                        else
-                        {
-                            footerSettings.HtmUrl = _options.FooterUrl;
-                        }
-            */
 
             var cssPath = "";
             if (string.IsNullOrEmpty(_options.CSS))
@@ -302,38 +215,11 @@ namespace azuredevops_export_wiki
                 }
             }
 
-            /*
-                        var doc = new HtmlToPdfDocument()
-                        {
-                            GlobalSettings = {
-                                ColorMode = ColorMode.Color,
-                                Orientation = Orientation.Portrait,
-                                PaperSize = PaperKind.A4,
-                                Out = output,
-
-                            },
-                            Objects = {
-                                new ObjectSettings() {
-                                    PagesCount = true,
-                                    HtmlContent = html,
-                                    WebSettings = {
-                                        DefaultEncoding = "utf-8",
-                                        UserStyleSheet = cssPath
-                                     },
-                                    HeaderSettings = headerSettings,
-                                    FooterSettings = footerSettings,
-                                    UseLocalLinks = true
-                                }
-                            }
-                        };
-
-                        converter.Convert(doc);
-            */
-
             if (string.IsNullOrEmpty(_options.ChromeExecutablePath))
             {
                 RevisionInfo revisionInfo = await new BrowserFetcher().DownloadAsync(BrowserFetcher.DefaultChromiumRevision);
             }
+
 
             var launchOptions = new LaunchOptions
             {
