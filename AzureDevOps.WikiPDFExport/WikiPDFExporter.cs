@@ -97,10 +97,12 @@ namespace azuredevops_export_wiki
                     var htmlStart = "<!DOCTYPE html><html>";
                     var htmlEnd = "</html>";
                     var headStart = "<head>";
-                    var head = new List<string>();
-                    head.Add("<meta http-equiv=Content-Type content=\"text/html; charset=utf-8\">");
+                    var header = new List<string>();
+                    var footer = new List<string>();
+                    header.Add("<meta http-equiv=Content-Type content=\"text/html; charset=utf-8\">");
             
-                    head.Add("<link rel=\"stylesheet\" href=\"https://unpkg.com/gutenberg-css@0.6\" media=\"print\">");
+                    header.Add("<link rel=\"stylesheet\" href=\"https://unpkg.com/gutenberg-css@0.6\" media=\"print\">");
+                    header.Add("<link rel=\"stylesheet\" href=\"https://unpkg.com/gutenberg-css@0.6/dist/themes/modern.min.css\" media=\"print\">");
                     var headEnd = "</head>";
 
 
@@ -114,8 +116,8 @@ namespace azuredevops_export_wiki
 
                         // adding the correct charset for unicode smileys and all that fancy stuff, and include mermaid.js
                         html = $"{html}{mermaid}{mermaidInitialize}";
-                        head.Add(mermaid);
-                        head.Add(mermaidInitialize);
+                        header.Add(mermaid);
+                        header.Add(mermaidInitialize);
                     }
 
                     if (_options.HighlightCode)
@@ -138,8 +140,8 @@ namespace azuredevops_export_wiki
                                                     </style>";
 
                         //todo: add offline version of highlightjs 
-                        head.Add(hightlight);
-                        head.Add(hightlightInitialize);
+                        header.Add(hightlight);
+                        header.Add(hightlightInitialize);
                     }
 
                     if (_options.Math)
@@ -147,12 +149,12 @@ namespace azuredevops_export_wiki
                         var katex = "<script src=\"https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/katex.min.js\"></script><script src=\"https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/contrib/auto-render.min.js\" onload=\"renderMathInElement(document.body);\"></script>";
                         var katexCss = "<link rel=\"stylesheet\" href=\"https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/katex.min.css\">";
 
-                        head.Add(katex);
-                        head.Add(katexCss);
+                        header.Add(katexCss);
+                        footer.Add(katex);
                     }
 
                     //build the html for rendering
-                    html = $"{htmlStart}{headStart}{string.Concat(head)}{headEnd}{html}{htmlEnd}";
+                    html = $"{htmlStart}{headStart}{string.Concat(header)}{headEnd}{html}<footer>{string.Concat(footer)}</footer>{htmlEnd}";
 
                     if (_options.Debug)
                     {
