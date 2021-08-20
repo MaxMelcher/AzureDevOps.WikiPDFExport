@@ -510,11 +510,16 @@ namespace azuredevops_export_wiki
                         {
                             //urls could be encoded and contain spaces - they are then not found on disk
                             var linkUrl = HttpUtility.UrlDecode(link.Url);
+
+                            //if the url contains an anchor, remove it
+                            linkUrl = linkUrl.Split('#')[0];
+
                             absPath = Path.GetFullPath(_path + linkUrl);
                         }
                         else
                         {
-                            absPath = Path.GetFullPath(file.Directory.FullName + "/" + link.Url);
+                            var linkNoAnchor = link.Url.Split('#')[0];
+                            absPath = Path.GetFullPath(file.Directory.FullName + "/" + linkNoAnchor);
                         }
 
                         //the file is a markdown file, create a link to it
@@ -539,6 +544,10 @@ namespace azuredevops_export_wiki
                         if (isMarkdown)
                         {
                             var relPath = mf.RelativePath + "\\" + link.Url;
+
+                            //remove anchor
+                            relPath = relPath.Split("#")[0];
+
                             relPath = relPath.Replace("/", "\\");
                             relPath = relPath.Replace("\\", "");
                             relPath = relPath.Replace(".md", "");
