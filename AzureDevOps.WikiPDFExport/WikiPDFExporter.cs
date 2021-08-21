@@ -100,7 +100,7 @@ namespace azuredevops_export_wiki
                     var header = new List<string>();
                     var footer = new List<string>();
                     header.Add("<meta http-equiv=Content-Type content=\"text/html; charset=utf-8\">");
-            
+
                     header.Add("<link rel=\"stylesheet\" href=\"https://unpkg.com/gutenberg-css@0.6\" media=\"print\">");
                     header.Add("<link rel=\"stylesheet\" href=\"https://unpkg.com/gutenberg-css@0.6/dist/themes/modern.min.css\" media=\"print\">");
                     var headEnd = "</head>";
@@ -233,140 +233,156 @@ namespace azuredevops_export_wiki
             {
                 var page = await browser.NewPageAsync();
                 await page.SetContentAsync(html);
-                await page.PdfAsync(output);
-            }
 
-            Log($"PDF created at: {output}");
+                var pdfoptions = new PdfOptions()
+                {
+                    DisplayHeaderFooter = true,
+                    MarginOptions = {
+                        Top = "100px",
+                        Bottom = "100px",
+                        Left ="30px",
+                        Right = "30px"
+                    },
+                    Format = PuppeteerSharp.Media.PaperFormat.A4,
+                    FooterTemplate= "<h1 style='margin: 10px;font-size: 20px;'><span class='title'></span></h1><div style='font-size:10px!important;color:grey!important;padding-left:400px;' class='pdfheader'>title: <span class='title'></span> url: <span class='url'></span> <span>Page: </span><span class='pageNumber'></span>/<span class='totalPages'></span></div>",
+                    HeaderTemplate = "<div class=\"header\" style=\"font-size: 10px;color: #999; margin: 15px 0;clear:both; position: relative; top: 20px;font-family:my-font\"><p>header text</p></div>",
+            };
+
+
+            await page.PdfAsync(output, pdfoptions);
+        }
+
+        Log($"PDF created at: {output}");
             return output;
         }
 
-        //Replacing page parameters with dynamic values
-        //[PAGE] and [PAGETO] do not need to be replaced because they are handled by the PDF converter
-        private string ReplacePageParameters(string input)
-        {
-            Log("Replacing Page Parameters", LogLevel.Debug, 1);
-            Log($"Input: {input}", LogLevel.Debug, 1);
-            input = input.Replace("[DATE]", DateTime.Now.ToString("g"), true, CultureInfo.InvariantCulture);
+    //Replacing page parameters with dynamic values
+    //[PAGE] and [PAGETO] do not need to be replaced because they are handled by the PDF converter
+    private string ReplacePageParameters(string input)
+    {
+        Log("Replacing Page Parameters", LogLevel.Debug, 1);
+        Log($"Input: {input}", LogLevel.Debug, 1);
+        input = input.Replace("[DATE]", DateTime.Now.ToString("g"), true, CultureInfo.InvariantCulture);
 
-            Log($"Output: {input}", LogLevel.Debug, 1);
-            return input;
+        Log($"Output: {input}", LogLevel.Debug, 1);
+        return input;
+    }
+
+    private string ConvertMarkdownToHTML(List<MarkdownFile> files)
+    {
+        Log("Converting Markdown to HTML");
+        StringBuilder sb = new StringBuilder();
+
+        //setup the markdown pipeline to support tables
+        var pipelineBuilder = new MarkdownPipelineBuilder()
+            .UsePipeTables()
+            .UseEmojiAndSmiley()
+            .UseAdvancedExtensions()
+            .UseYamlFrontMatter();
+
+        if (_options.Math)
+        {
+            pipelineBuilder.UseMathematics();
         }
 
-        private string ConvertMarkdownToHTML(List<MarkdownFile> files)
+        for (var i = 0; i < files.Count; i++)
         {
-            Log("Converting Markdown to HTML");
-            StringBuilder sb = new StringBuilder();
+            var mf = files[i];
+            var file = new FileInfo(files[i].AbsolutePath);
 
-            //setup the markdown pipeline to support tables
-            var pipelineBuilder = new MarkdownPipelineBuilder()
-                .UsePipeTables()
-                .UseEmojiAndSmiley()
-                .UseAdvancedExtensions()
-                .UseYamlFrontMatter();
+            Log($"{file.Name}", LogLevel.Information, 1);
+            var htmlfile = file.FullName.Replace(".md", ".html");
 
-            if (_options.Math)
+            if (!File.Exists(file.FullName))
             {
-                pipelineBuilder.UseMathematics();
+                Log($"File {file.FullName} specified in the order file was not found and will be skipped!", LogLevel.Error, 1);
+                continue;
             }
 
-            for (var i = 0; i < files.Count; i++)
+            var md = File.ReadAllText(file.FullName);
+
+            //replace Table of Content
+            md = RemoveTableOfContent(md);
+
+            // remove scalings from image links, width & height: file.png =600x500
+            var regexImageScalings = @"\((.[^\)]*?[png|jpg|jpeg]) =(\d+)x(\d+)\)";
+            md = Regex.Replace(md, regexImageScalings, @"($1){width=$2 height=$3}");
+
+            // remove scalings from image links, width only: file.png =600x
+            regexImageScalings = @"\((.[^\)]*?[png|jpg|jpeg]) =(\d+)x\)";
+            md = Regex.Replace(md, regexImageScalings, @"($1){width=$2}");
+
+            // remove scalings from image links, height only: file.png =x600
+            regexImageScalings = @"\((.[^\)]*?[png|jpg|jpeg]) =x(\d+)\)";
+            md = Regex.Replace(md, regexImageScalings, @"($1){height=$2}");
+
+            // determine the correct nesting of pages and related chapters
+            pipelineBuilder.BlockParsers.Replace<HeadingBlockParser>(new OffsetHeadingBlockParser(mf.Level + 1));
+
+            if (_options.ConvertMermaid)
             {
-                var mf = files[i];
-                var file = new FileInfo(files[i].AbsolutePath);
+                pipelineBuilder = pipelineBuilder.UseMermaidContainers();
+            }
 
-                Log($"{file.Name}", LogLevel.Information, 1);
-                var htmlfile = file.FullName.Replace(".md", ".html");
+            var pipeline = pipelineBuilder.Build();
 
-                if (!File.Exists(file.FullName))
+            //parse the markdown document so we can alter it later
+            var document = (MarkdownObject)Markdown.Parse(md, pipeline);
+
+            if (!string.IsNullOrEmpty(_options.Filter))
+            {
+                if (!PageMatchesFilter(document))
                 {
-                    Log($"File {file.FullName} specified in the order file was not found and will be skipped!", LogLevel.Error, 1);
+                    Log("Page does not have correct tags - skip", LogLevel.Information, 3);
                     continue;
                 }
-
-                var md = File.ReadAllText(file.FullName);
-
-                //replace Table of Content
-                md = RemoveTableOfContent(md);
-
-                // remove scalings from image links, width & height: file.png =600x500
-                var regexImageScalings = @"\((.[^\)]*?[png|jpg|jpeg]) =(\d+)x(\d+)\)";
-                md = Regex.Replace(md, regexImageScalings, @"($1){width=$2 height=$3}");
-
-                // remove scalings from image links, width only: file.png =600x
-                regexImageScalings = @"\((.[^\)]*?[png|jpg|jpeg]) =(\d+)x\)";
-                md = Regex.Replace(md, regexImageScalings, @"($1){width=$2}");
-
-                // remove scalings from image links, height only: file.png =x600
-                regexImageScalings = @"\((.[^\)]*?[png|jpg|jpeg]) =x(\d+)\)";
-                md = Regex.Replace(md, regexImageScalings, @"($1){height=$2}");
-
-                // determine the correct nesting of pages and related chapters
-                pipelineBuilder.BlockParsers.Replace<HeadingBlockParser>(new OffsetHeadingBlockParser(mf.Level + 1));
-
-                if (_options.ConvertMermaid)
+                else
                 {
-                    pipelineBuilder = pipelineBuilder.UseMermaidContainers();
+                    Log("Page tags match the provided filter", LogLevel.Information, 3);
                 }
+            }
 
-                var pipeline = pipelineBuilder.Build();
+            //adjust the links
+            CorrectLinksAndImages(document, file, mf);
 
-                //parse the markdown document so we can alter it later
-                var document = (MarkdownObject)Markdown.Parse(md, pipeline);
+            string html = null;
+            var builder = new StringBuilder();
+            using (var writer = new System.IO.StringWriter(builder))
+            {
+                // write the HTML output
+                var renderer = new HtmlRenderer(writer);
+                pipeline.Setup(renderer);
+                renderer.Render(document);
+            }
+            html = builder.ToString();
 
-                if (!string.IsNullOrEmpty(_options.Filter))
-                {
-                    if (!PageMatchesFilter(document))
-                    {
-                        Log("Page does not have correct tags - skip", LogLevel.Information, 3);
-                        continue;
-                    }
-                    else
-                    {
-                        Log("Page tags match the provided filter", LogLevel.Information, 3);
-                    }
-                }
+            //add html anchor
+            var anchorPath = file.FullName.Substring(_path.Length);
+            anchorPath = anchorPath.Replace("\\", "");
+            anchorPath = anchorPath.ToLower();
+            anchorPath = anchorPath.Replace(".md", "");
 
-                //adjust the links
-                CorrectLinksAndImages(document, file, mf);
+            var relativePath = file.FullName.Substring(_path.Length);
 
-                string html = null;
-                var builder = new StringBuilder();
-                using (var writer = new System.IO.StringWriter(builder))
-                {
-                    // write the HTML output
-                    var renderer = new HtmlRenderer(writer);
-                    pipeline.Setup(renderer);
-                    renderer.Render(document);
-                }
-                html = builder.ToString();
+            var anchor = $"<a id=\"{anchorPath}\">&nbsp;</a>";
 
-                //add html anchor
-                var anchorPath = file.FullName.Substring(_path.Length);
-                anchorPath = anchorPath.Replace("\\", "");
-                anchorPath = anchorPath.ToLower();
-                anchorPath = anchorPath.Replace(".md", "");
+            Log($"Anchor: {anchorPath}", LogLevel.Information, 3);
 
-                var relativePath = file.FullName.Substring(_path.Length);
+            html = anchor + html;
 
-                var anchor = $"<a id=\"{anchorPath}\">&nbsp;</a>";
+            if (_options.PathToHeading)
+            {
+                var filename = file.Name;
+                filename = HttpUtility.UrlDecode(relativePath);
+                var heading = $"<b>{filename}</b>";
+                html = heading + html;
+            }
 
-                Log($"Anchor: {anchorPath}", LogLevel.Information, 3);
-
-                html = anchor + html;
-
-                if (_options.PathToHeading)
-                {
-                    var filename = file.Name;
-                    filename = HttpUtility.UrlDecode(relativePath);
-                    var heading = $"<b>{filename}</b>";
-                    html = heading + html;
-                }
-
-                if (_options.Heading)
-                {
-                    var filename = file.Name.Replace(".md", "");
-                    filename = HttpUtility.UrlDecode(filename);
-                    var filenameEscapes = new Dictionary<string, string>
+            if (_options.Heading)
+            {
+                var filename = file.Name.Replace(".md", "");
+                filename = HttpUtility.UrlDecode(filename);
+                var filenameEscapes = new Dictionary<string, string>
                     {
                         {"%3A", ":"},
                         {"%3C", "<"},
@@ -379,281 +395,281 @@ namespace azuredevops_export_wiki
                         {"-", " "}
                     };
 
-                    var title = new StringBuilder(filename);
-                    foreach (var filenameEscape in filenameEscapes)
-                    {
-                        title.Replace(filenameEscape.Key, filenameEscape.Value);
-                    }
-
-                    var heading = $"<h{mf.Level + 1}>{title}</h{mf.Level + 1}>";
-                    html = heading + html;
-                }
-
-                if (_options.BreakPage)
+                var title = new StringBuilder(filename);
+                foreach (var filenameEscape in filenameEscapes)
                 {
-                    //if not one the last page
-                    if (i + 1 < files.Count)
-                    {
-                        Log("----------------------", LogLevel.Information);
-                        Log("Adding new page to PDF", LogLevel.Information);
-                        Log("----------------------", LogLevel.Information);
-                        html = "<div style='page-break-after: always;'>" + html + "</div>";
-                    }
+                    title.Replace(filenameEscape.Key, filenameEscape.Value);
                 }
 
-                if (_options.Debug)
-                {
-                    Log($"html:\n{html}", LogLevel.Debug, 1);
-                }
-                sb.Append(html);
+                var heading = $"<h{mf.Level + 1}>{title}</h{mf.Level + 1}>";
+                html = heading + html;
             }
 
-            var result = sb.ToString();
+            if (_options.BreakPage)
+            {
+                //if not one the last page
+                if (i + 1 < files.Count)
+                {
+                    Log("----------------------", LogLevel.Information);
+                    Log("Adding new page to PDF", LogLevel.Information);
+                    Log("----------------------", LogLevel.Information);
+                    html = "<div style='page-break-after: always;'>" + html + "</div>";
+                }
+            }
 
-            return result;
+            if (_options.Debug)
+            {
+                Log($"html:\n{html}", LogLevel.Debug, 1);
+            }
+            sb.Append(html);
         }
 
-        private bool PageMatchesFilter(MarkdownObject document)
+        var result = sb.ToString();
+
+        return result;
+    }
+
+    private bool PageMatchesFilter(MarkdownObject document)
+    {
+        if (!string.IsNullOrEmpty(_options.Filter))
         {
-            if (!string.IsNullOrEmpty(_options.Filter))
+            Log($"Filter provided: {_options.Filter}", LogLevel.Information, 2);
+
+            var filters = _options.Filter.Split(",");
+            var frontmatter = document.Descendants<YamlFrontMatterBlock>().FirstOrDefault();
+
+            if (frontmatter == null)
             {
-                Log($"Filter provided: {_options.Filter}", LogLevel.Information, 2);
-
-                var filters = _options.Filter.Split(",");
-                var frontmatter = document.Descendants<YamlFrontMatterBlock>().FirstOrDefault();
-
-                if (frontmatter == null)
-                {
-                    Log($"Page has no frontmatter tags", LogLevel.Information, 2);
-                    return false;
-                }
-
-                var frontmatterTags = new List<string>();
-                var lastTag = "";
-                foreach (StringLine frontmatterline in frontmatter.Lines)
-                {
-
-                    var splice = frontmatterline.Slice.ToString();
-                    var split = splice.Split(":");
-
-                    //title:test or <empty>:test2 or tags:<empty>
-                    if (split.Length == 2)
-                    {
-                        //title:
-                        if (string.IsNullOrEmpty(split[1]))
-                        {
-                            lastTag = split[0].Trim();
-                        }
-                        //title:test
-                        else if (!string.IsNullOrEmpty(split[0]))
-                        {
-                            frontmatterTags.Add($"{split[0].Trim()}:{split[1].Trim()}");
-                        }
-                        //:test2
-                        else
-                        {
-                            frontmatterTags.Add($"{lastTag}:{split[1].Trim()}");
-                        }
-                    }
-                    else if (split.Length == 1 && !string.IsNullOrEmpty(split[0]))
-                    {
-                        frontmatterTags.Add($"{lastTag}:{split[0].Trim().Substring(2)}");
-                    }
-                }
-
-                foreach (var filter in filters)
-                {
-                    if (frontmatterTags.Contains(filter, StringComparer.OrdinalIgnoreCase))
-                    {
-                        return true;
-                    }
-                }
+                Log($"Page has no frontmatter tags", LogLevel.Information, 2);
                 return false;
             }
-            return true;
-        }
 
-        private string RemoveTableOfContent(string document)
-        {
-            if (document.Contains("TOC"))
+            var frontmatterTags = new List<string>();
+            var lastTag = "";
+            foreach (StringLine frontmatterline in frontmatter.Lines)
             {
-                Log("Removing Table of contents [[_TOC_]] from pdf", LogLevel.Warning, 2);
-                document = document.Replace("[[_TOC_]]", "");
-            }
-            return document;
-        }
 
-        public void CorrectLinksAndImages(MarkdownObject document, FileInfo file, MarkdownFile mf)
-        {
-            Log("Correcting Links and Images", LogLevel.Information, 2);
-            // walk the document node tree and replace relative image links
-            // and relative links to markdown pages
-            foreach (var link in document.Descendants().OfType<LinkInline>())
-            {
-                if (link.Url != null)
+                var splice = frontmatterline.Slice.ToString();
+                var split = splice.Split(":");
+
+                //title:test or <empty>:test2 or tags:<empty>
+                if (split.Length == 2)
                 {
-                    if (!link.Url.StartsWith("http"))
+                    //title:
+                    if (string.IsNullOrEmpty(split[1]))
                     {
-                        string absPath = null;
-
-                        //handle --attachments-path case
-                        if (!string.IsNullOrEmpty(this._options.AttachmentsPath) && link.Url.StartsWith("/.attachments") || link.Url.StartsWith(".attachments"))
-                        {
-                            var linkUrl = link.Url.Split('/').Last();
-
-                            //urls could be encoded and contain spaces - they are then not found on disk
-                            linkUrl = HttpUtility.UrlDecode(linkUrl);
-
-                            absPath = Path.GetFullPath(Path.Combine(this._options.AttachmentsPath, linkUrl));
-                        }
-                        else if (link.Url.StartsWith("/"))
-                        {
-                            //urls could be encoded and contain spaces - they are then not found on disk
-                            var linkUrl = HttpUtility.UrlDecode(link.Url);
-
-                            //if the url contains an anchor, remove it
-                            linkUrl = linkUrl.Split('#')[0];
-
-                            absPath = Path.GetFullPath(_path + linkUrl);
-                        }
-                        else
-                        {
-                            var linkNoAnchor = link.Url.Split('#')[0];
-                            absPath = Path.GetFullPath(file.Directory.FullName + "/" + linkNoAnchor);
-                        }
-
-                        //the file is a markdown file, create a link to it
-                        var isMarkdown = false;
-                        var fileInfo = new FileInfo(absPath);
-                        if (fileInfo.Exists && fileInfo.Extension.Equals(".md", StringComparison.InvariantCultureIgnoreCase))
-                        {
-                            isMarkdown = true;
-                        }
-                        else if (fileInfo.Exists)
-                        {
-                            link.Url = $"file:///{absPath}";
-                        }
-
-                        fileInfo = new FileInfo($"{absPath}.md");
-                        if (fileInfo.Exists && fileInfo.Extension.Equals(".md", StringComparison.InvariantCultureIgnoreCase))
-                        {
-                            isMarkdown = true;
-                        }
-
-                        //only markdown files get a pdf internal link
-                        if (isMarkdown)
-                        {
-                            var relPath = mf.RelativePath + "\\" + link.Url;
-
-                            //remove anchor
-                            relPath = relPath.Split("#")[0];
-
-                            relPath = relPath.Replace("/", "\\");
-                            relPath = relPath.Replace("\\", "");
-                            relPath = relPath.Replace(".md", "");
-                            relPath = relPath.ToLower();
-                            Log($"Markdown link: {relPath}", LogLevel.Information, 2);
-                            link.Url = $"#{relPath}";
-                        }
+                        lastTag = split[0].Trim();
+                    }
+                    //title:test
+                    else if (!string.IsNullOrEmpty(split[0]))
+                    {
+                        frontmatterTags.Add($"{split[0].Trim()}:{split[1].Trim()}");
+                    }
+                    //:test2
+                    else
+                    {
+                        frontmatterTags.Add($"{lastTag}:{split[1].Trim()}");
                     }
                 }
-                CorrectLinksAndImages(link, file, mf);
-            }
-        }
-
-        private List<MarkdownFile> ReadOrderFiles(string path, int level)
-        {
-            //read the .order file
-            //if there is an entry and a folder with the same name, dive deeper
-            var directory = new DirectoryInfo(Path.GetFullPath(path));
-            Log($"Reading .order file in directory {path}");
-            var orderFiles = directory.GetFiles(".order", SearchOption.TopDirectoryOnly);
-
-            if (orderFiles.Count() > 0)
-            { Log("Order file found", LogLevel.Debug, 1); }
-
-            var result = new List<MarkdownFile>();
-            foreach (var orderFile in orderFiles)
-            {
-                var orders = File.ReadAllLines(orderFile.FullName);
-                { Log($"Pages: {orders.Count()}", LogLevel.Information, 2); }
-                var relativePath = orderFile.Directory.FullName.Length > directory.FullName.Length ?
-                    orderFile.Directory.FullName.Substring(directory.FullName.Length) :
-                    "/";
-
-
-
-                foreach (var order in orders)
+                else if (split.Length == 1 && !string.IsNullOrEmpty(split[0]))
                 {
-                    //skip empty lines
-                    if (string.IsNullOrEmpty(order))
-                    {
-                        continue;
-                        //todo add log entry that we skipped an empty line
-                    }
-
-                    MarkdownFile mf = new MarkdownFile();
-                    mf.AbsolutePath = $"{orderFile.Directory.FullName}\\{order}.md";
-                    mf.RelativePath = $"{relativePath}";
-                    mf.Level = level;
-                    result.Add(mf);
-
-                    { Log($"Adding page: {mf.AbsolutePath}", LogLevel.Information, 2); }
-
-                    var childPath = Path.Combine(orderFile.Directory.FullName, order);
-                    if (Directory.Exists(childPath))
-                    {
-                        //recursion
-                        result.AddRange(ReadOrderFiles(childPath, level + 1));
-                    }
+                    frontmatterTags.Add($"{lastTag}:{split[0].Trim().Substring(2)}");
                 }
             }
 
-            return result;
+            foreach (var filter in filters)
+            {
+                if (frontmatterTags.Contains(filter, StringComparer.OrdinalIgnoreCase))
+                {
+                    return true;
+                }
+            }
+            return false;
         }
+        return true;
+    }
 
-        private void Log(string msg, LogLevel logLevel = LogLevel.Information, int indent = 0)
+    private string RemoveTableOfContent(string document)
+    {
+        if (document.Contains("TOC"))
         {
-            var indentString = new string(' ', indent * 2);
-            if (_options.Debug && logLevel == LogLevel.Debug)
-            {
-                Console.WriteLine(indentString + msg);
-            }
-
-            if (_options.Verbose && logLevel == LogLevel.Information)
-            {
-                Console.WriteLine(indentString + msg);
-            }
-
-            if (logLevel == LogLevel.Warning)
-            {
-                var color = Console.ForegroundColor;
-                Console.ForegroundColor = ConsoleColor.Yellow;
-                Console.WriteLine(indentString + $"WARN: {msg}");
-                Console.ForegroundColor = color;
-            }
-
-            if (logLevel == LogLevel.Error)
-            {
-                var color = Console.ForegroundColor;
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine(indentString + $"ERR: {msg}");
-                Console.ForegroundColor = color;
-            }
+            Log("Removing Table of contents [[_TOC_]] from pdf", LogLevel.Warning, 2);
+            document = document.Replace("[[_TOC_]]", "");
         }
+        return document;
+    }
 
-        public class MarkdownFile
+    public void CorrectLinksAndImages(MarkdownObject document, FileInfo file, MarkdownFile mf)
+    {
+        Log("Correcting Links and Images", LogLevel.Information, 2);
+        // walk the document node tree and replace relative image links
+        // and relative links to markdown pages
+        foreach (var link in document.Descendants().OfType<LinkInline>())
         {
-            public string AbsolutePath;
-            public string RelativePath;
-            public int Level;
-
-            public override string ToString()
+            if (link.Url != null)
             {
-                return $"[{Level}] {AbsolutePath}";
+                if (!link.Url.StartsWith("http"))
+                {
+                    string absPath = null;
+
+                    //handle --attachments-path case
+                    if (!string.IsNullOrEmpty(this._options.AttachmentsPath) && link.Url.StartsWith("/.attachments") || link.Url.StartsWith(".attachments"))
+                    {
+                        var linkUrl = link.Url.Split('/').Last();
+
+                        //urls could be encoded and contain spaces - they are then not found on disk
+                        linkUrl = HttpUtility.UrlDecode(linkUrl);
+
+                        absPath = Path.GetFullPath(Path.Combine(this._options.AttachmentsPath, linkUrl));
+                    }
+                    else if (link.Url.StartsWith("/"))
+                    {
+                        //urls could be encoded and contain spaces - they are then not found on disk
+                        var linkUrl = HttpUtility.UrlDecode(link.Url);
+
+                        //if the url contains an anchor, remove it
+                        linkUrl = linkUrl.Split('#')[0];
+
+                        absPath = Path.GetFullPath(_path + linkUrl);
+                    }
+                    else
+                    {
+                        var linkNoAnchor = link.Url.Split('#')[0];
+                        absPath = Path.GetFullPath(file.Directory.FullName + "/" + linkNoAnchor);
+                    }
+
+                    //the file is a markdown file, create a link to it
+                    var isMarkdown = false;
+                    var fileInfo = new FileInfo(absPath);
+                    if (fileInfo.Exists && fileInfo.Extension.Equals(".md", StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        isMarkdown = true;
+                    }
+                    else if (fileInfo.Exists)
+                    {
+                        link.Url = $"file:///{absPath}";
+                    }
+
+                    fileInfo = new FileInfo($"{absPath}.md");
+                    if (fileInfo.Exists && fileInfo.Extension.Equals(".md", StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        isMarkdown = true;
+                    }
+
+                    //only markdown files get a pdf internal link
+                    if (isMarkdown)
+                    {
+                        var relPath = mf.RelativePath + "\\" + link.Url;
+
+                        //remove anchor
+                        relPath = relPath.Split("#")[0];
+
+                        relPath = relPath.Replace("/", "\\");
+                        relPath = relPath.Replace("\\", "");
+                        relPath = relPath.Replace(".md", "");
+                        relPath = relPath.ToLower();
+                        Log($"Markdown link: {relPath}", LogLevel.Information, 2);
+                        link.Url = $"#{relPath}";
+                    }
+                }
             }
+            CorrectLinksAndImages(link, file, mf);
         }
     }
+
+    private List<MarkdownFile> ReadOrderFiles(string path, int level)
+    {
+        //read the .order file
+        //if there is an entry and a folder with the same name, dive deeper
+        var directory = new DirectoryInfo(Path.GetFullPath(path));
+        Log($"Reading .order file in directory {path}");
+        var orderFiles = directory.GetFiles(".order", SearchOption.TopDirectoryOnly);
+
+        if (orderFiles.Count() > 0)
+        { Log("Order file found", LogLevel.Debug, 1); }
+
+        var result = new List<MarkdownFile>();
+        foreach (var orderFile in orderFiles)
+        {
+            var orders = File.ReadAllLines(orderFile.FullName);
+            { Log($"Pages: {orders.Count()}", LogLevel.Information, 2); }
+            var relativePath = orderFile.Directory.FullName.Length > directory.FullName.Length ?
+                orderFile.Directory.FullName.Substring(directory.FullName.Length) :
+                "/";
+
+
+
+            foreach (var order in orders)
+            {
+                //skip empty lines
+                if (string.IsNullOrEmpty(order))
+                {
+                    continue;
+                    //todo add log entry that we skipped an empty line
+                }
+
+                MarkdownFile mf = new MarkdownFile();
+                mf.AbsolutePath = $"{orderFile.Directory.FullName}\\{order}.md";
+                mf.RelativePath = $"{relativePath}";
+                mf.Level = level;
+                result.Add(mf);
+
+                { Log($"Adding page: {mf.AbsolutePath}", LogLevel.Information, 2); }
+
+                var childPath = Path.Combine(orderFile.Directory.FullName, order);
+                if (Directory.Exists(childPath))
+                {
+                    //recursion
+                    result.AddRange(ReadOrderFiles(childPath, level + 1));
+                }
+            }
+        }
+
+        return result;
+    }
+
+    private void Log(string msg, LogLevel logLevel = LogLevel.Information, int indent = 0)
+    {
+        var indentString = new string(' ', indent * 2);
+        if (_options.Debug && logLevel == LogLevel.Debug)
+        {
+            Console.WriteLine(indentString + msg);
+        }
+
+        if (_options.Verbose && logLevel == LogLevel.Information)
+        {
+            Console.WriteLine(indentString + msg);
+        }
+
+        if (logLevel == LogLevel.Warning)
+        {
+            var color = Console.ForegroundColor;
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            Console.WriteLine(indentString + $"WARN: {msg}");
+            Console.ForegroundColor = color;
+        }
+
+        if (logLevel == LogLevel.Error)
+        {
+            var color = Console.ForegroundColor;
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine(indentString + $"ERR: {msg}");
+            Console.ForegroundColor = color;
+        }
+    }
+
+    public class MarkdownFile
+    {
+        public string AbsolutePath;
+        public string RelativePath;
+        public int Level;
+
+        public override string ToString()
+        {
+            return $"[{Level}] {AbsolutePath}";
+        }
+    }
+}
 
 
 }
