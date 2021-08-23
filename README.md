@@ -38,57 +38,22 @@ Currently it requires a x64 runtime.
 The download is available [here](https://github.com/MaxMelcher/AzureDevOps.WikiPDFExport/releases)
 
 ## ⚙ Configuration Options
-
-### --help
-Help - outputs all the flags/parameters
-
-### -o / --output
-The path to the export file including the filename, e.g. c:\export.pdf
-
-### -b / --breakPage
-For every wiki page a new page in the PDF will be created
-
-### -h / --heading
-For every wiki page create a heading in the PDF. If the file is called Home.md a new #Home-heading is added to PDF.
-
-### -s / --single
-Path to a single markdown file to convert to PDF. If you want to write your changelog in the wiki, this is your parameter to only convert a single page. 
--p parameter is required, too.
-
-### -p / --path
-Path to the wiki folder. If not provided, the current folder of the executable is used.  
-If you only want to convert a subfolder and have images, then you must provide the path to the attachments folder with --attachments-path. 
-
 ### --attachments-path
 Path to the .attachments folder.  If not provided, the .attachments is assumed to be located under the folder of the wiki (-p/--path).
-
-### -m / --mermaid
-Convert mermaid diagrams to SVG. Will download latest chromium, if chrome-path is not defined.
-
-### --mermaidjs-path
-Path of the mermaid.js file. It'll be used if mermaid diagrams support is turned on (-m/--mermaid). If not specified, 'https://cdnjs.cloudflare.com/ajax/libs/mermaid/8.6.4/mermaid.min.js' will be downloaded.
-
+### -b / --breakPage
+For every wiki page a new page in the PDF will be created
 ### --chrome-path
 Path of the chrome or chromium executable. It'll be used if mermaid diagrams support is turned on (-m/--mermaid). If not specified, a headless version will be downloaded.
-
 ### --css 
 Path to the stylesheet to overwrite the look of certain components in the PDF. See [styles.css](styles.css) for examples. To get the html file, use the [--debug flag](#-d----debug) to inspect and style it.
-
 ### -c / --highlight-code 
 Highlight code blocks using highligh.js
-
-### --highlight-style 
-hightlight.js style used for code blocks. Defaults to 'vs'. See https://github.com/highlightjs/highlight.js/tree/main/src/styles for a full list.
-
-### -v / --verbose
-Verbose mode. Logging will added to the console window
-
 ### -d / --debug
 Debug mode. Logs tons of stuff and even exports the intermediate html file
-
-### --pathToHeading
-Add path of the file to the header
-
+### --disableTelemetry
+Disables the telemetry tracking, see [Telemetry](#telemetry)
+### --filter
+Filters the pages depending on the page [yaml tags](https://docs.microsoft.com/en-us/azure/devops/project/wiki/wiki-markdown-guidance?view=azure-devops#yaml-tags).
 ### --footer-left, --footer-center, --footer-right, --header-left, --header-center, --header-right,
 Headers and footers can be added to the document by the --header-* and
   --footer* arguments respectfully.  In header and footer text string supplied
@@ -107,19 +72,39 @@ Headers and footers can be added to the document by the --header-* and
    * [doctitle]   Replaced by the title of the output document
    * [sitepage]   Replaced by the number of the page in the current site being converted
    * [sitepages]  Replaced by the number of pages in the current site being converted
-
+### --help
+Help - outputs all the flags/parameters
+### -h / --heading
+For every wiki page create a heading in the PDF. If the file is called Home.md a new #Home-heading is added to PDF.
 ### --header-url, --footer-url
 Provide a path to html files that will be added as header and footer. See [example-footer.html](example-footer.html), [example-header.html](example-header.html)
-
 ### --HideHeaderLine, --hideFooterLine
 Removes the horizontal line in the header or footer. 
-
-### --disableTelemetry
-Disables the telemetry tracking, see [Telemetry](#telemetry)
+### --highlight-style 
+hightlight.js style used for code blocks. Defaults to 'vs'. See https://github.com/highlightjs/highlight.js/tree/main/src/styles for a full list.
+### -m / --mermaid
+Convert mermaid diagrams to SVG. Will download latest chromium, if chrome-path is not defined.
+### --mermaidjs-path
+Path of the mermaid.js file. It'll be used if mermaid diagrams support is turned on (-m/--mermaid). If not specified, 'https://cdnjs.cloudflare.com/ajax/libs/mermaid/8.6.4/mermaid.min.js' will be downloaded.
 ### --open
 Opens the PFD file after conversion. Great for development, not great in a build task.
-### --filter
-Filters the pages depending on the page [yaml tags](https://docs.microsoft.com/en-us/azure/devops/project/wiki/wiki-markdown-guidance?view=azure-devops#yaml-tags).
+### -o / --output
+The path to the export file including the filename, e.g. c:\export.pdf
+### --organization 
+Azure Devops organization URL used to convert work item references to work item links. Ex: https://dev.azure.com/MyOrganizationName/
+### -p / --path
+Path to the wiki folder. If not provided, the current folder of the executable is used.  
+If you only want to convert a subfolder and have images, then you must provide the path to the attachments folder with --attachments-path.
+### --pat
+Personal access token used to access your Azure Devops Organization. If no token is provided
+and organization and project parameters are provided, it will start a prompt asking you to login.
+### --pathToHeading
+Add path of the file to the header
+### -s / --single
+Path to a single markdown file to convert to PDF. If you want to write your changelog in the wiki, this is your parameter to only convert a single page. 
+-p parameter is required, too.
+### -v / --verbose
+Verbose mode. Logging will added to the console window
 
 ## 😲 Limitations
 
@@ -137,6 +122,17 @@ The tool uses Application Insights for basic telemetry:
 - The duration of the export and the count of wiki pages is tracked and submitted to Azure. 
 - In the case of an error, the exception is submitted. 
 - No wiki data/content is submitted.
+
+## FAQ
+
+### Some pages are missing? 
+Please check the .order files in your wiki if the pages are listed in there.
+
+### The emoticons are missing in the PDF? 
+Please check if you have page file that are encoded (e.g. Test%20dFiles.md)
+
+### There is an error 'Qt: Could not initialize OLE (error 80010106)'. 
+Yes, please ignore for now.
 
 ## ♥ Thanks
 

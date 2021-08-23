@@ -154,6 +154,30 @@ namespace azuredevops_export_wiki
                     var head = "<meta http-equiv=Content-Type content=\"text/html; charset=utf-8\">";
                     var headEnd = "</head>";
 
+//this adds the css twice, but makes troubleshooting easier
+                    var cssPath = "";
+                    if (string.IsNullOrEmpty(_options.CSS))
+                    {
+                        cssPath = "devopswikistyle.css";
+                        Log("No CSS specified, using devopswikistyle.css", LogLevel.Information, 2);
+                    }
+                    else
+                    {
+                        cssPath = Path.GetFullPath(_options.CSS);
+                        if (!File.Exists(cssPath))
+                        {
+                            Log($"CSS file does not exist at path {cssPath}", LogLevel.Warning);
+                        }
+                    }
+
+                    string style ="";
+                    if (File.Exists(cssPath))
+                    {
+                        var css = File.ReadAllText(cssPath);
+                        style = $"<style>{css}</style>";
+                        head += style;
+                    }
+
                     if (_options.ConvertMermaid)
                     {
                         string mermaid = !string.IsNullOrEmpty(_options.MermaidJsPath) ?
@@ -279,7 +303,7 @@ namespace azuredevops_export_wiki
                         File.WriteAllText(htmlPath, html);
                     }
 
-                    var path = ConvertHTMLToPDF(html);
+                    var path = ConvertHTMLToPDF(html, cssPath);
 
                     Console.ForegroundColor = ConsoleColor.Green;
                     Console.WriteLine();
@@ -308,7 +332,7 @@ namespace azuredevops_export_wiki
             }
         }
 
-        private string ConvertHTMLToPDF(string html)
+        private string ConvertHTMLToPDF(string html, string cssPath)
         {
             Log("Converting HTML to PDF");
             Log("Ignore errors like 'Qt: Could not initialize OLE (error 80010106)'", LogLevel.Warning);
@@ -354,22 +378,6 @@ namespace azuredevops_export_wiki
                 footerSettings.HtmUrl = _options.FooterUrl;
             }
 
-
-            var cssPath = "";
-            if (string.IsNullOrEmpty(_options.CSS))
-            {
-                cssPath = "devopswikistyle.css";
-                Log("No CSS specified, using devopswikistyle.css", LogLevel.Information, 2);
-            }
-            else
-            {
-                cssPath = Path.GetFullPath(_options.CSS);
-                if (!File.Exists(cssPath))
-                {
-                    Log($"CSS file does not exist at path {cssPath}", LogLevel.Warning);
-                }
-            }
-
             var doc = new HtmlToPdfDocument()
             {
                 GlobalSettings = {
@@ -385,11 +393,11 @@ namespace azuredevops_export_wiki
                         HtmlContent = html,
                         WebSettings = {
                             DefaultEncoding = "utf-8",
-                            UserStyleSheet = cssPath
+                            UserStyleSheet = "file://D:/Git/WikiPDFExport/AzureDevOps.WikiPDFExport/devopswikistyle.css"
                          },
                         HeaderSettings = headerSettings,
                         FooterSettings = footerSettings,
-                        UseLocalLinks = true
+                        UseLocalLinks = true,
                     }
                 }
             };
@@ -840,7 +848,7 @@ namespace azuredevops_export_wiki
                 </span>
             </span>
             ";
-            
+
         }
 
         public class MarkdownFile
