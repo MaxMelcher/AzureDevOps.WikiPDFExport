@@ -173,6 +173,8 @@ Following variables are included in the above partial view:
 
 Working link between #7 text
 
+#6 - A bug
+
 #NotAWorkItemId
 
 Non working link#7
