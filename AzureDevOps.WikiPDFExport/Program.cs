@@ -98,5 +98,11 @@ namespace azuredevops_export_wiki
 
         [Option("hightlight-style", Required = false, HelpText = "hightlight.js style used for code blocks. Defaults to 'vs'. See https://github.com/highlightjs/highlight.js/tree/main/src/styles for a full list.")]
         public string HighlightStyle { get;set; }
+
+        [Option("pat", Required = false, HelpText = "Personal access token used to access your Azure Devops Organization. If no token is provided and organization and project parameters are provided, it will start a prompt asking you to login.")]
+        public string AzureDevopsPAT { get;set; }
+
+        [Option("organization", Required = false, HelpText = "Azure Devops organization URL used to convert work item references to work item links. Ex: https://dev.azure.com/MyOrganizationName/")]
+        public string AzureDevopsOrganization { get;set; }
     }
 }
