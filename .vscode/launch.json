@@ -21,7 +21,7 @@
                 "-h",
                 "-b",
 //              "-m",
-             // "--math",
+              "--math",
               //"--mathjax-path=MathJax.js",
               "--debug",
             //  "--pathToHeading",
@@ -44,7 +44,7 @@
                 //"-m"
                 //"--filter=tags:test,tags:license"
                 // "-c"
-                 "--organization=https://dev.azure.com/mmelcher",
+                // "--organization=https://dev.azure.com/mmelcher",
                  "--pat=7dmhcnemllrx6rn2z5zoh35res6nnl5xnfkyzput3pueaoqrvwr" //add a 'q' to the end. valid until August 2022.
             ],
             "cwd": "${workspaceFolder}/AzureDevOps.WikiPDFExport",
