@@ -123,7 +123,7 @@ The tool uses Application Insights for basic telemetry:
 - In the case of an error, the exception is submitted. 
 - No wiki data/content is submitted.
 
-## FAQ
+## ❓ FAQ
 
 ### Some pages are missing? 
 Please check the .order files in your wiki if the pages are listed in there.
