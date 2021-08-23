@@ -89,30 +89,17 @@ Debug mode. Logs tons of stuff and even exports the intermediate html file
 ### --pathToHeading
 Add path of the file to the header
 
-### --footer-left, --footer-center, --footer-right, --header-left, --header-center, --header-right,
+### --header-template, --footer-template
 Headers and footers can be added to the document by the --header-* and
-  --footer* arguments respectfully.  In header and footer text string supplied
-  to e.g. --header-left, the following variables will be substituted.
+  --footer* template arguments respectfully.  In header and footer string supplied
+ the following variables will be substituted. See [PDF options from puppeteer](https://pptr.dev/#?product=Puppeteer&show=api-pagepdfoptions). 
 
-   * [page]       Replaced by the number of the pages currently being printed
-   * [frompage]   Replaced by the number of the first page to be printed
+   * [pageNumber]       Replaced by the number of the pages currently being printed
    * [topage]     Replaced by the number of the last page to be printed
-   * [webpage]    Replaced by the URL of the page being printed
-   * [section]    Replaced by the name of the current section
-   * [subsection] Replaced by the name of the current subsection
-   * [date]       Replaced by the current date in system local format
-   * [isodate]    Replaced by the current date in ISO 8601 extended format
-   * [time]       Replaced by the current time in system local format
-   * [title]      Replaced by the title of the of the current page object
-   * [doctitle]   Replaced by the title of the output document
-   * [sitepage]   Replaced by the number of the page in the current site being converted
-   * [sitepages]  Replaced by the number of pages in the current site being converted
+   * [totalPages]       Replaced by the current date in system local format
 
-### --header-url, --footer-url
-Provide a path to html files that will be added as header and footer. See [example-footer.html](example-footer.html), [example-header.html](example-header.html)
-
-### --HideHeaderLine, --hideFooterLine
-Removes the horizontal line in the header or footer. 
+### --header-file, --footer-file
+Provide a path to html files that will be added as header and footer. See [example-footer.html](example-footer.html), [example-header.html](example-header.html).
 
 ### --disableTelemetry
 Disables the telemetry tracking, see [Telemetry](#telemetry)

@@ -234,18 +234,20 @@ namespace azuredevops_export_wiki
                 var page = await browser.NewPageAsync();
                 await page.SetContentAsync(html);
 
+//todo load header/footer template from file
+
                 var pdfoptions = new PdfOptions()
                 {
                     DisplayHeaderFooter = true,
                     MarginOptions = {
                         Top = "100px",
                         Bottom = "100px",
-                        Left ="30px",
-                        Right = "30px"
+                        Left ="100px",
+                        Right = "100px"
                     },
                     Format = PuppeteerSharp.Media.PaperFormat.A4,
+                    HeaderTemplate = "<div class=\"header\" style=\"padding: 0 !important; margin: 0; -webkit-print-color-adjust: exact; background-color: red; color: white; width: 100%; text-align: left; font-size: 12px;\"><br /> Page <span class=\"pageNumber\"></span> of <span class=\"totalPages\"></span></div>",
                     FooterTemplate= "<h1 style='margin: 10px;font-size: 20px;'><span class='title'></span></h1><div style='font-size:10px!important;color:grey!important;padding-left:400px;' class='pdfheader'>title: <span class='title'></span> url: <span class='url'></span> <span>Page: </span><span class='pageNumber'></span>/<span class='totalPages'></span></div>",
-                    HeaderTemplate = "<div class=\"header\" style=\"font-size: 10px;color: #999; margin: 15px 0;clear:both; position: relative; top: 20px;font-family:my-font\"><p>header text</p></div>",
             };
 
 
