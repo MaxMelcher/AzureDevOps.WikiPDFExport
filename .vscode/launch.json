@@ -43,6 +43,8 @@
                 //"-m"
                 //"--filter=tags:test,tags:license"
                 // "-c"
+                // "--organization=https://dev.azure.com/mmelcher",
+                // "--pat=e3jbikqf33tucikgqwznlbi263hxjsw5nlstb2n2fzvcmtrw5tuq" #Read issues, valid until August 2022
             ],
             "cwd": "${workspaceFolder}/AzureDevOps.WikiPDFExport",
             "console": "internalConsole",

@@ -164,3 +164,19 @@ Following variables are included in the above partial view:
 | ```<input type="hidden" id="ConfirmClearLoginHistoryText" value="@Messages.ConfirmClearLoginHistoryText" />``` | Messages.ConfirmClearLoginHistoryText | Messages.resx | Are you sure to clear Login History? |
 | ```<input type="hidden" id="MissingRequiredFields" value="@Messages.MissingRequiredFields" />``` | Messages.MissingRequiredFields | Messages.resx | Validation Failed, Please Provide Required Fields |
   
+## Azure Devops Work Item link
+
+#7
+
+* Working link in list
+* #8
+
+Working link between #7 text
+
+#6 - A bug
+
+#NotAWorkItemId
+
+Non working link#7
+#7Non working link
+Definitly#7Non working link

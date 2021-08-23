@@ -23,6 +23,13 @@ using azuredevops_export_wiki.MermaidContainer;
 using Markdig.Parsers;
 using Markdig.Extensions.Yaml;
 using Markdig.Helpers;
+using Microsoft.TeamFoundation.WorkItemTracking.WebApi;
+using Microsoft.TeamFoundation.WorkItemTracking.WebApi.Models;
+using Microsoft.VisualStudio.Services.Client;
+using Microsoft.VisualStudio.Services.Common;
+
+using Microsoft.VisualStudio.Services.WebApi;
+using Process = System.Diagnostics.Process;
 
 namespace azuredevops_export_wiki
 {
@@ -31,6 +38,7 @@ namespace azuredevops_export_wiki
         private Options _options;
         private TelemetryClient _telemetryClient;
         private string _path;
+        private Dictionary<string, string> _iconClass;
 
         public WikiPDFExporter(Options options)
         {
@@ -46,6 +54,51 @@ namespace azuredevops_export_wiki
             }
             _telemetryClient = new TelemetryClient(config);
 
+            this._iconClass = new Dictionary<string, string>(){
+                {"icon_crown", "bowtie-symbol-crown"},
+                {"icon_trophy", "bowtie-symbol-trophy"},
+                {"icon_list", "bowtie-symbol-list"},
+                {"icon_book", "bowtie-symbol-book"},
+                {"icon_sticky_note", "bowtie-symbol-stickynote"},
+                {"icon_clipboard", "bowtie-symbol-task"},
+                {"icon_insect", "bowtie-symbol-bug"},
+                {"icon_traffic_cone", "bowtie-symbol-impediment"},
+                {"icon_chat_bubble", "bowtie-symbol-review"},
+                {"icon_flame", "bowtie-symbol-flame"},
+                {"icon_megaphone", "bowtie-symbol-ask"},
+                {"icon_test_plan", "bowtie-test-plan"},
+                {"icon_test_suite", "bowtie-test-suite"},
+                {"icon_test_case", "bowtie-test-case"},
+                {"icon_test_step", "bowtie-test-step"},
+                {"icon_test_parameter", "bowtie-test-parameter"},
+                {"icon_code_review", "bowtie-symbol-review-request"},
+                {"icon_code_response", "bowtie-symbol-review-response"},
+                {"icon_review", "bowtie-symbol-feedback-request"},
+                {"icon_response", "bowtie-symbol-feedback-response"},
+                {"icon_ribbon", "bowtie-symbol-ribbon"},
+                {"icon_chart", "bowtie-symbol-finance"},
+                {"icon_headphone", "bowtie-symbol-headphone"},
+                {"icon_key", "bowtie-symbol-key"},
+                {"icon_airplane", "bowtie-symbol-airplane"},
+                {"icon_car", "bowtie-symbol-car"},
+                {"icon_diamond", "bowtie-symbol-diamond"},
+                {"icon_asterisk", "bowtie-symbol-asterisk"},
+                {"icon_database_storage", "bowtie-symbol-storage-database"},
+                {"icon_government", "bowtie-symbol-government"},
+                {"icon_gavel", "bowtie-symbol-decision"},
+                {"icon_parachute", "bowtie-symbol-parachute"},
+                {"icon_paint_brush", "bowtie-symbol-paint-brush"},
+                {"icon_palette", "bowtie-symbol-color-palette"},
+                {"icon_gear", "bowtie-settings-gear"},
+                {"icon_check_box", "bowtie-status-success-box"},
+                {"icon_gift", "bowtie-package-fill"},
+                {"icon_test_beaker", "bowtie-test-fill"},
+                {"icon_broken_lightbulb", "bowtie-symbol-defect"},
+                {"icon_clipboard_issue", "bowtie-symbol-issue"},
+                {"icon_github", "bowtie-brand-github"},
+                {"icon_pull_request", "bowtie-tfvc-pull-request"},
+                {"icon_github_issue", "bowtie-status-error-outline"},
+            };
 
         }
 
@@ -194,6 +247,22 @@ namespace azuredevops_export_wiki
                             await page.SetContentAsync(html);
                             html = await page.GetContentAsync();
                         }
+                    }
+
+                    if (_options.AzureDevopsOrganization != null)
+                    {
+                        VssCredentials credentials = !string.IsNullOrEmpty(_options.AzureDevopsPAT) ?
+                        new VssBasicCredential(string.Empty, _options.AzureDevopsPAT)
+                        : new VssClientCredentials();
+                        VssConnection connection = new VssConnection(new Uri(_options.AzureDevopsOrganization), credentials);
+
+                        // Create instance of WorkItemTrackingHttpClient using VssConnection
+                        WorkItemTrackingHttpClient witClient = connection.GetClient<WorkItemTrackingHttpClient>();
+
+                        string pattern = @"([>\b \r\n])(#[0-9]+)([<\b \r\n])";
+                        html = Regex.Replace(html, pattern, match => match.Groups[1].Value
+                                                                     + this.generateWorkItemLink(match.Groups[2].Value, witClient).Result
+                                                                     + match.Groups[3].Value);
                     }
 
                     //both mermaid and katex do local rendering
@@ -730,6 +799,48 @@ namespace azuredevops_export_wiki
                 Console.WriteLine(indentString + $"ERR: {msg}");
                 Console.ForegroundColor = color;
             }
+        }
+
+        async private Task<string> generateWorkItemLink(string stringId, WorkItemTrackingHttpClient witClient)
+        {
+            int id;
+            try
+            {
+                id = Int32.Parse(stringId.Replace("#", ""));
+            }
+            catch (FormatException)
+            {
+                Console.WriteLine($"Unable to parse '{stringId}'");
+                return stringId;
+            }
+
+            WorkItem workItem = await witClient.GetWorkItemAsync(id, expand: WorkItemExpand.All);
+            WorkItemType type = await witClient.GetWorkItemTypeAsync(workItem.Fields["System.TeamProject"].ToString(),
+                                                                        workItem.Fields["System.WorkItemType"].ToString());
+
+            string childColor = type.Color;
+            string childIcon = this._iconClass[type.Icon.Id];
+            string url = ((ReferenceLink)workItem.Links.Links["html"]).Href;
+            string title = workItem.Fields["System.Title"].ToString();
+            string state = workItem.Fields["System.State"].ToString();
+            string stateColor = type.States.First(s => s.Name == state).Color;
+
+            return $@"
+            <span class=""mention-widget-workitem"" style=""border-left-color: #{childColor};"">
+                <a class=""mention-link mention-wi-link mention-click-handled"" href=""{url}"">
+                    <span class=""work-item-type-icon-host"">
+                    <i class=""work-item-type-icon bowtie-icon {childIcon}"" role=""figure"" style=""color: #{childColor};""></i>
+                    </span>
+                    <span class=""secondary-text"">{workItem.Id}</span>
+                    <span class=""mention-widget-workitem-title fontWeightSemiBold"">{title}</span>
+                </a>
+                <span class=""mention-widget-workitem-state"">
+                    <span class=""workitem-state-color"" style=""background-color: #{stateColor};""></span>
+                    <span>{state}</span>
+                </span>
+            </span>
+            ";
+            
         }
 
         public class MarkdownFile
