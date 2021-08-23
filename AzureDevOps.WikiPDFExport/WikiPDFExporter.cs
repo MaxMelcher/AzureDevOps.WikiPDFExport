@@ -150,7 +150,7 @@ namespace azuredevops_export_wiki
                     var htmlStart = "<!DOCTYPE html><html>";
                     var htmlEnd = "</html>";
                     var headStart = "<head>";
-                    
+
                     var footer = new List<string>();
 
                     var header = new List<string>();
@@ -221,12 +221,34 @@ namespace azuredevops_export_wiki
                                                                      + match.Groups[3].Value);
                     }
 
+                    var cssPath = "";
+                    if (string.IsNullOrEmpty(_options.CSS))
+                    {
+                        cssPath = "devopswikistyle.css";
+                        Log("No CSS specified, using devopswikistyle.css", LogLevel.Information, 2);
+                    }
+                    else
+                    {
+                        cssPath = Path.GetFullPath(_options.CSS);
+                        if (!File.Exists(cssPath))
+                        {
+                            Log($"CSS file does not exist at path {cssPath}", LogLevel.Warning);
+                        }
+                    }
+
+                    if (File.Exists(cssPath))
+                    {
+                        var css = File.ReadAllText(cssPath);
+                        var style = $"<style>{css}</style>";
+                        header.Add(style);
+                    }
+
                     //build the html for rendering
                     html = $"{htmlStart}{headStart}{string.Concat(header)}{headEnd}{html}<footer>{string.Concat(footer)}</footer>{htmlEnd}";
 
                     if (_options.Debug)
                     {
-                        var htmlPath = Path.Combine(_path, "html.html");
+                        var htmlPath = string.Concat(_options.Output, ".html");
                         Log($"Writing converted html to path: {htmlPath}");
                         File.WriteAllText(htmlPath, html);
                     }
@@ -268,21 +290,6 @@ namespace azuredevops_export_wiki
             if (output == null)
             {
                 output = Path.Combine(Directory.GetCurrentDirectory(), "export.pdf");
-            }
-
-            var cssPath = "";
-            if (string.IsNullOrEmpty(_options.CSS))
-            {
-                cssPath = "devopswikistyle.css";
-                Log("No CSS specified, using devopswikistyle.css", LogLevel.Information, 2);
-            }
-            else
-            {
-                cssPath = Path.GetFullPath(_options.CSS);
-                if (!File.Exists(cssPath))
-                {
-                    Log($"CSS file does not exist at path {cssPath}", LogLevel.Warning);
-                }
             }
 
             if (string.IsNullOrEmpty(_options.ChromeExecutablePath))

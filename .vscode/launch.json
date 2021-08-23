@@ -12,9 +12,9 @@
             "program": "${workspaceFolder}/AzureDevOps.WikiPDFExport/bin/Debug/net5.0/win-x64/azuredevops-export-wiki.dll",
             "args": [
                 "-v",
-                "-p..\\AzureDevOps.WikiPDFExport.Test\\Tests\\AzureDevOps.WikiPDFExport.wiki",
-                "--attachments-path=..\\AzureDevOps.WikiPDFExport.Test\\Tests\\AzureDevOps.WikiPDFExport.wiki\\.attachments\\",
-                //"-p..\\AzureDevOps.WikiPDFExport.Test\\Tests\\Code",
+               // "-p..\\AzureDevOps.WikiPDFExport.Test\\Tests\\AzureDevOps.WikiPDFExport.wiki",
+               // "--attachments-path=..\\AzureDevOps.WikiPDFExport.Test\\Tests\\AzureDevOps.WikiPDFExport.wiki\\.attachments\\",
+                "-p..\\AzureDevOps.WikiPDFExport.Test\\Tests\\Code",
 //                "-p..\\AzureDevOps.WikiPDFExport.Test\\Tests\\Azure-Platform-Design",
 //                "-p..\\AzureDevOps.WikiPDFExport.Test\\Tests\\1k",
 //                "-s..\\AzureDevOps.WikiPDFExport.Test\\Tests\\Test-Emoticon\\emoji.md",
@@ -45,7 +45,7 @@
                 //"--filter=tags:test,tags:license"
                 // "-c"
                  "--organization=https://dev.azure.com/mmelcher",
-                 "--pat=7dmhcnemllrx6rn2z5zoh35res6nnl5xnfkyzput3pueaoqrvwrq" //add a 'q' to the end. valid until August 2022.
+                 "--pat=7dmhcnemllrx6rn2z5zoh35res6nnl5xnfkyzput3pueaoqrvwr" //add a 'q' to the end. valid until August 2022.
             ],
             "cwd": "${workspaceFolder}/AzureDevOps.WikiPDFExport",
             "console": "internalConsole",
