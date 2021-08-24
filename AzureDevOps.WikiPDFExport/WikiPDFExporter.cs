@@ -310,21 +310,25 @@ namespace azuredevops_export_wiki
                 await page.SetContentAsync(html);
 
                 //todo load header/footer template from file
-
-                var pdfoptions = new PdfOptions()
+                var pdfoptions = new PdfOptions();
+                if (!string.IsNullOrEmpty(_options.HeaderTemplate) || !string.IsNullOrEmpty(_options.FooterTemplate))
                 {
-                    DisplayHeaderFooter = true,
-                    MarginOptions = {
-                        Top = "100px",
+                    pdfoptions = new PdfOptions()
+                    {
+                        PreferCSSPageSize = false,
+                        DisplayHeaderFooter = true,
+                        MarginOptions = {
+                        Top = "80px",
                         Bottom = "100px",
-                        Left ="100px",
+                        //left and right do not have an impact
+                        Left = "100px",
                         Right = "100px"
                     },
-                    Format = PuppeteerSharp.Media.PaperFormat.A4,
-                    HeaderTemplate = "<div class=\"header\" style=\"padding: 0 !important; margin: 0; -webkit-print-color-adjust: exact; background-color: red; color: white; width: 100%; text-align: left; font-size: 12px;\"><br /> Page <span class=\"pageNumber\"></span> of <span class=\"totalPages\"></span></div>",
-                    FooterTemplate = "<h1 style='margin: 10px;font-size: 20px;'><span class='title'></span></h1><div style='font-size:10px!important;color:grey!important;padding-left:400px;' class='pdfheader'>title: <span class='title'></span> url: <span class='url'></span> <span>Page: </span><span class='pageNumber'></span>/<span class='totalPages'></span></div>",
-                };
-
+                        HeaderTemplate = _options.HeaderTemplate,
+                        FooterTemplate = _options.FooterTemplate,
+                        Format = PuppeteerSharp.Media.PaperFormat.A4
+                    };
+                }
 
                 await page.PdfAsync(output, pdfoptions);
             }

@@ -51,21 +51,14 @@ namespace azuredevops_export_wiki
         [Option("pathToHeading", Required = false, HelpText = "Add path of the file to the header")]
         public bool PathToHeading { get; set; }
 
-        [Option("footer-left", Required = false, HelpText = "Text in the footer on the left, supports placeholders")]
-        public string FooterLeft { get; set; }
-        [Option("footer-center", Required = false, HelpText = "Text in the footer on the center, supports placeholders")]
-        public string FooterCenter { get; set; }
-        [Option("footer-right", Required = false, HelpText = "Text in the footer on the right, supports placeholders")]
-        public string FooterRight { get; set; }
-        [Option("footer-url", Required = false, HelpText = "URL to an html file containing the footer")]
-        public string FooterUrl { get; set; }        
+        [Option("footer-template", Required = false, HelpText = "A HTML template for the footer. Will be added on every page.")]
+        public string FooterTemplate { get; set; }
 
-        [Option("header-left", Required = false, HelpText = "Text in the header on the left, supports placeholders")]
-        public string HeaderLeft { get; set; }
-        [Option("header-center", Required = false, HelpText = "Text in the header on the center, supports placeholders")]
-        public string HeaderCenter { get; set; }
-        [Option("header-right", Required = false, HelpText = "Text in the header on the right, supports placeholders")]
-        public string HeaderRight { get; set; }
+        [Option("header-template", Required = false, HelpText = "A HTML template for the header. Will be added on every page.")]
+        public string HeaderTemplate { get; set; }
+
+        [Option("footer-url", Required = false, HelpText = "URL to an html file containing the footer")]
+        public string FooterUrl { get; set; }
         [Option("header-url", Required = false, HelpText = "URL to an html file containing the header, does not work together with header-right, header-left or header-center")]
         public string HeaderUrl { get; set; }
 
@@ -79,7 +72,7 @@ namespace azuredevops_export_wiki
         public bool ConvertMermaid { get; set; }
 
         [Option("mermaidjs-path", Required = false, HelpText = "Path of the mermaid.js file. It'll be used if mermaid diagrams support is turned on (-m/--mermaid). If not specified, 'https://cdnjs.cloudflare.com/ajax/libs/mermaid/8.6.4/mermaid.min.js' will be used.")]
-        public string MermaidJsPath { get;set; }
+        public string MermaidJsPath { get; set; }
 
         [Option("chrome-path", Required = false, HelpText = "Path of the chrome or chromium executable. It'll be used if mermaid diagrams support is turned on (-m/--mermaid). If not specified, a headless version will be downloaded.")]
         public string ChromeExecutablePath { get; set; }
@@ -97,12 +90,12 @@ namespace azuredevops_export_wiki
         public bool HighlightCode { get; set; }
 
         [Option("hightlight-style", Required = false, HelpText = "hightlight.js style used for code blocks. Defaults to 'vs'. See https://github.com/highlightjs/highlight.js/tree/main/src/styles for a full list.")]
-        public string HighlightStyle { get;set; }
+        public string HighlightStyle { get; set; }
 
         [Option("pat", Required = false, HelpText = "Personal access token used to access your Azure Devops Organization. If no token is provided and organization and project parameters are provided, it will start a prompt asking you to login.")]
-        public string AzureDevopsPAT { get;set; }
+        public string AzureDevopsPAT { get; set; }
 
         [Option("organization", Required = false, HelpText = "Azure Devops organization URL used to convert work item references to work item links. Ex: https://dev.azure.com/MyOrganizationName/")]
-        public string AzureDevopsOrganization { get;set; }
+        public string AzureDevopsOrganization { get; set; }
     }
 }
