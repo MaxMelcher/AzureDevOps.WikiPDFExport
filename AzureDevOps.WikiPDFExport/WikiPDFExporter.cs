@@ -357,11 +357,6 @@ namespace azuredevops_export_wiki
                 .UseAdvancedExtensions()
                 .UseYamlFrontMatter();
 
-            if (_options.Math)
-            {
-                pipelineBuilder.UseMathematics();
-            }
-
             for (var i = 0; i < files.Count; i++)
             {
                 var mf = files[i];
