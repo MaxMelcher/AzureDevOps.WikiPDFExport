@@ -301,7 +301,7 @@ namespace azuredevops_export_wiki
             var launchOptions = new LaunchOptions
             {
                 ExecutablePath = _options.ChromeExecutablePath ?? string.Empty,
-                Headless = true
+                Headless = true //set to false for easier debugging
             };
 
             using (var browser = await Puppeteer.LaunchAsync(launchOptions))
@@ -623,7 +623,8 @@ namespace azuredevops_export_wiki
                         }
                         else if (fileInfo.Exists)
                         {
-                            link.Url = $"file:///{absPath}";
+                            absPath = absPath.Replace("\\", "/");
+                            link.Url = "file:///" + absPath;
                         }
 
                         fileInfo = new FileInfo($"{absPath}.md");
