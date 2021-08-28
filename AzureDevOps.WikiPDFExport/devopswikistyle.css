@@ -33,6 +33,15 @@ html >*:last-child {
     margin: 0 0 16px 0
 }
 
+pre {
+    white-space: pre-wrap !important; /* needed to wrap long code lines */
+}
+
+table td
+{
+    word-break: break-all !important; /* need to wrap large tables */
+}
+
  table {
     border-collapse: collapse;
     border-spacing: 0;

@@ -21,12 +21,14 @@ If you need more control over the output, please see the Configuration Options b
 The tool currently supports the following:
 * Export all wiki pages (and sub pages) in the correct order including styles and formatting.
 * Includes pictures (remote and relative urls)
-* Creates PDF bookmarks to all pages for easier navigation within the PDF
 * If you link to other wiki pages, the link in the PDF will work, too. 
 * Everything self-contained. Download the .exe file, run it, done.
+* It is fast. A PDF with 160 pages is created in less than a second.
 * Tool can be used as part of a build, see [BuildTask](AzureDevOps.WikiPDFExport/Build-Task.md)
 * Supports emoticons :) ⚠ ℹ
-* It is fast. A PDF with 160 pages is created in less than a second. 1000 pages in ~8 seconds.
+* Mermaid supported 
+* Workitems can be referenced and will be included in the pdf as link with the current status, e.g. #7.
+* Math/Latex formulas are rendered
 
 ## 🛰 Requirements
 
@@ -95,6 +97,7 @@ So far the following limitations are known:
 * The tool, sometimes shows an error "Qt: Could not initialize OLE (error 80010106)" - this can be ignored.
 * If headers are not formatted properly (#Header instead of # Header), they are rendered incorrectly. I might fix that in the future.
 * The tool lacks proper testing because I only have two realistic wikis available. Want to contribute one?
+* Currently, no pdf bookmarks are created (see [chromium issue](https://bugs.chromium.org/p/chromium/issues/detail?id=781797)).  
 
 ## ⚖ License
 See [license](/AzureDevOps.WikiPDFExport/License.md)

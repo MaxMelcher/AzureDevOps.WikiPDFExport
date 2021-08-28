@@ -13,7 +13,7 @@
             "args": [
                 "-v",
                 "-p..\\AzureDevOps.WikiPDFExport.Test\\Tests\\AzureDevOps.WikiPDFExport.wiki",
-                "--attachments-path=..\\AzureDevOps.WikiPDFExport.Test\\Tests\\AzureDevOps.WikiPDFExport.wiki\\.attachments\\",
+//                "--attachments-path=..\\AzureDevOps.WikiPDFExport.Test\\Tests\\AzureDevOps.WikiPDFExport.wiki\\.attachments\\",
 //               "-p..\\AzureDevOps.WikiPDFExport.Test\\Tests\\Code",
 //                "-p..\\AzureDevOps.WikiPDFExport.Test\\Tests\\Azure-Platform-Design",
 //                "-p..\\AzureDevOps.WikiPDFExport.Test\\Tests\\1k",
@@ -29,19 +29,18 @@
                 "--footer-template=<div style='padding-right: 10px; padding-top:2px; margin: 0; -webkit-print-color-adjust: exact; border-top:1px solid grey; color: grey; width: 100%; text-align: right; font-size: 6px;'>Print: <span class='date'></span> Page: </span><span class='pageNumber'></span>/<span class='totalPages'></span></div>",
                 //"--css=styles.css", //not needed, its the default now.
                 "--open",
-                //"--footer-hide-line"
                 //"--footer-url=C:\\Git\\AzureDevOps.WikiPDFExport\\AzureDevOps.WikiPDFExport\\bin\\Debug\\netcoreapp3.1\\example-footer.html",
                 //"--header-url=C:\\Git\\AzureDevOps.WikiPDFExport\\AzureDevOps.WikiPDFExport\\bin\\Debug\\netcoreapp3.1\\example-header.html"
                 //"-s..\\AzureDevOps.WikiPDFExport.Test\\Tests\\Real\\AzureDevOps.WikiPDFExport\\TEST%2DPAGE.md"
                 //"-s..\\AzureDevOps.WikiPDFExport\\TEST%2DPAGE.md",
                 //"--mermaidjs-path=mermaid.min.js",
                 //"--chrome-path=c:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe",
-                //"--disableTelemetry",
+                "--disableTelemetry",
                 "--mermaid",
                 //"--filter=tags:test,tags:license"
-                // "-c"
-                // "--organization=https://dev.azure.com/mmelcher",
-                 "--pat=7dmhcnemllrx6rn2z5zoh35res6nnl5xnfkyzput3pueaoqrvwr" //add a 'q' to the end. valid until August 2022.
+                "--highlight-code",
+                "--organization=https://dev.azure.com/mmelcher",
+                 "--pat=wdsenlsthdajotbtmej3t7pcqq2zqudf57at352ely4blsdjesfa" //add a 'a' to the end. valid until August 2022.
             ],
             "cwd": "${workspaceFolder}/AzureDevOps.WikiPDFExport",
             "console": "internalConsole",

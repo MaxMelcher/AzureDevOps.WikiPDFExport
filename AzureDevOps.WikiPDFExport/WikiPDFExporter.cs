@@ -240,7 +240,9 @@ namespace azuredevops_export_wiki
                     {
                         var css = File.ReadAllText(cssPath);
                         var style = $"<style>{css}</style>";
-                        header.Add(style);
+
+                        //adding the css to the footer to overwrite the mermaid, katex, highlightjs styles. 
+                        footer.Add(style);
                     }
 
                     //build the html for rendering
