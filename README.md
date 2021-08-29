@@ -1,5 +1,5 @@
 ## 🏎 Quickstart
-This tool exports a Azure DevOps wiki as PDF. Therefore, you need to git clone the target wiki to a computer. You can get the clone link of the wiki in the top right of the wiki homepage:
+This tool exports an Azure DevOps wiki as PDF. Therefore, you need to git clone the target wiki to a computer. You can get the clone link of the wiki in the top right of the wiki homepage:
 ![Clone a wiki](images/CloneWiki.png)
 
 To clone this wiki, use the following command:
@@ -32,8 +32,9 @@ The tool currently supports the following:
 
 ## 🛰 Requirements
 
-The tool is developed as .NET 5 application, therefore you need to have the runtime installed. Download is available [here](https://dotnet.microsoft.com/download).
-Currently it requires a x64 runtime.
+The tool is developed as .NET 5 application, therefore you need to have the runtime installed. 
+Download is available [here](https://dotnet.microsoft.com/download).
+It requires a x64 windows runtime.
 
 ## 🔽 Download
 
@@ -56,7 +57,7 @@ Debug mode. Logs tons of stuff and even exports the intermediate html file
 Disables the telemetry tracking, see [Telemetry](#telemetry)
 ### --filter
 Filters the pages depending on the page [yaml tags](https://docs.microsoft.com/en-us/azure/devops/project/wiki/wiki-markdown-guidance?view=azure-devops#yaml-tags).
-### --footer-left, --footer-center, --footer-right, --header-left, --header-center, --header-right,
+### --footer-template, --header-template,
 Headers and footers can be added to the document by the --header-* and
   --footer* template arguments respectfully.  In header and footer string supplied
  the following variables will be substituted. See [PDF options from puppeteer](https://pptr.dev/#?product=Puppeteer&show=api-pagepdfoptions). 
@@ -65,7 +66,7 @@ Headers and footers can be added to the document by the --header-* and
    * [topage]     Replaced by the number of the last page to be printed
    * [totalPages]       Replaced by the current date in system local format
 
-### --header-file, --footer-file
+### --footer-template-path, --header-template-path
 Provide a path to html files that will be added as header and footer. See [example-footer.html](example-footer.html), [example-header.html](example-header.html).
 
 ### --disableTelemetry
@@ -119,11 +120,13 @@ Please check if you have page file that are encoded (e.g. Test%20dFiles.md)
 ### There is an error 'Qt: Could not initialize OLE (error 80010106)'. 
 Yes, please ignore for now.
 
+### Does it also work for Github? 
+Yes, but there the .order files are missing to determine the sort order of pages. You would need to create them by yourself, but it is possible.
+
 ## ♥ Thanks
 
 In this tool uses open source libraries that do the actual work - I just combined them to get the export as PDF:
 1. [CommandLineParser](https://github.com/commandlineparser/commandline) to parse the command line
 1. [MarkDig](https://github.com/lunet-io/markdig/) to parse markdown files to HTML.
-1. [DinkToPdf](https://github.com/rdvojmoc/DinkToPdf) to export HTML to PDF
 1. [dotnet-warp](https://github.com/Hubert-Rybak/dotnet-warp) to release a self-contained exe file
 1. [puppeteer-sharp](https://github.com/hardkoded/puppeteer-sharp) to convert mermaid markdown to SVG

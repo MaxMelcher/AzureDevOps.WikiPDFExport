@@ -313,8 +313,32 @@ namespace azuredevops_export_wiki
 
                 //todo load header/footer template from file
                 var pdfoptions = new PdfOptions();
-                if (!string.IsNullOrEmpty(_options.HeaderTemplate) || !string.IsNullOrEmpty(_options.FooterTemplate))
+                if (!string.IsNullOrEmpty(_options.HeaderTemplate)
+                || !string.IsNullOrEmpty(_options.FooterTemplate)
+                || !string.IsNullOrEmpty(_options.HeaderTemplatePath)
+                || !string.IsNullOrEmpty(_options.FooterTemplatePath))
                 {
+
+                    string footerTemplate = "";
+                    string headerTemplate = "";
+                    if (!string.IsNullOrEmpty(_options.HeaderTemplate))
+                    {
+                        headerTemplate = _options.HeaderTemplate;
+                    }
+                    else if (!string.IsNullOrEmpty(_options.HeaderTemplatePath))
+                    {
+                        headerTemplate = File.ReadAllText(_options.HeaderTemplatePath);
+                    }
+
+                    if (!string.IsNullOrEmpty(_options.FooterTemplate))
+                    {
+                        footerTemplate = _options.FooterTemplate;
+                    }
+                    else if (!string.IsNullOrEmpty(_options.FooterTemplatePath))
+                    {
+                        footerTemplate = File.ReadAllText(_options.FooterTemplatePath);
+                    }
+
                     pdfoptions = new PdfOptions()
                     {
                         PreferCSSPageSize = false,
@@ -326,8 +350,8 @@ namespace azuredevops_export_wiki
                         Left = "100px",
                         Right = "100px"
                     },
-                        HeaderTemplate = _options.HeaderTemplate,
-                        FooterTemplate = _options.FooterTemplate,
+                        HeaderTemplate = headerTemplate,
+                        FooterTemplate = footerTemplate,
                         Format = PuppeteerSharp.Media.PaperFormat.A4
                     };
                 }
@@ -628,7 +652,7 @@ namespace azuredevops_export_wiki
                             //convert images to base64 and embed them in the html. Chrome/Puppeter does not show local files because of security reasons.
                             Byte[] bytes = File.ReadAllBytes(fileInfo.FullName);
                             String base64 = Convert.ToBase64String(bytes);
-                            
+
                             link.Url = $"data:image/{fileInfo.Extension};base64,{base64}";
                         }
 

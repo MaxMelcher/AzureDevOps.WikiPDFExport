@@ -57,10 +57,10 @@ namespace azuredevops_export_wiki
         [Option("header-template", Required = false, HelpText = "A HTML template for the header. Will be added on every page.")]
         public string HeaderTemplate { get; set; }
 
-        [Option("footer-url", Required = false, HelpText = "URL to an html file containing the footer")]
-        public string FooterUrl { get; set; }
-        [Option("header-url", Required = false, HelpText = "URL to an html file containing the header, does not work together with header-right, header-left or header-center")]
-        public string HeaderUrl { get; set; }
+        [Option("footer-template-path", Required = false, HelpText = "Path to an html file containing the footer")]
+        public string FooterTemplatePath { get; set; }
+        [Option("header-template-path", Required = false, HelpText = "Path to an html file containing the header, does not work together with header-right, header-left or header-center")]
+        public string HeaderTemplatePath { get; set; }
 
         [Option("css", Required = false, HelpText = "Path to a css file that is used for styling the PDF")]
         public string CSS { get; set; }
