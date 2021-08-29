@@ -9,7 +9,7 @@ The result should look like this:
 ![Cloned wiki repository](images/Clone.png)
  
 Once you have cloned the wiki, you must download the Azure DevOps WikiPDFExport tool.
-**[azuredevops-export-wiki.exe](https://github.com/MaxMelcher/AzureDevOps.WikiPDFExport/releases)** (~20MB)
+**[azuredevops-export-wiki.exe](https://github.com/MaxMelcher/AzureDevOps.WikiPDFExport/releases)** (~14MB)
 
 You can drop it right into the cloned folder and execute it there. 
 Launched without parameters, the tool will detect all wiki files next to it and convert it to a PDF called export.pdf right next to it. Similar to this [pdf](https://github.com/MaxMelcher/AzureDevOps.WikiPDFExport/blob/main/AzureDevOps.WikiPDFExport/export.pdf).
