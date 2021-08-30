@@ -172,6 +172,15 @@ namespace azuredevops_export_wiki
                         header.Add(mermaidInitialize);
                     }
 
+                    if (_options.Math)
+                    {
+                        var katex = "<script src=\"https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/katex.min.js\"></script><script src=\"https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/contrib/auto-render.min.js\" onload=\"renderMathInElement(document.body, {delimiters: [{left: '$$', right: '$$', display: true},{left: '$', right: '$', display: true}]});\"></script>";
+                        var katexCss = "<link rel=\"stylesheet\" href=\"https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/katex.min.css\">";
+
+                        header.Add(katexCss);
+                        footer.Add(katex);
+                    }
+
                     if (_options.HighlightCode)
                     {
                         string hightlightStyle = _options.HighlightStyle ?? "vs";
@@ -194,15 +203,6 @@ namespace azuredevops_export_wiki
                         //todo: add offline version of highlightjs 
                         header.Add(hightlight);
                         header.Add(hightlightInitialize);
-                    }
-
-                    if (_options.Math)
-                    {
-                        var katex = "<script src=\"https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/katex.min.js\"></script><script src=\"https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/contrib/auto-render.min.js\" onload=\"renderMathInElement(document.body);\"></script>";
-                        var katexCss = "<link rel=\"stylesheet\" href=\"https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/katex.min.css\">";
-
-                        header.Add(katexCss);
-                        footer.Add(katex);
                     }
 
                     if (_options.AzureDevopsOrganization != null)
@@ -386,6 +386,9 @@ namespace azuredevops_export_wiki
                 .UseEmojiAndSmiley()
                 .UseAdvancedExtensions()
                 .UseYamlFrontMatter();
+
+            pipelineBuilder.Extensions.RemoveAll(x => x is Markdig.Extensions.Mathematics.MathExtension); //handled by katex
+            pipelineBuilder.Extensions.RemoveAll(x => x is Markdig.Extensions.GenericAttributes.GenericAttributesExtension); //this interferes with katex parsing of {} elements.
 
             for (var i = 0; i < files.Count; i++)
             {
