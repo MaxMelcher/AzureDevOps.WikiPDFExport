@@ -65,6 +65,9 @@ namespace azuredevops_export_wiki
         [Option("css", Required = false, HelpText = "Path to a css file that is used for styling the PDF")]
         public string CSS { get; set; }
 
+        [Option("no-frontmatter", Required = false, HelpText = "Remove Frontmatter from pages")]
+        public bool NoFrontmatter { get; set; }
+
         [Option("math", Required = false, HelpText = "Convert math/latex formulas")]
         public bool Math { get; set; }
 

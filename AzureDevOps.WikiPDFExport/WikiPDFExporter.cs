@@ -406,6 +406,7 @@ namespace azuredevops_export_wiki
                 //replace Table of Content
                 md = RemoveTableOfContent(md);
 
+                
                 // remove scalings from image links, width & height: file.png =600x500
                 var regexImageScalings = @"\((.[^\)]*?[png|jpg|jpeg]) =(\d+)x(\d+)\)";
                 md = Regex.Replace(md, regexImageScalings, @"($1){width=$2 height=$3}");
@@ -429,7 +430,12 @@ namespace azuredevops_export_wiki
                 var pipeline = pipelineBuilder.Build();
 
                 //parse the markdown document so we can alter it later
-                var document = (MarkdownObject)Markdown.Parse(md, pipeline);
+                var document = (MarkdownDocument)Markdown.Parse(md, pipeline);
+
+                if (_options.NoFrontmatter)
+                {
+                    RemoveFrontmatter(document);
+                }
 
                 if (!string.IsNullOrEmpty(_options.Filter))
                 {
@@ -531,6 +537,18 @@ namespace azuredevops_export_wiki
             return result;
         }
 
+        private MarkdownDocument RemoveFrontmatter(MarkdownDocument document)
+        {
+            var frontmatter = document.Descendants<YamlFrontMatterBlock>().FirstOrDefault();
+
+            if (frontmatter != null)
+            {
+                document.Remove(frontmatter);
+                Log($"Removed Frontmatter/Yaml tags", LogLevel.Information, 1);
+            }
+            return document;
+        }
+
         private bool PageMatchesFilter(MarkdownObject document)
         {
             if (!string.IsNullOrEmpty(_options.Filter))
@@ -595,7 +613,7 @@ namespace azuredevops_export_wiki
         {
             if (document.Contains("TOC"))
             {
-                Log("Removing Table of contents [[_TOC_]] from pdf", LogLevel.Warning, 2);
+                Log("Removing Table of contents [[_TOC_]] from pdf", LogLevel.Warning, 1);
                 document = document.Replace("[[_TOC_]]", "");
             }
             return document;

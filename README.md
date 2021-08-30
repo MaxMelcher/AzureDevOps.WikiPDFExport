@@ -69,6 +69,9 @@ Headers and footers can be added to the document by the --header-* and
 ### --footer-template-path, --header-template-path
 Provide a path to html files that will be added as header and footer. See [example-footer.html](example-footer.html), [example-header.html](example-header.html).
 
+### --no-frontmatter
+If you want to remove the [frontmatter / YAML tags](https://docs.microsoft.com/en-us/azure/devops/project/wiki/wiki-markdown-guidance?view=azure-devops#yaml-tags) from the PDF. 
+
 ### --disableTelemetry
 Disables the telemetry tracking, see [Telemetry](#telemetry)
 ### --open
