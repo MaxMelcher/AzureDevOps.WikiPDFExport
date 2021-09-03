@@ -6,7 +6,6 @@
     <RootNamespace>azuredevops_export_wiki</RootNamespace>
     <PublishSingleFile>false</PublishSingleFile>
     <SelfContained>false</SelfContained>
-    <RuntimeIdentifier>win-x64</RuntimeIdentifier>
     <PublishTrimmed>false</PublishTrimmed>
     <PublishReadyToRun>true</PublishReadyToRun>
     <CopyLocalLockFileAssemblies>false</CopyLocalLockFileAssemblies>

@@ -225,7 +225,7 @@ namespace azuredevops_export_wiki
                     if (string.IsNullOrEmpty(_options.CSS))
                     {
                         cssPath = "devopswikistyle.css";
-                        Log("No CSS specified, using devopswikistyle.css", LogLevel.Information, 2);
+                        Log("No CSS specified, using devopswikistyle.css", LogLevel.Information, 0);
                     }
                     else
                     {
@@ -304,6 +304,8 @@ namespace azuredevops_export_wiki
             {
                 ExecutablePath = _options.ChromeExecutablePath ?? string.Empty,
                 Headless = true, //set to false for easier debugging
+                Args = new[] { "--no-sandbox", "--single-process" }, //required to launch in linux
+                Devtools = false
             };
 
             using (var browser = await Puppeteer.LaunchAsync(launchOptions))
@@ -341,6 +343,7 @@ namespace azuredevops_export_wiki
 
                     pdfoptions = new PdfOptions()
                     {
+                        PrintBackground = true,
                         PreferCSSPageSize = false,
                         DisplayHeaderFooter = true,
                         MarginOptions = {
@@ -357,6 +360,7 @@ namespace azuredevops_export_wiki
                 }
 
                 await page.PdfAsync(output, pdfoptions);
+                await browser.CloseAsync();
             }
 
             Log($"PDF created at: {output}");
@@ -409,7 +413,7 @@ namespace azuredevops_export_wiki
                 //replace Table of Content
                 md = RemoveTableOfContent(md);
 
-                
+
                 // remove scalings from image links, width & height: file.png =600x500
                 var regexImageScalings = @"\((.[^\)]*?[png|jpg|jpeg]) =(\d+)x(\d+)\)";
                 md = Regex.Replace(md, regexImageScalings, @"($1){width=$2 height=$3}");
@@ -736,7 +740,7 @@ namespace azuredevops_export_wiki
                     }
 
                     MarkdownFile mf = new MarkdownFile();
-                    mf.AbsolutePath = $"{orderFile.Directory.FullName}\\{order}.md";
+                    mf.AbsolutePath = Path.Combine(orderFile.Directory.FullName, $"{order}.md");
                     mf.RelativePath = $"{relativePath}";
                     mf.Level = level;
                     result.Add(mf);
