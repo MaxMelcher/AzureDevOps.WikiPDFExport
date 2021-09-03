@@ -9,7 +9,7 @@
             "type": "coreclr",
             "request": "launch",
             "preLaunchTask": "build",
-            "program": "${workspaceFolder}/AzureDevOps.WikiPDFExport/bin/Debug/net5.0/win-x64/azuredevops-export-wiki.dll",
+            "program": "${workspaceFolder}/AzureDevOps.WikiPDFExport/bin/Debug/net5.0/azuredevops-export-wiki.dll",
             "args": [
                 "--verbose",
                 "-p..\\AzureDevOps.WikiPDFExport.Test\\Tests\\AzureDevOps.WikiPDFExport.wiki",

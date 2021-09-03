@@ -321,8 +321,8 @@ namespace azuredevops_export_wiki
                 || !string.IsNullOrEmpty(_options.FooterTemplatePath))
                 {
 
-                    string footerTemplate = "";
-                    string headerTemplate = "";
+                    string footerTemplate = null;
+                    string headerTemplate = null;
                     if (!string.IsNullOrEmpty(_options.HeaderTemplate))
                     {
                         headerTemplate = _options.HeaderTemplate;
@@ -353,10 +353,13 @@ namespace azuredevops_export_wiki
                         Left = "100px",
                         Right = "100px"
                     },
-                        HeaderTemplate = headerTemplate,
-                        FooterTemplate = footerTemplate,
+
                         Format = PuppeteerSharp.Media.PaperFormat.A4
                     };
+
+                    pdfoptions.FooterTemplate = footerTemplate;
+                    pdfoptions.HeaderTemplate = headerTemplate;
+
                 }
 
                 await page.PdfAsync(output, pdfoptions);
