@@ -34,7 +34,7 @@ The tool currently supports the following:
 
 The tool is developed as .NET 5 application, therefore you need to have the runtime installed. 
 Download is available [here](https://dotnet.microsoft.com/download).
-It requires a x64 windows runtime.
+It requires a x64 windows or linux runtime.
 
 ## 🔽 Download
 
