@@ -33,3 +33,4 @@ AzureDevOps.WikiPDFExport.Test/Tests/Azure-Platform-Design/
 AzureDevOps.WikiPDFExport/.local-chromium/
 tests/*
 AzureDevOps.WikiPDFExport.Test/Tests/1k/*
+.local-chromium/*

@@ -393,7 +393,7 @@ namespace azuredevops_export_wiki
                         HtmlContent = html,
                         WebSettings = {
                             DefaultEncoding = "utf-8",
-                            UserStyleSheet = "file://D:/Git/WikiPDFExport/AzureDevOps.WikiPDFExport/devopswikistyle.css"
+                            UserStyleSheet = cssPath
                          },
                         HeaderSettings = headerSettings,
                         FooterSettings = footerSettings,

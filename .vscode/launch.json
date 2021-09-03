@@ -31,7 +31,7 @@
                 "--footer-left=LEFT [subsection]",
                 "--footer-center=CENTER [DATE]",
                 "--footer-right=RIGHT page: [page] of [topage]",
-                "--css=devopswikistyle.css",
+                "--css=..\\styles.css",
                 "--open",
                 //"--footer-hide-line"
                 //"--footer-url=C:\\Git\\AzureDevOps.WikiPDFExport\\AzureDevOps.WikiPDFExport\\bin\\Debug\\netcoreapp3.1\\example-footer.html",
