@@ -12,7 +12,7 @@
             "program": "${workspaceFolder}/AzureDevOps.WikiPDFExport/bin/Debug/net5.0/azuredevops-export-wiki.dll",
             "args": [
                 "--verbose",
-                "-p..\\AzureDevOps.WikiPDFExport.Test\\Tests\\AzureDevOps.WikiPDFExport.wiki",
+                "-p..\\AzureDevOps.WikiPDFExport.Test\\Tests\\DeepLink",
                 //                "--attachments-path=..\\AzureDevOps.WikiPDFExport.Test\\Tests\\AzureDevOps.WikiPDFExport.wiki\\.attachments\\",
                 //               "-p..\\AzureDevOps.WikiPDFExport.Test\\Tests\\Code",
                 //                "-p..\\AzureDevOps.WikiPDFExport.Test\\Tests\\Azure-Platform-Design",
@@ -23,12 +23,12 @@
                 //              "-m",
                 "--math",
                 //"--mathjax-path=MathJax.js",
-                //"--debug",
+                "--debug",
                 //  "--pathToHeading",
                 //    "--header-template=<div style='padding-left: 10px; margin: 0; -webkit-print-color-adjust: exact; border-bottom:1px solid grey; color: grey; width: 100%; text-align: left; font-size: 6px;'>AzureDevOps.WikiPDFExport</div>",
                 //    "--footer-template=<div style='padding-right: 10px; padding-top:2px; margin: 0; -webkit-print-color-adjust: exact; border-top:1px solid grey; color: grey; width: 100%; text-align: right; font-size: 6px;'>Print: <span class='date'></span> Page: </span><span class='pageNumber'></span>/<span class='totalPages'></span></div>",
                 //"--css=styles.css", //not needed, its the default now.
-                "--open",
+                //"--open",
                 "--footer-template-path=..\\example-footer.html",
                 "--header-template-path=..\\example-header.html",
                 "--no-frontmatter",

@@ -394,8 +394,20 @@ namespace azuredevops_export_wiki
                 .UseAdvancedExtensions()
                 .UseYamlFrontMatter();
 
-            pipelineBuilder.Extensions.RemoveAll(x => x is Markdig.Extensions.Mathematics.MathExtension); //handled by katex
-            pipelineBuilder.Extensions.RemoveAll(x => x is Markdig.Extensions.GenericAttributes.GenericAttributesExtension); //this interferes with katex parsing of {} elements.
+            //must be handled by us to have linking across files
+            pipelineBuilder.Extensions.RemoveAll(x => x is Markdig.Extensions.AutoIdentifiers.AutoIdentifierExtension);
+            //handled by katex
+            pipelineBuilder.Extensions.RemoveAll(x => x is Markdig.Extensions.Mathematics.MathExtension);
+            //this interferes with katex parsing of {} elements.
+            pipelineBuilder.Extensions.RemoveAll(x => x is Markdig.Extensions.GenericAttributes.GenericAttributesExtension);
+
+            DeepLinkExtension deeplink = new DeepLinkExtension();
+            pipelineBuilder.Extensions.Add(deeplink);
+
+            if (_options.ConvertMermaid)
+            {
+                pipelineBuilder = pipelineBuilder.UseMermaidContainers();
+            }
 
             for (var i = 0; i < files.Count; i++)
             {
@@ -432,10 +444,8 @@ namespace azuredevops_export_wiki
                 // determine the correct nesting of pages and related chapters
                 pipelineBuilder.BlockParsers.Replace<HeadingBlockParser>(new OffsetHeadingBlockParser(mf.Level + 1));
 
-                if (_options.ConvertMermaid)
-                {
-                    pipelineBuilder = pipelineBuilder.UseMermaidContainers();
-                }
+                //update the deeplinking
+                deeplink.Filename = "FILE123";
 
                 var pipeline = pipelineBuilder.Build();
 
