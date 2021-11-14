@@ -310,26 +310,6 @@ namespace azuredevops_export_wiki
 
             using (var browser = await Puppeteer.LaunchAsync(launchOptions))
             {
-<<<<<<< HEAD
-                GlobalSettings = {
-                    ColorMode = ColorMode.Color,
-                    Orientation = Orientation.Portrait,
-                    PaperSize = PaperKind.A4,
-                    Out = output,
-
-                },
-                Objects = {
-                    new ObjectSettings() {
-                        PagesCount = true,
-                        HtmlContent = html,
-                        WebSettings = {
-                            DefaultEncoding = "utf-8",
-                            UserStyleSheet = cssPath
-                         },
-                        HeaderSettings = headerSettings,
-                        FooterSettings = footerSettings,
-                        UseLocalLinks = true,
-=======
                 var page = await browser.NewPageAsync();
                 await page.SetContentAsync(html);
 
@@ -359,7 +339,6 @@ namespace azuredevops_export_wiki
                     else if (!string.IsNullOrEmpty(_options.FooterTemplatePath))
                     {
                         footerTemplate = File.ReadAllText(_options.FooterTemplatePath);
->>>>>>> puppeteer-pdf
                     }
 
                     pdfoptions = new PdfOptions()
