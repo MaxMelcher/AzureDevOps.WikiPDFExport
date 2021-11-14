@@ -445,7 +445,7 @@ namespace azuredevops_export_wiki
                 pipelineBuilder.BlockParsers.Replace<HeadingBlockParser>(new OffsetHeadingBlockParser(mf.Level + 1));
 
                 //update the deeplinking
-                deeplink.Filename = "FILE123";
+                deeplink.Filename = Path.GetFileNameWithoutExtension(file.FullName);
 
                 var pipeline = pipelineBuilder.Build();
 
@@ -651,6 +651,7 @@ namespace azuredevops_export_wiki
                     if (!link.Url.StartsWith("http"))
                     {
                         string absPath = null;
+                        string anchor = null;
 
                         //handle --attachments-path case
                         if (!string.IsNullOrEmpty(this._options.AttachmentsPath) && link.Url.StartsWith("/.attachments") || link.Url.StartsWith(".attachments"))
@@ -666,16 +667,15 @@ namespace azuredevops_export_wiki
                         {
                             //urls could be encoded and contain spaces - they are then not found on disk
                             var linkUrl = HttpUtility.UrlDecode(link.Url);
-
-                            //if the url contains an anchor, remove it
-                            linkUrl = linkUrl.Split('#')[0];
-
+                            linkUrl = linkUrl.Replace("#", "-");
                             absPath = Path.GetFullPath(_path + linkUrl);
                         }
                         else
                         {
-                            var linkNoAnchor = link.Url.Split('#')[0];
-                            absPath = Path.GetFullPath(file.Directory.FullName + "/" + linkNoAnchor);
+                            var split =  link.Url.Split("#");
+                            var linkUrl = split[0];
+                            anchor = split.Length > 1 ? split[1] : null;
+                            absPath = Path.GetFullPath(file.Directory.FullName + "/" + linkUrl);
                         }
 
                         //the file is a markdown file, create a link to it

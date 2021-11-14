@@ -187,7 +187,7 @@ namespace azuredevops_export_wiki
                 headingBuffer.Length = 0;
             }
 
-            attributes.Id = $"ww-{headingId}";
+            attributes.Id = $"{headingId}";
         }
 
 
