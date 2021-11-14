@@ -24,10 +24,10 @@ jobs:
       run: dotnet restore
       
     - name: Publish Windows
-      run: dotnet publish -r win-x64 -c Release -p:Version=${{ github.event.inputs.version }} --no-restore --self-contained
+      run: dotnet publish -r win-x64 -c Release -p:Version=${{ github.event.inputs.version }} --no-restore --no-self-contained -o output/win-x64
       
     - name: Publish Linux
-      run: dotnet publish -r linux-x64 -c Release -p:Version=${{ github.event.inputs.version }} --no-restore --no-self-contained
+      run: dotnet publish -r linux-x64 -c Release -p:Version=${{ github.event.inputs.version }} --no-restore --no-self-contained  -o output/linux-x64
       
     - name: Create Release
       uses: ncipollo/release-action@v1.8.10
