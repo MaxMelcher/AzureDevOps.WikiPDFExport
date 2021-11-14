@@ -4,7 +4,6 @@ using System.Diagnostics;
 using System.IO;
 using System.Text;
 using Markdig;
-using DinkToPdf;
 using Markdig.Syntax.Inlines;
 using Markdig.Syntax;
 using System.Linq;
@@ -151,32 +150,13 @@ namespace azuredevops_export_wiki
                     var htmlStart = "<!DOCTYPE html><html>";
                     var htmlEnd = "</html>";
                     var headStart = "<head>";
-                    var head = "<meta http-equiv=Content-Type content=\"text/html; charset=utf-8\">";
+
+                    var footer = new List<string>();
+
+                    var header = new List<string>();
+                    header.Add("<meta http-equiv=Content-Type content=\"text/html; charset=utf-8\">");
                     var headEnd = "</head>";
 
-//this adds the css twice, but makes troubleshooting easier
-                    var cssPath = "";
-                    if (string.IsNullOrEmpty(_options.CSS))
-                    {
-                        cssPath = "devopswikistyle.css";
-                        Log("No CSS specified, using devopswikistyle.css", LogLevel.Information, 2);
-                    }
-                    else
-                    {
-                        cssPath = Path.GetFullPath(_options.CSS);
-                        if (!File.Exists(cssPath))
-                        {
-                            Log($"CSS file does not exist at path {cssPath}", LogLevel.Warning);
-                        }
-                    }
-
-                    string style ="";
-                    if (File.Exists(cssPath))
-                    {
-                        var css = File.ReadAllText(cssPath);
-                        style = $"<style>{css}</style>";
-                        head += style;
-                    }
 
                     if (_options.ConvertMermaid)
                     {
@@ -188,24 +168,17 @@ namespace azuredevops_export_wiki
 
                         // adding the correct charset for unicode smileys and all that fancy stuff, and include mermaid.js
                         html = $"{html}{mermaid}{mermaidInitialize}";
+                        header.Add(mermaid);
+                        header.Add(mermaidInitialize);
+                    }
 
-                        if (string.IsNullOrEmpty(_options.ChromeExecutablePath))
-                        {
-                            RevisionInfo revisionInfo = await new BrowserFetcher().DownloadAsync(BrowserFetcher.DefaultChromiumRevision);
-                        }
+                    if (_options.Math)
+                    {
+                        var katex = "<script src=\"https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/katex.min.js\"></script><script src=\"https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/contrib/auto-render.min.js\" onload=\"renderMathInElement(document.body, {delimiters: [{left: '$$', right: '$$', display: true},{left: '$', right: '$', display: true}]});\"></script>";
+                        var katexCss = "<link rel=\"stylesheet\" href=\"https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/katex.min.css\">";
 
-                        var launchOptions = new LaunchOptions
-                        {
-                            ExecutablePath = _options.ChromeExecutablePath ?? string.Empty,
-                            Headless = true
-                        };
-
-                        using (var browser = await Puppeteer.LaunchAsync(launchOptions))
-                        {
-                            var page = await browser.NewPageAsync();
-                            await page.SetContentAsync(html);
-                            html = await page.GetContentAsync();
-                        }
+                        header.Add(katexCss);
+                        footer.Add(katex);
                     }
 
                     if (_options.HighlightCode)
@@ -227,50 +200,9 @@ namespace azuredevops_export_wiki
                                                         }
                                                     </style>";
 
-                        html = $"{html}{hightlight}{hightlightInitialize}";
-
-                        if (string.IsNullOrEmpty(_options.ChromeExecutablePath))
-                        {
-                            RevisionInfo revisionInfo = await new BrowserFetcher().DownloadAsync(BrowserFetcher.DefaultChromiumRevision);
-                        }
-
-                        var launchOptions = new LaunchOptions
-                        {
-                            ExecutablePath = _options.ChromeExecutablePath ?? string.Empty,
-                            Headless = true
-                        };
-
-                        using (var browser = await Puppeteer.LaunchAsync(launchOptions))
-                        {
-                            var page = await browser.NewPageAsync();
-                            await page.SetContentAsync(html);
-                            html = await page.GetContentAsync();
-                        }
-                    }
-
-                    if (_options.Math)
-                    {
-                        var katex = "<script src=\"https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/katex.min.js\"></script><script src=\"https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/contrib/auto-render.min.js\" onload=\"renderMathInElement(document.body);\"></script>";
-                        var katexCss = "<link rel=\"stylesheet\" href=\"https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/katex.min.css\">";
-                        html = $"{htmlStart}{headStart}{head}{katexCss}{headEnd}{html}{katex}{htmlEnd}";
-
-                        if (string.IsNullOrEmpty(_options.ChromeExecutablePath))
-                        {
-                            RevisionInfo revisionInfo = await new BrowserFetcher().DownloadAsync(BrowserFetcher.DefaultChromiumRevision);
-                        }
-
-                        var launchOptions = new LaunchOptions
-                        {
-                            ExecutablePath = _options.ChromeExecutablePath ?? string.Empty,
-                            Headless = true
-                        };
-
-                        using (var browser = await Puppeteer.LaunchAsync(launchOptions))
-                        {
-                            var page = await browser.NewPageAsync();
-                            await page.SetContentAsync(html);
-                            html = await page.GetContentAsync();
-                        }
+                        //todo: add offline version of highlightjs 
+                        header.Add(hightlight);
+                        header.Add(hightlightInitialize);
                     }
 
                     if (_options.AzureDevopsOrganization != null)
@@ -289,21 +221,41 @@ namespace azuredevops_export_wiki
                                                                      + match.Groups[3].Value);
                     }
 
-                    //both mermaid and katex do local rendering
-                    if (!_options.Math && !_options.ConvertMermaid)
+                    var cssPath = "";
+                    if (string.IsNullOrEmpty(_options.CSS))
                     {
-                        // adding the correct charset for unicode smileys and all that fancy stuff
-                        html = $"{htmlStart}{head}{html}{htmlEnd}";
+                        cssPath = "devopswikistyle.css";
+                        Log("No CSS specified, using devopswikistyle.css", LogLevel.Information, 0);
                     }
+                    else
+                    {
+                        cssPath = Path.GetFullPath(_options.CSS);
+                        if (!File.Exists(cssPath))
+                        {
+                            Log($"CSS file does not exist at path {cssPath}", LogLevel.Warning);
+                        }
+                    }
+
+                    if (File.Exists(cssPath))
+                    {
+                        var css = File.ReadAllText(cssPath);
+                        var style = $"<style>{css}</style>";
+
+                        //adding the css to the footer to overwrite the mermaid, katex, highlightjs styles. 
+                        footer.Add(style);
+                    }
+
+                    //build the html for rendering
+                    html = $"{htmlStart}{headStart}{string.Concat(header)}{headEnd}{html}<footer>{string.Concat(footer)}</footer>{htmlEnd}";
 
                     if (_options.Debug)
                     {
-                        var htmlPath = Path.Combine(_path, "html.html");
+                        var htmlPath = string.Concat(_options.Output, ".html");
                         Log($"Writing converted html to path: {htmlPath}");
                         File.WriteAllText(htmlPath, html);
                     }
 
-                    var path = ConvertHTMLToPDF(html, cssPath);
+                    var path = await ConvertHTMLToPDFAsync(html);
 
                     Console.ForegroundColor = ConsoleColor.Green;
                     Console.WriteLine();
@@ -332,12 +284,9 @@ namespace azuredevops_export_wiki
             }
         }
 
-        private string ConvertHTMLToPDF(string html, string cssPath)
+        private async Task<string> ConvertHTMLToPDFAsync(string html)
         {
             Log("Converting HTML to PDF");
-            Log("Ignore errors like 'Qt: Could not initialize OLE (error 80010106)'", LogLevel.Warning);
-            var converter = new BasicConverter(new PdfTools());
-
             var output = _options.Output;
 
             if (output == null)
@@ -345,41 +294,23 @@ namespace azuredevops_export_wiki
                 output = Path.Combine(Directory.GetCurrentDirectory(), "export.pdf");
             }
 
-            //somehow the options HeaderSettings.Left/Right/Center don't work in combination with HeaderSettings.HtmlURL
-            var headerSettings = new HeaderSettings
+            if (string.IsNullOrEmpty(_options.ChromeExecutablePath))
             {
-                FontSize = 9,
-                Line = !_options.HideHeaderLine,
-                Spacing = 2.812,
-            };
-            if (string.IsNullOrEmpty(_options.HeaderUrl))
-            {
-                headerSettings.Left = _options.HeaderLeft;
-                headerSettings.Center = _options.HeaderCenter;
-                headerSettings.Right = _options.HeaderRight;
-            }
-            else
-            {
-                headerSettings.HtmUrl = _options.HeaderUrl;
+                RevisionInfo revisionInfo = await new BrowserFetcher().DownloadAsync(BrowserFetcher.DefaultChromiumRevision);
             }
 
-            var footerSettings = new FooterSettings
-            {
-                Line = !_options.HideFooterLine
-            };
-            if (string.IsNullOrEmpty(_options.FooterUrl))
-            {
-                footerSettings.Left = _options.FooterLeft;
-                footerSettings.Center = _options.FooterCenter;
-                footerSettings.Right = _options.FooterRight;
-            }
-            else
-            {
-                footerSettings.HtmUrl = _options.FooterUrl;
-            }
 
-            var doc = new HtmlToPdfDocument()
+            var launchOptions = new LaunchOptions
             {
+                ExecutablePath = _options.ChromeExecutablePath ?? string.Empty,
+                Headless = true, //set to false for easier debugging
+                Args = new[] { "--no-sandbox", "--single-process" }, //required to launch in linux
+                Devtools = false
+            };
+
+            using (var browser = await Puppeteer.LaunchAsync(launchOptions))
+            {
+<<<<<<< HEAD
                 GlobalSettings = {
                     ColorMode = ColorMode.Color,
                     Orientation = Orientation.Portrait,
@@ -398,11 +329,64 @@ namespace azuredevops_export_wiki
                         HeaderSettings = headerSettings,
                         FooterSettings = footerSettings,
                         UseLocalLinks = true,
-                    }
-                }
-            };
+=======
+                var page = await browser.NewPageAsync();
+                await page.SetContentAsync(html);
 
-            converter.Convert(doc);
+                //todo load header/footer template from file
+                var pdfoptions = new PdfOptions();
+                if (!string.IsNullOrEmpty(_options.HeaderTemplate)
+                || !string.IsNullOrEmpty(_options.FooterTemplate)
+                || !string.IsNullOrEmpty(_options.HeaderTemplatePath)
+                || !string.IsNullOrEmpty(_options.FooterTemplatePath))
+                {
+
+                    string footerTemplate = null;
+                    string headerTemplate = null;
+                    if (!string.IsNullOrEmpty(_options.HeaderTemplate))
+                    {
+                        headerTemplate = _options.HeaderTemplate;
+                    }
+                    else if (!string.IsNullOrEmpty(_options.HeaderTemplatePath))
+                    {
+                        headerTemplate = File.ReadAllText(_options.HeaderTemplatePath);
+                    }
+
+                    if (!string.IsNullOrEmpty(_options.FooterTemplate))
+                    {
+                        footerTemplate = _options.FooterTemplate;
+                    }
+                    else if (!string.IsNullOrEmpty(_options.FooterTemplatePath))
+                    {
+                        footerTemplate = File.ReadAllText(_options.FooterTemplatePath);
+>>>>>>> puppeteer-pdf
+                    }
+
+                    pdfoptions = new PdfOptions()
+                    {
+                        PrintBackground = true,
+                        PreferCSSPageSize = false,
+                        DisplayHeaderFooter = true,
+                        MarginOptions = {
+                        Top = "80px",
+                        Bottom = "100px",
+                        //left and right do not have an impact
+                        Left = "100px",
+                        Right = "100px"
+                    },
+
+                        Format = PuppeteerSharp.Media.PaperFormat.A4
+                    };
+
+                    pdfoptions.FooterTemplate = footerTemplate;
+                    pdfoptions.HeaderTemplate = headerTemplate;
+
+                }
+
+                await page.PdfAsync(output, pdfoptions);
+                await browser.CloseAsync();
+            }
+
             Log($"PDF created at: {output}");
             return output;
         }
@@ -431,9 +415,19 @@ namespace azuredevops_export_wiki
                 .UseAdvancedExtensions()
                 .UseYamlFrontMatter();
 
-            if (_options.Math)
+            //must be handled by us to have linking across files
+            pipelineBuilder.Extensions.RemoveAll(x => x is Markdig.Extensions.AutoIdentifiers.AutoIdentifierExtension);
+            //handled by katex
+            pipelineBuilder.Extensions.RemoveAll(x => x is Markdig.Extensions.Mathematics.MathExtension);
+            //this interferes with katex parsing of {} elements.
+            pipelineBuilder.Extensions.RemoveAll(x => x is Markdig.Extensions.GenericAttributes.GenericAttributesExtension);
+
+            DeepLinkExtension deeplink = new DeepLinkExtension();
+            pipelineBuilder.Extensions.Add(deeplink);
+
+            if (_options.ConvertMermaid)
             {
-                pipelineBuilder.UseMathematics();
+                pipelineBuilder = pipelineBuilder.UseMermaidContainers();
             }
 
             for (var i = 0; i < files.Count; i++)
@@ -455,6 +449,7 @@ namespace azuredevops_export_wiki
                 //replace Table of Content
                 md = RemoveTableOfContent(md);
 
+
                 // remove scalings from image links, width & height: file.png =600x500
                 var regexImageScalings = @"\((.[^\)]*?[png|jpg|jpeg]) =(\d+)x(\d+)\)";
                 md = Regex.Replace(md, regexImageScalings, @"($1){width=$2 height=$3}");
@@ -470,15 +465,18 @@ namespace azuredevops_export_wiki
                 // determine the correct nesting of pages and related chapters
                 pipelineBuilder.BlockParsers.Replace<HeadingBlockParser>(new OffsetHeadingBlockParser(mf.Level + 1));
 
-                if (_options.ConvertMermaid)
-                {
-                    pipelineBuilder = pipelineBuilder.UseMermaidContainers();
-                }
+                //update the deeplinking
+                deeplink.Filename = Path.GetFileNameWithoutExtension(file.FullName);
 
                 var pipeline = pipelineBuilder.Build();
 
                 //parse the markdown document so we can alter it later
-                var document = (MarkdownObject)Markdown.Parse(md, pipeline);
+                var document = (MarkdownDocument)Markdown.Parse(md, pipeline);
+
+                if (_options.NoFrontmatter)
+                {
+                    RemoveFrontmatter(document);
+                }
 
                 if (!string.IsNullOrEmpty(_options.Filter))
                 {
@@ -580,6 +578,18 @@ namespace azuredevops_export_wiki
             return result;
         }
 
+        private MarkdownDocument RemoveFrontmatter(MarkdownDocument document)
+        {
+            var frontmatter = document.Descendants<YamlFrontMatterBlock>().FirstOrDefault();
+
+            if (frontmatter != null)
+            {
+                document.Remove(frontmatter);
+                Log($"Removed Frontmatter/Yaml tags", LogLevel.Information, 1);
+            }
+            return document;
+        }
+
         private bool PageMatchesFilter(MarkdownObject document)
         {
             if (!string.IsNullOrEmpty(_options.Filter))
@@ -644,7 +654,7 @@ namespace azuredevops_export_wiki
         {
             if (document.Contains("TOC"))
             {
-                Log("Removing Table of contents [[_TOC_]] from pdf", LogLevel.Warning, 2);
+                Log("Removing Table of contents [[_TOC_]] from pdf", LogLevel.Warning, 1);
                 document = document.Replace("[[_TOC_]]", "");
             }
             return document;
@@ -662,6 +672,7 @@ namespace azuredevops_export_wiki
                     if (!link.Url.StartsWith("http"))
                     {
                         string absPath = null;
+                        string anchor = null;
 
                         //handle --attachments-path case
                         if (!string.IsNullOrEmpty(this._options.AttachmentsPath) && link.Url.StartsWith("/.attachments") || link.Url.StartsWith(".attachments"))
@@ -677,16 +688,15 @@ namespace azuredevops_export_wiki
                         {
                             //urls could be encoded and contain spaces - they are then not found on disk
                             var linkUrl = HttpUtility.UrlDecode(link.Url);
-
-                            //if the url contains an anchor, remove it
-                            linkUrl = linkUrl.Split('#')[0];
-
+                            linkUrl = linkUrl.Replace("#", "-");
                             absPath = Path.GetFullPath(_path + linkUrl);
                         }
                         else
                         {
-                            var linkNoAnchor = link.Url.Split('#')[0];
-                            absPath = Path.GetFullPath(file.Directory.FullName + "/" + linkNoAnchor);
+                            var split =  link.Url.Split("#");
+                            var linkUrl = split[0];
+                            anchor = split.Length > 1 ? split[1] : null;
+                            absPath = Path.GetFullPath(file.Directory.FullName + "/" + linkUrl);
                         }
 
                         //the file is a markdown file, create a link to it
@@ -698,7 +708,11 @@ namespace azuredevops_export_wiki
                         }
                         else if (fileInfo.Exists)
                         {
-                            link.Url = $"file:///{absPath}";
+                            //convert images to base64 and embed them in the html. Chrome/Puppeter does not show local files because of security reasons.
+                            Byte[] bytes = File.ReadAllBytes(fileInfo.FullName);
+                            String base64 = Convert.ToBase64String(bytes);
+
+                            link.Url = $"data:image/{fileInfo.Extension};base64,{base64}";
                         }
 
                         fileInfo = new FileInfo($"{absPath}.md");
@@ -760,7 +774,7 @@ namespace azuredevops_export_wiki
                     }
 
                     MarkdownFile mf = new MarkdownFile();
-                    mf.AbsolutePath = $"{orderFile.Directory.FullName}\\{order}.md";
+                    mf.AbsolutePath = Path.Combine(orderFile.Directory.FullName, $"{order}.md");
                     mf.RelativePath = $"{relativePath}";
                     mf.Level = level;
                     result.Add(mf);
@@ -808,7 +822,6 @@ namespace azuredevops_export_wiki
                 Console.ForegroundColor = color;
             }
         }
-
         async private Task<string> generateWorkItemLink(string stringId, WorkItemTrackingHttpClient witClient)
         {
             int id;
@@ -848,21 +861,18 @@ namespace azuredevops_export_wiki
                 </span>
             </span>
             ";
-
-        }
-
-        public class MarkdownFile
-        {
-            public string AbsolutePath;
-            public string RelativePath;
-            public int Level;
-
-            public override string ToString()
-            {
-                return $"[{Level}] {AbsolutePath}";
-            }
         }
     }
 
+    public class MarkdownFile
+    {
+        public string AbsolutePath;
+        public string RelativePath;
+        public int Level;
 
+        public override string ToString()
+        {
+            return $"[{Level}] {AbsolutePath}";
+        }
+    }
 }

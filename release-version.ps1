@@ -1,4 +1,6 @@
-# dotnet tool install --global dotnet-warp
+# handled in github actions
+$version = "4.0.0-beta5"
+dotnet publish -r win-x64 -c Release -p:Version=$version -o output/win-x64
 
-$version = "3.3.1"
-dotnet warp AzureDevOps.WikiPDFExport/azuredevops-export-wiki.csproj -p:Version=$version
+#linux version
+dotnet publish -r linux-x64 --configuration Release -p:PublishReadyToRun=false -p:PublishSingleFile=true  -p:Version=$version -o output/linux-x64

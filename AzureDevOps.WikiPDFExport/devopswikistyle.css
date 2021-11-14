@@ -2,8 +2,8 @@
 body, html {
     color: #191919;
     word-wrap: break-word;
-    font-family: "Segoe UI Emoji", Tahoma, Geneva, Verdana, sans-serif;
-    font-size: .9375rem
+    font-family: "Segoe UI Emoji", Symbola, Tahoma, Geneva, Verdana, sans-serif;
+    font-size: .9375rem;
 }
 
 html >*:first-child {
@@ -31,6 +31,15 @@ html >*:last-child {
  table,
  pre {
     margin: 0 0 16px 0
+}
+
+pre {
+    white-space: pre-wrap !important; /* needed to wrap long code lines */
+}
+
+table td
+{
+    word-break: break-all !important; /* need to wrap large tables */
 }
 
  table {

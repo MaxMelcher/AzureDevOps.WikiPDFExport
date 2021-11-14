@@ -1,5 +1,5 @@
 ## 🏎 Quickstart
-This tool exports a Azure DevOps wiki as PDF. Therefore, you need to git clone the target wiki to a computer. You can get the clone link of the wiki in the top right of the wiki homepage:
+This tool exports an Azure DevOps wiki as PDF. Therefore, you need to git clone the target wiki to a computer. You can get the clone link of the wiki in the top right of the wiki homepage:
 ![Clone a wiki](images/CloneWiki.png)
 
 To clone this wiki, use the following command:
@@ -9,7 +9,7 @@ The result should look like this:
 ![Cloned wiki repository](images/Clone.png)
  
 Once you have cloned the wiki, you must download the Azure DevOps WikiPDFExport tool.
-**[azuredevops-export-wiki.exe](https://github.com/MaxMelcher/AzureDevOps.WikiPDFExport/releases)** (~20MB)
+**[azuredevops-export-wiki.exe](https://github.com/MaxMelcher/AzureDevOps.WikiPDFExport/releases)** (~14MB)
 
 You can drop it right into the cloned folder and execute it there. 
 Launched without parameters, the tool will detect all wiki files next to it and convert it to a PDF called export.pdf right next to it. Similar to this [pdf](https://github.com/MaxMelcher/AzureDevOps.WikiPDFExport/blob/main/AzureDevOps.WikiPDFExport/export.pdf).
@@ -21,17 +21,20 @@ If you need more control over the output, please see the Configuration Options b
 The tool currently supports the following:
 * Export all wiki pages (and sub pages) in the correct order including styles and formatting.
 * Includes pictures (remote and relative urls)
-* Creates PDF bookmarks to all pages for easier navigation within the PDF
 * If you link to other wiki pages, the link in the PDF will work, too. 
 * Everything self-contained. Download the .exe file, run it, done.
+* It is fast. A PDF with 160 pages is created in less than a second.
 * Tool can be used as part of a build, see [BuildTask](AzureDevOps.WikiPDFExport/Build-Task.md)
 * Supports emoticons :) ⚠ ℹ
-* It is fast. A PDF with 160 pages is created in less than a second. 1000 pages in ~8 seconds.
+* Mermaid supported 
+* Workitems can be referenced and will be included in the pdf as link with the current status, e.g. #7.
+* Math/Latex formulas are rendered
 
 ## 🛰 Requirements
 
-The tool is developed as .NET 5 application, therefore you need to have the runtime installed. Download is available [here](https://dotnet.microsoft.com/download).
-Currently it requires a x64 runtime.
+The tool is developed as .NET 5 application, therefore you need to have the runtime installed. 
+Download is available [here](https://dotnet.microsoft.com/download).
+It requires a x64 windows or linux runtime.
 
 ## 🔽 Download
 
@@ -54,38 +57,23 @@ Debug mode. Logs tons of stuff and even exports the intermediate html file
 Disables the telemetry tracking, see [Telemetry](#telemetry)
 ### --filter
 Filters the pages depending on the page [yaml tags](https://docs.microsoft.com/en-us/azure/devops/project/wiki/wiki-markdown-guidance?view=azure-devops#yaml-tags).
-### --footer-left, --footer-center, --footer-right, --header-left, --header-center, --header-right,
+### --footer-template, --header-template,
 Headers and footers can be added to the document by the --header-* and
-  --footer* arguments respectfully.  In header and footer text string supplied
-  to e.g. --header-left, the following variables will be substituted.
+  --footer* template arguments respectfully.  In header and footer string supplied
+ the following variables will be substituted. See [PDF options from puppeteer](https://pptr.dev/#?product=Puppeteer&show=api-pagepdfoptions). 
 
-   * [page]       Replaced by the number of the pages currently being printed
-   * [frompage]   Replaced by the number of the first page to be printed
+   * [pageNumber]       Replaced by the number of the pages currently being printed
    * [topage]     Replaced by the number of the last page to be printed
-   * [webpage]    Replaced by the URL of the page being printed
-   * [section]    Replaced by the name of the current section
-   * [subsection] Replaced by the name of the current subsection
-   * [date]       Replaced by the current date in system local format
-   * [isodate]    Replaced by the current date in ISO 8601 extended format
-   * [time]       Replaced by the current time in system local format
-   * [title]      Replaced by the title of the of the current page object
-   * [doctitle]   Replaced by the title of the output document
-   * [sitepage]   Replaced by the number of the page in the current site being converted
-   * [sitepages]  Replaced by the number of pages in the current site being converted
-### --help
-Help - outputs all the flags/parameters
-### -h / --heading
-For every wiki page create a heading in the PDF. If the file is called Home.md a new #Home-heading is added to PDF.
-### --header-url, --footer-url
-Provide a path to html files that will be added as header and footer. See [example-footer.html](example-footer.html), [example-header.html](example-header.html)
-### --HideHeaderLine, --hideFooterLine
-Removes the horizontal line in the header or footer. 
-### --highlight-style 
-hightlight.js style used for code blocks. Defaults to 'vs'. See https://github.com/highlightjs/highlight.js/tree/main/src/styles for a full list.
-### -m / --mermaid
-Convert mermaid diagrams to SVG. Will download latest chromium, if chrome-path is not defined.
-### --mermaidjs-path
-Path of the mermaid.js file. It'll be used if mermaid diagrams support is turned on (-m/--mermaid). If not specified, 'https://cdnjs.cloudflare.com/ajax/libs/mermaid/8.6.4/mermaid.min.js' will be downloaded.
+   * [totalPages]       Replaced by the current date in system local format
+
+### --footer-template-path, --header-template-path
+Provide a path to html files that will be added as header and footer. See [example-footer.html](example-footer.html), [example-header.html](example-header.html).
+
+### --no-frontmatter
+If you want to remove the [frontmatter / YAML tags](https://docs.microsoft.com/en-us/azure/devops/project/wiki/wiki-markdown-guidance?view=azure-devops#yaml-tags) from the PDF. 
+
+### --disableTelemetry
+Disables the telemetry tracking, see [Telemetry](#telemetry)
 ### --open
 Opens the PFD file after conversion. Great for development, not great in a build task.
 ### -o / --output
@@ -113,6 +101,7 @@ So far the following limitations are known:
 * The tool, sometimes shows an error "Qt: Could not initialize OLE (error 80010106)" - this can be ignored.
 * If headers are not formatted properly (#Header instead of # Header), they are rendered incorrectly. I might fix that in the future.
 * The tool lacks proper testing because I only have two realistic wikis available. Want to contribute one?
+* Currently, no pdf bookmarks are created (see [chromium issue](https://bugs.chromium.org/p/chromium/issues/detail?id=781797)).  
 
 ## ⚖ License
 See [license](/AzureDevOps.WikiPDFExport/License.md)
@@ -134,11 +123,19 @@ Please check if you have page file that are encoded (e.g. Test%20dFiles.md)
 ### There is an error 'Qt: Could not initialize OLE (error 80010106)'. 
 Yes, please ignore for now.
 
+### Does it also work for Github? 
+Yes, but there the .order files are missing to determine the sort order of pages. You would need to create them by yourself, but it is possible.
+
+### Does it run on Linux? 
+I only tested Ubuntu 18.04 - but there it works. I installed the following packages: 
+```
+apt-get install -y gconf-service libasound2 libatk1.0-0 libc6 libcairo2 libcups2 libdbus-1-3 libexpat1 libfontconfig1 libgcc1 libgconf-2-4 libgdk-pixbuf2.0-0 libglib2.0-0 libgtk-3-0 libnspr4 libpango-1.0-0 libpangocairo-1.0-0 libstdc++6 libx11-6 libx11-xcb1 libxcb1 libxcomposite1 libxcursor1 libxdamage1 libxext6 libxfixes3 libxi6 libxrandr2 libxrender1 libxss1 libxtst6 ca-certificates fonts-liberation libappindicator1 libnss3 lsb-release xdg-utils wget libgbm-dev ttf-ancient-fonts
+```
+
 ## ♥ Thanks
 
 In this tool uses open source libraries that do the actual work - I just combined them to get the export as PDF:
 1. [CommandLineParser](https://github.com/commandlineparser/commandline) to parse the command line
 1. [MarkDig](https://github.com/lunet-io/markdig/) to parse markdown files to HTML.
-1. [DinkToPdf](https://github.com/rdvojmoc/DinkToPdf) to export HTML to PDF
 1. [dotnet-warp](https://github.com/Hubert-Rybak/dotnet-warp) to release a self-contained exe file
 1. [puppeteer-sharp](https://github.com/hardkoded/puppeteer-sharp) to convert mermaid markdown to SVG
