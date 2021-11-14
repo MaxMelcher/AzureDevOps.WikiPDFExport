@@ -1,0 +1,38 @@
+name: .NET
+
+on: 
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version, e.g. v1.0.0'     
+        required: true
+        default: 'v1.0.0'
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 6.0.x
+        
+    - name: Restore dependencies
+      run: dotnet restore
+      
+    - name: Publish Windows
+      run: dotnet publish -r win-x64 -c Release -p:Version=${{ github.event.inputs.version }} --no-restore
+      
+    - name: Publish Linux
+      run: dotnet publish -r linux-x64 -c Release -p:Version=${{ github.event.inputs.version }} --no-restore
+      
+    - name: Create Release
+      uses: ncipollo/release-action@v1.8.10
+      with:
+        artifacts: "output/*"
+        release_name: ${{ github.event.inputs.version }}
+        tag_name: ${{ github.ref }}
+        draft: true
