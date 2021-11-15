@@ -1,3 +1,6 @@
+---
+lastmod: '2021-11-15T10:33:42.714Z'
+---
 ## 🏎 Quickstart
 This tool exports an Azure DevOps wiki as PDF. Therefore, you need to git clone the target wiki to a computer. You can get the clone link of the wiki in the top right of the wiki homepage:
 ![Clone a wiki](images/CloneWiki.png)
@@ -9,7 +12,7 @@ The result should look like this:
 ![Cloned wiki repository](images/Clone.png)
  
 Once you have cloned the wiki, you must download the Azure DevOps WikiPDFExport tool.
-**[azuredevops-export-wiki.exe](https://github.com/MaxMelcher/AzureDevOps.WikiPDFExport/releases)** (~14MB)
+**[azuredevops-export-wiki.exe](https://github.com/MaxMelcher/AzureDevOps.WikiPDFExport/releases)** (~30MB)
 
 You can drop it right into the cloned folder and execute it there. 
 Launched without parameters, the tool will detect all wiki files next to it and convert it to a PDF called export.pdf right next to it. Similar to this [pdf](https://github.com/MaxMelcher/AzureDevOps.WikiPDFExport/blob/main/AzureDevOps.WikiPDFExport/export.pdf).
@@ -34,7 +37,7 @@ The tool currently supports the following:
 
 The tool is developed as .NET 5 application, therefore you need to have the runtime installed. 
 Download is available [here](https://dotnet.microsoft.com/download).
-It requires a x64 windows or linux runtime.
+It requires a x64 **windows** or **linux** runtime.
 
 ## 🔽 Download
 
@@ -98,7 +101,6 @@ Verbose mode. Logging will added to the console window
 
 So far the following limitations are known:
 * TOC (Table of Contents) tag is not supported and removed from the pdf.
-* The tool, sometimes shows an error "Qt: Could not initialize OLE (error 80010106)" - this can be ignored.
 * If headers are not formatted properly (#Header instead of # Header), they are rendered incorrectly. I might fix that in the future.
 * The tool lacks proper testing because I only have two realistic wikis available. Want to contribute one?
 * Currently, no pdf bookmarks are created (see [chromium issue](https://bugs.chromium.org/p/chromium/issues/detail?id=781797)).  
