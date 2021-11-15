@@ -19,15 +19,12 @@ jobs:
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: 6.0.x
-        
-    - name: Restore dependencies
-      run: dotnet restore
-      
+            
     - name: Publish Windows
-      run: dotnet publish -r win-x64 -c Release -p:Version=${{ github.event.inputs.version }} --no-restore --no-self-contained -o output/win-x64
+      run: dotnet publish -r win-x64 -c Release -p:Version=${{ github.event.inputs.version }} --no-self-contained -o output/win-x64
       
     - name: Publish Linux
-      run: dotnet publish -r linux-x64 -c Release -p:Version=${{ github.event.inputs.version }} --no-restore --no-self-contained  -o output/linux-x64
+      run: dotnet publish -r linux-x64 -c Release -p:Version=${{ github.event.inputs.version }} --no-self-contained  -o output/linux-x64
       
     - name: Create Release
       uses: ncipollo/release-action@v1.8.10
