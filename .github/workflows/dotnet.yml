@@ -31,4 +31,4 @@ jobs:
         name: 'v$GITHUB_REF_NAME'
         tag: $GITHUB_REF_NAME
         draft: true
-        commit: $GITHUB_SHA
+        
