@@ -30,7 +30,7 @@ jobs:
       uses: ncipollo/release-action@v1.8.10
       with:
         artifacts: "output/*"
-        release_name: 'v${{ github.event.inputs.version }}'
-        tag_name: ${{ github.ref }}
+        name: 'v${{ github.event.inputs.version }}'
+        tag: ${{ github.ref }}
         draft: true
         commit: ${{ github.sha }}
