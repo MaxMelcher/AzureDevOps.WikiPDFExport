@@ -29,6 +29,6 @@ jobs:
       with:
         artifacts: "output/*"
         name: 'v$GITHUB_REF_NAME'
-        tag: $GITHUB_REF_NAME
+        tag: $GITHUB_REF
         draft: true
         commit: $GITHUB_SHA
