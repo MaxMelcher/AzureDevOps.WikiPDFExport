@@ -33,4 +33,4 @@ jobs:
         release_name: 'v${{ github.event.inputs.version }}'
         tag_name: ${{ github.ref }}
         draft: true
-        commit: ${{ GITHUB_SHA }}
+        commit: ${{ github.sha }}
