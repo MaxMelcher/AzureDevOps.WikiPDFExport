@@ -28,6 +28,6 @@ jobs:
       uses: ncipollo/release-action@v1.8.10
       with:
         artifacts: "output/*"
-        name: 'v$GITHUB_REF_NAME'
+        name: 'v${{env.GITHUB_REF_NAME}}'
         tag: $GITHUB_REF
         draft: true
