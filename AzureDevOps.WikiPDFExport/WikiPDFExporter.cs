@@ -22,6 +22,7 @@ using azuredevops_export_wiki.MermaidContainer;
 using Markdig.Parsers;
 using Markdig.Extensions.Yaml;
 using Markdig.Helpers;
+using Microsoft.TeamFoundation.Common;
 using Microsoft.TeamFoundation.WorkItemTracking.WebApi;
 using Microsoft.TeamFoundation.WorkItemTracking.WebApi.Models;
 using Microsoft.VisualStudio.Services.Client;
@@ -36,7 +37,8 @@ namespace azuredevops_export_wiki
     {
         private Options _options;
         private TelemetryClient _telemetryClient;
-        private string _path;
+        private string _path;                       //Starting path of the export tree of files - note this may be below the root of the wiki (the path ending ....wiki/)
+        private string _rootWikiPath;               //The path to the root of the wiki
         private Dictionary<string, string> _iconClass;
 
         public WikiPDFExporter(Options options)
@@ -119,6 +121,11 @@ namespace azuredevops_export_wiki
                     {
                         _path = Path.GetFullPath(_path);
                     }
+
+                    // Set _rootWikiPath...
+                    var split = _path.Split(".wiki");
+                    _rootWikiPath = split[0].IsNullOrEmpty() ? _path : split[0] + ".wiki";
+                    
 
                     List<MarkdownFile> files = null;
                     if (!string.IsNullOrEmpty(_options.Single))
@@ -668,7 +675,7 @@ namespace azuredevops_export_wiki
                             //urls could be encoded and contain spaces - they are then not found on disk
                             var linkUrl = HttpUtility.UrlDecode(link.Url);
                             linkUrl = linkUrl.Replace("#", "-");
-                            absPath = Path.GetFullPath(_path + linkUrl);
+                            absPath = Path.GetFullPath(_rootWikiPath + linkUrl);
                         }
                         else
                         {
@@ -708,7 +715,12 @@ namespace azuredevops_export_wiki
                             //remove anchor
                             relPath = relPath.Split("#")[0];
 
+                            
                             relPath = relPath.Replace("/", "\\");
+                            // remove relative part if we are not exporting from the root of the wiki
+                            var pathBelowRootWiki = _path.Replace(_rootWikiPath, ""); 
+                            if( !pathBelowRootWiki.IsNullOrEmpty())
+                                relPath = relPath.Replace(pathBelowRootWiki, "");
                             relPath = relPath.Replace("\\", "");
                             relPath = relPath.Replace(".md", "");
                             relPath = relPath.ToLower();
