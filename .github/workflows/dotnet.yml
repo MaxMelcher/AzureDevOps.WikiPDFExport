@@ -24,6 +24,9 @@ jobs:
     - name: Publish Linux
       run: dotnet publish -r linux-x64 -c Release -p:Version=$GITHUB_REF_NAME --no-self-contained  -o output/linux-x64
       
+    - name: Publish MacOs
+      run: dotnet publish -r osx-x64 -c Release -p:Version=$GITHUB_REF_NAME --no-self-contained  -o output/osx-x64
+      
     - name: Release
       uses: softprops/action-gh-release@v1
       with:
@@ -34,3 +37,4 @@ jobs:
           output/win-x64/devopswikistyle.css
           output/win-x64/licenses.txt
           output/linux-x64/azuredevops-export-wiki
+          output/osx-x64/azuredevops-export-wiki
