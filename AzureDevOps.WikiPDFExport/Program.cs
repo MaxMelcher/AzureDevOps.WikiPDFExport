@@ -100,5 +100,8 @@ namespace azuredevops_export_wiki
 
         [Option("organization", Required = false, HelpText = "Azure Devops organization URL used to convert work item references to work item links. Ex: https://dev.azure.com/MyOrganizationName/")]
         public string AzureDevopsOrganization { get; set; }
+
+        [Option("singletoc", Required = false, HelpText = "Creates a single table of content for all markdown files (handles all markdown files as a single one)")]
+        public bool SingleTOC { get; set; }
     }
 }

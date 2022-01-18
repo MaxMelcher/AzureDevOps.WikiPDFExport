@@ -145,7 +145,6 @@ namespace azuredevops_export_wiki
                             }
                         };
                     }
-                    else
                     {
                         files = ReadOrderFiles(_path, 0); // root level
                     }
@@ -417,6 +416,31 @@ namespace azuredevops_export_wiki
                 pipelineBuilder = pipelineBuilder.UseMermaidContainers();
             }
 
+            var firstMDFileInfo = new FileInfo(files[0].AbsolutePath);
+            var singleMDFilePath = firstMDFileInfo.DirectoryName;
+            if (_options.SingleTOC)
+            {
+                var completeMarkdown = "[TOC]\n";
+                for (var i = 0; i < files.Count; i++)
+                {
+                    var file = new FileInfo(files[i].AbsolutePath);
+                    var md = File.ReadAllText(file.FullName);
+                    completeMarkdown += md;
+                }
+
+                var directoryName = firstMDFileInfo.Directory.Name;
+                var relativePath = "/" + directoryName + ".md";
+                singleMDFilePath = new FileInfo(files[0].AbsolutePath).DirectoryName + relativePath;
+                if (File.Exists(singleMDFilePath))
+                {
+                    Log($"File {singleMDFilePath} can't be used as a single md!", LogLevel.Error, 1);
+                    return null;
+                }
+                File.WriteAllText(singleMDFilePath, completeMarkdown);
+                files = new List<MarkdownFile> { new MarkdownFile { AbsolutePath = singleMDFilePath, Level = 0, RelativePath = relativePath  } };
+            }
+
+
             for (var i = 0; i < files.Count; i++)
             {
                 var mf = files[i];
@@ -433,8 +457,11 @@ namespace azuredevops_export_wiki
 
                 var md = File.ReadAllText(file.FullName);
 
-                //replace Table of Content
-                //md = RemoveTableOfContent(md);
+                //rename TOC tags to fit to MarkdigToc
+                if (_options.SingleTOC)
+                    md = md.Replace("[[_TOC_]]", "");
+                else
+                    md = RenameTableOfContent(md);
 
 
                 // remove scalings from image links, width & height: file.png =600x500
@@ -477,6 +504,7 @@ namespace azuredevops_export_wiki
                         Log("Page tags match the provided filter", LogLevel.Information, 3);
                     }
                 }
+
 
                 //adjust the links
                 CorrectLinksAndImages(document, file, mf);
@@ -560,6 +588,9 @@ namespace azuredevops_export_wiki
                 sb.Append(html);
             }
 
+            if (_options.SingleTOC && File.Exists(singleMDFilePath))
+                File.Delete(singleMDFilePath);
+
             var result = sb.ToString();
 
             return result;
@@ -637,13 +668,10 @@ namespace azuredevops_export_wiki
             return true;
         }
 
-        private string RemoveTableOfContent(string document)
+        private string RenameTableOfContent(string document)
         {
             if (document.Contains("TOC"))
-            {
-                Log("Removing Table of contents [[_TOC_]] from pdf", LogLevel.Warning, 1);
-                document = document.Replace("[[_TOC_]]", "");
-            }
+                document = document.Replace("[[_TOC_]]", "[TOC]"); // MarkdigToc styled. See https://github.com/leisn/MarkdigToc
             return document;
         }
 
