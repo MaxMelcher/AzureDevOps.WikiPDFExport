@@ -399,7 +399,8 @@ namespace azuredevops_export_wiki
                 .UsePipeTables()
                 .UseEmojiAndSmiley()
                 .UseAdvancedExtensions()
-                .UseYamlFrontMatter();
+                .UseYamlFrontMatter()
+                .UseTableOfContent();
 
             //must be handled by us to have linking across files
             pipelineBuilder.Extensions.RemoveAll(x => x is Markdig.Extensions.AutoIdentifiers.AutoIdentifierExtension);
@@ -433,7 +434,7 @@ namespace azuredevops_export_wiki
                 var md = File.ReadAllText(file.FullName);
 
                 //replace Table of Content
-                md = RemoveTableOfContent(md);
+                //md = RemoveTableOfContent(md);
 
 
                 // remove scalings from image links, width & height: file.png =600x500
