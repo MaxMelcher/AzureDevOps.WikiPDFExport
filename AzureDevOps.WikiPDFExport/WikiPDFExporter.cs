@@ -447,6 +447,7 @@ namespace azuredevops_export_wiki
                 var contents = files.Select(x => x.Content).ToList();
                 var tocContent = CreateGlobalTableOfContent(contents);
                 var tocString = string.Join("\n", tocContent);
+
                 var tocMarkdownFile = new MarkdownFile { AbsolutePath = tocMDFilePath, Level = 0, RelativePath = relativePath, Content = tocString };
                 files.Insert(0, tocMarkdownFile);
             }
@@ -545,6 +546,13 @@ namespace azuredevops_export_wiki
                     var filename = file.Name;
                     filename = HttpUtility.UrlDecode(relativePath);
                     var heading = $"<b>{filename}</b>";
+                    html = heading + html;
+                }
+
+
+                if (!string.IsNullOrEmpty(_options.GlobalTOC) && i == 0 && !_options.Heading)
+                {
+                    var heading = $"<h1>{_options.GlobalTOC}</h1>";
                     html = heading + html;
                 }
 
