@@ -30,6 +30,9 @@ using Microsoft.VisualStudio.Services.Common;
 
 using Microsoft.VisualStudio.Services.WebApi;
 using Process = System.Diagnostics.Process;
+using System.Runtime.CompilerServices;
+
+[assembly:InternalsVisibleTo("AzureDevOps.WikiPDFExport.Test")]
 
 namespace azuredevops_export_wiki
 {
@@ -100,7 +103,6 @@ namespace azuredevops_export_wiki
                 {"icon_pull_request", "bowtie-tfvc-pull-request"},
                 {"icon_github_issue", "bowtie-status-error-outline"},
             };
-
         }
 
         public async Task Export()
@@ -145,7 +147,6 @@ namespace azuredevops_export_wiki
                             }
                         };
                     }
-                    else
                     {
                         files = ReadOrderFiles(_path, 0); // root level
                     }
@@ -399,7 +400,8 @@ namespace azuredevops_export_wiki
                 .UsePipeTables()
                 .UseEmojiAndSmiley()
                 .UseAdvancedExtensions()
-                .UseYamlFrontMatter();
+                .UseYamlFrontMatter()
+                .UseTableOfContent();
 
             //must be handled by us to have linking across files
             pipelineBuilder.Extensions.RemoveAll(x => x is Markdig.Extensions.AutoIdentifiers.AutoIdentifierExtension);
@@ -430,11 +432,38 @@ namespace azuredevops_export_wiki
                     continue;
                 }
 
-                var md = File.ReadAllText(file.FullName);
+                var markdownContent = File.ReadAllText(file.FullName);
+                files[i].Content = markdownContent;
+            }
 
-                //replace Table of Content
-                md = RemoveTableOfContent(md);
+            if (!string.IsNullOrEmpty(_options.GlobalTOC))
+            {
+                var firstMDFileInfo = new FileInfo(files[0].AbsolutePath);
+                var directoryName = firstMDFileInfo.Directory.Name;
+                var tocName = _options.GlobalTOC == "" ? directoryName : _options.GlobalTOC;
+                var relativePath = "/" + tocName + ".md";
+                var tocMDFilePath = new FileInfo(files[0].AbsolutePath).DirectoryName + relativePath;
 
+                var contents = files.Select(x => x.Content).ToList();
+                var tocContent = CreateGlobalTableOfContent(contents);
+                var tocString = string.Join("\n", tocContent);
+
+                var tocMarkdownFile = new MarkdownFile { AbsolutePath = tocMDFilePath, Level = 0, RelativePath = relativePath, Content = tocString };
+                files.Insert(0, tocMarkdownFile);
+            }
+
+            for (var i = 0; i < files.Count; i++)
+            {
+                var mf = files[i];
+                var file = new FileInfo(files[i].AbsolutePath);
+
+                Log($"{file.Name}", LogLevel.Information, 1);
+
+                var md = mf.Content;
+
+                //rename TOC tags to fit to MarkdigToc or delete them from each markdown document
+                var newTOCString = _options.GlobalTOC != null ? "" : "[TOC]"; 
+                md = md.Replace("[[_TOC_]]", newTOCString);
 
                 // remove scalings from image links, width & height: file.png =600x500
                 var regexImageScalings = @"\((.[^\)]*?[png|jpg|jpeg]) =(\d+)x(\d+)\)";
@@ -457,7 +486,7 @@ namespace azuredevops_export_wiki
                 var pipeline = pipelineBuilder.Build();
 
                 //parse the markdown document so we can alter it later
-                var document = (MarkdownDocument)Markdown.Parse(md, pipeline);
+                var document = Markdown.Parse(md, pipeline);
 
                 if (_options.NoFrontmatter)
                 {
@@ -477,6 +506,7 @@ namespace azuredevops_export_wiki
                     }
                 }
 
+
                 //adjust the links
                 CorrectLinksAndImages(document, file, mf);
 
@@ -490,6 +520,12 @@ namespace azuredevops_export_wiki
                     renderer.Render(document);
                 }
                 html = builder.ToString();
+
+                if (!string.IsNullOrEmpty(_options.GlobalTOC) && i == 0)
+                {
+                    html = RemoveDuplicatedHeadersFromGlobalTOC(html);
+                    Log($"Removed duplicated headers from toc html", LogLevel.Information, 1);
+                }
 
                 //add html anchor
                 var anchorPath = file.FullName.Substring(_path.Length);
@@ -510,6 +546,13 @@ namespace azuredevops_export_wiki
                     var filename = file.Name;
                     filename = HttpUtility.UrlDecode(relativePath);
                     var heading = $"<b>{filename}</b>";
+                    html = heading + html;
+                }
+
+
+                if (!string.IsNullOrEmpty(_options.GlobalTOC) && i == 0 && !_options.Heading)
+                {
+                    var heading = $"<h1>{_options.GlobalTOC}</h1>";
                     html = heading + html;
                 }
 
@@ -562,6 +605,30 @@ namespace azuredevops_export_wiki
             var result = sb.ToString();
 
             return result;
+        }
+
+        internal string RemoveDuplicatedHeadersFromGlobalTOC(string html)
+        {
+            var result = Regex.Replace(html, @"^ *<h[123456].*>.*<\/h[123456]> *\n?$", "", RegexOptions.Multiline);
+            result = result.Trim('\n');
+            return result;
+        }
+
+        internal List<string> CreateGlobalTableOfContent(List<string> contents)
+        {
+            var headers = new List<string>();
+            foreach (var content in contents) 
+            {
+                var headerMatches = Regex.Matches(content, "^ *#+ ?.*$", RegexOptions.Multiline);
+                headers.AddRange(headerMatches.Select(x => x.Value.Trim()));
+            }
+
+            if (!headers.Any())
+                return new List<string>(); // no header -> no toc
+
+            var tocContent = new List<string> { "[TOC]" }; // MarkdigToc style
+            tocContent.AddRange(headers);
+            return tocContent;
         }
 
         private MarkdownDocument RemoveFrontmatter(MarkdownDocument document)
@@ -636,13 +703,10 @@ namespace azuredevops_export_wiki
             return true;
         }
 
-        private string RemoveTableOfContent(string document)
+        private string RenameTableOfContent(string document)
         {
             if (document.Contains("TOC"))
-            {
-                Log("Removing Table of contents [[_TOC_]] from pdf", LogLevel.Warning, 1);
-                document = document.Replace("[[_TOC_]]", "");
-            }
+                document = document.Replace("[[_TOC_]]", "[TOC]"); // MarkdigToc styled. See https://github.com/leisn/MarkdigToc
             return document;
         }
 
@@ -860,6 +924,7 @@ namespace azuredevops_export_wiki
         public string AbsolutePath;
         public string RelativePath;
         public int Level;
+        public string Content;
 
         public override string ToString()
         {
