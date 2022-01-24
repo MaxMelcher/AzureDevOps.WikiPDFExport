@@ -24,6 +24,7 @@ If you need more control over the output, please see the Configuration Options b
 The tool currently supports the following:
 * Export all wiki pages (and sub pages) in the correct order including styles and formatting.
 * Includes pictures (remote and relative urls)
+* Table of Contents
 * If you link to other wiki pages, the link in the PDF will work, too. 
 * Everything self-contained. Download the .exe file, run it, done.
 * It is fast. A PDF with 160 pages is created in less than a second.
@@ -72,6 +73,9 @@ Headers and footers can be added to the document by the --header-* and
 ### --footer-template-path, --header-template-path
 Provide a path to html files that will be added as header and footer. See [example-footer.html](example-footer.html), [example-header.html](example-header.html).
 
+### --GlobalTOC
+Title for a global table of content for all markdown files. When not specified each markdown creates its own toc if defined
+
 ### --no-frontmatter
 If you want to remove the [frontmatter / YAML tags](https://docs.microsoft.com/en-us/azure/devops/project/wiki/wiki-markdown-guidance?view=azure-devops#yaml-tags) from the PDF. 
 
@@ -100,7 +104,6 @@ Verbose mode. Logging will added to the console window
 ## 😲 Limitations
 
 So far the following limitations are known:
-* TOC (Table of Contents) tag is not supported and removed from the pdf.
 * If headers are not formatted properly (#Header instead of # Header), they are rendered incorrectly. I might fix that in the future.
 * The tool lacks proper testing because I only have two realistic wikis available. Want to contribute one?
 * Currently, no pdf bookmarks are created (see [chromium issue](https://bugs.chromium.org/p/chromium/issues/detail?id=781797)).  
