@@ -407,8 +407,10 @@ namespace azuredevops_export_wiki
             pipelineBuilder.Extensions.RemoveAll(x => x is Markdig.Extensions.AutoIdentifiers.AutoIdentifierExtension);
             //handled by katex
             pipelineBuilder.Extensions.RemoveAll(x => x is Markdig.Extensions.Mathematics.MathExtension);
+            
+            //todo: is this needed? it will stop support of resizing images:
             //this interferes with katex parsing of {} elements.
-            pipelineBuilder.Extensions.RemoveAll(x => x is Markdig.Extensions.GenericAttributes.GenericAttributesExtension);
+            //pipelineBuilder.Extensions.RemoveAll(x => x is Markdig.Extensions.GenericAttributes.GenericAttributesExtension);
 
             DeepLinkExtension deeplink = new DeepLinkExtension();
             pipelineBuilder.Extensions.Add(deeplink);
@@ -460,6 +462,10 @@ namespace azuredevops_export_wiki
                 Log($"{file.Name}", LogLevel.Information, 1);
 
                 var md = mf.Content;
+
+                if (string.IsNullOrEmpty(md)) { 
+                    Log($"File {file.FullName} is empty and will be skipped!", LogLevel.Warning, 1);
+                    continue;}
 
                 //rename TOC tags to fit to MarkdigToc or delete them from each markdown document
                 var newTOCString = _options.GlobalTOC != null ? "" : "[TOC]"; 
