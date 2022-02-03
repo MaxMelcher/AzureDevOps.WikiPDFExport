@@ -6,6 +6,8 @@ tags:
 title: Hello world
 ---
 
+![image.png](/.attachments/index-hero.jpg)
+![image.png](.attachments/index-hero.jpg)
 # Smileys
 
 😁♥️🎈✅💻🎥🧾⚖️🏎️😲🎯⚙️

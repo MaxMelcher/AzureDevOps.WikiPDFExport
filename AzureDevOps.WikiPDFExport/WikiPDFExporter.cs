@@ -742,7 +742,10 @@ namespace azuredevops_export_wiki
                         string anchor = null;
 
                         //handle --attachments-path case
-                        if (!string.IsNullOrEmpty(this._options.AttachmentsPath) && link.Url.StartsWith("/.attachments") || link.Url.StartsWith(".attachments"))
+                        if (
+                            !string.IsNullOrEmpty(this._options.AttachmentsPath) && 
+                            (link.Url.StartsWith("/.attachments") || link.Url.StartsWith(".attachments"))
+                        )
                         {
                             var linkUrl = link.Url.Split('/').Last();
 
