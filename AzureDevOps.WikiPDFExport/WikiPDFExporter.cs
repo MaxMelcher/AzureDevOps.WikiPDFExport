@@ -369,6 +369,11 @@ namespace azuredevops_export_wiki
                     pdfoptions.HeaderTemplate = headerTemplate;
 
                 }
+                else
+                {
+                    pdfoptions.PrintBackground = _options.PrintBackground;
+                }
+
 
                 await page.PdfAsync(output, pdfoptions);
                 await browser.CloseAsync();
