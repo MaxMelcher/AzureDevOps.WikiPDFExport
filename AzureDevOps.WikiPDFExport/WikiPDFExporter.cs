@@ -132,9 +132,14 @@ namespace azuredevops_export_wiki
                     List<MarkdownFile> files = null;
                     if (!string.IsNullOrEmpty(_options.Single))
                     {
-
-                        var directory = new DirectoryInfo(Path.GetFullPath(_path));
                         var filePath = Path.GetFullPath(_options.Single);
+                        var directory = new DirectoryInfo(Path.GetFullPath(filePath));
+
+                        if (!File.Exists(filePath))
+                        {
+                            Log($"Single-File [-s] {filePath} specified not found" + filePath, LogLevel.Error);
+                            return;
+                        }
 
                         var relativePath = filePath.Substring(directory.FullName.Length);
 
@@ -147,6 +152,7 @@ namespace azuredevops_export_wiki
                             }
                         };
                     }
+                    else
                     {
                         files = ReadOrderFiles(_path, 0); // root level
                     }
