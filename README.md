@@ -95,6 +95,8 @@ Personal access token used to access your Azure Devops Organization. If no token
 and organization and project parameters are provided, it will start a prompt asking you to login.
 ### --pathToHeading
 Add path of the file to the header
+### --printbackground
+Enable print background when using no header/footer template.
 ### -s / --single
 Path to a single markdown file to convert to PDF. If you want to write your changelog in the wiki, this is your parameter to only convert a single page. 
 -p parameter is required, too.
