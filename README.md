@@ -106,6 +106,7 @@ So far the following limitations are known:
 * If headers are not formatted properly (#Header instead of # Header), they are rendered incorrectly. I might fix that in the future.
 * The tool lacks proper testing because I only have two realistic wikis available. Want to contribute one?
 * Currently, no pdf bookmarks are created (see [chromium issue](https://bugs.chromium.org/p/chromium/issues/detail?id=781797)).  
+* Tags in Azure DevOps must be closed properly - if you leave a strikethrough (`~~`) open, then all the following ~~content will be striked through~~.
 
 ## ⚖ License
 See [license](/AzureDevOps.WikiPDFExport/License.md)
