@@ -41,10 +41,11 @@ namespace AzureDevOps.WikiPDFExport
         {
             // Arrange
             var wikiPDFExporter = new WikiPDFExporter(new Options());
-            var mdContent1 = "\n# SomeHeader\n"
-                + "SomeText";
-            var mdContent2 = "    ## SomeOtherHeader   \n"
-                + " []() #Some very interesting text in wrong header format #";
+            var mdContent1 = @"
+                # SomeHeader
+                SomeText";
+            var mdContent2 = @"    ## SomeOtherHeader   
+                []() #Some very interesting text in wrong header format #";
 
             // Act
             var result = wikiPDFExporter.CreateGlobalTableOfContent(new List<string> { mdContent1, mdContent2 });
@@ -52,6 +53,81 @@ namespace AzureDevOps.WikiPDFExport
             Assert.Equal("[TOC]", result[0]);
             Assert.Equal("# SomeHeader", result[1]);
             Assert.Equal("## SomeOtherHeader", result[2]);
+        }
+
+        [Fact]
+        public void CreateGlobalTableOfContent_ShouldIgnoreCodeSectionsSingle()
+        {
+            // Arrange
+            var wikiPDFExporter = new WikiPDFExporter(new Options());
+            var mdContent1 = @"
+                ``` code section
+                # SomeHeader
+                ```";
+            
+            // Act
+            var result = wikiPDFExporter.CreateGlobalTableOfContent(new List<string> { mdContent1 });
+
+            Assert.False(result.Any());
+        }
+
+        [Fact]
+        public void CreateGlobalTableOfContent_ShouldIgnoreCodeSectionsMultiple()
+        {
+            // Arrange
+            var wikiPDFExporter = new WikiPDFExporter(new Options());
+            var mdContent1 = @"
+                ``` code section
+                ## SomeHeader
+                Some other text
+                ```
+                ```
+                ## Another header ```
+                # A valid header";
+
+            // Act
+            var result = wikiPDFExporter.CreateGlobalTableOfContent(new List<string> { mdContent1 });
+
+            Assert.Equal(2, result.Count);
+            Assert.Equal("[TOC]", result[0]);
+            Assert.Equal("# A valid header", result[1]);
+        }
+
+        [Fact]
+        public void CreateGlobalTableOfContent_ShouldNotIgnoreInvalidCodeSections()
+        {
+            // Arrange
+            var wikiPDFExporter = new WikiPDFExporter(new Options());
+            var mdContent1 = @"
+                Not at the beginning ```
+                # A valid header
+                ```
+                ";
+
+            // Act
+            var result = wikiPDFExporter.CreateGlobalTableOfContent(new List<string> { mdContent1 });
+
+            Assert.Equal(2, result.Count);
+            Assert.Equal("[TOC]", result[0]);
+            Assert.Equal("# A valid header", result[1]);
+        }
+
+        [Fact]
+        public void CreateGlobalTableOfContent_ShouldNotIgnoreUnclosedCodeSections()
+        {
+            // Arrange
+            var wikiPDFExporter = new WikiPDFExporter(new Options());
+            var mdContent1 = @"
+                ``` unclosed comment
+                # A valid header
+                ";
+
+            // Act
+            var result = wikiPDFExporter.CreateGlobalTableOfContent(new List<string> { mdContent1 });
+
+            Assert.Equal(2, result.Count);
+            Assert.Equal("[TOC]", result[0]);
+            Assert.Equal("# A valid header", result[1]);
         }
 
         [Fact]

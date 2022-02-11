@@ -634,7 +634,9 @@ namespace azuredevops_export_wiki
         internal List<string> CreateGlobalTableOfContent(List<string> contents)
         {
             var headers = new List<string>();
-            foreach (var content in contents) 
+            var filteredContentList = RemoveCodeSections(contents);
+
+            foreach (var content in filteredContentList) 
             {
                 var headerMatches = Regex.Matches(content, "^ *#+ ?.*$", RegexOptions.Multiline);
                 headers.AddRange(headerMatches.Select(x => x.Value.Trim()));
@@ -646,6 +648,17 @@ namespace azuredevops_export_wiki
             var tocContent = new List<string> { "[TOC]" }; // MarkdigToc style
             tocContent.AddRange(headers);
             return tocContent;
+        }
+
+        private List<string> RemoveCodeSections(List<string> contents)
+        {
+            var contentWithoutCode = new List<string>();
+            for(var i=0; i < contents.Count; i++)
+            {
+                var contentWithoutCodeSection = Regex.Replace(contents[i], "^[ \t]*```[^`]*```", "", RegexOptions.Multiline);
+                contentWithoutCode.Add(contentWithoutCodeSection);
+            }
+            return contentWithoutCode;
         }
 
         private MarkdownDocument RemoveFrontmatter(MarkdownDocument document)
