@@ -33,7 +33,7 @@ The tool currently supports the following:
 
 ## 🛰 Requirements
 
-The tool is developed as .NET 5 application, therefore you need to have the runtime installed. 
+The tool is developed as .NET 6 application, therefore you need to have the runtime installed. 
 Download is available [here](https://dotnet.microsoft.com/download).
 It requires a x64 **windows** or **linux** runtime.
 
@@ -98,6 +98,24 @@ Enable print background when using no header/footer template.
 Path to a single markdown file to convert to PDF. If you want to write your changelog in the wiki, this is your parameter to only convert a single page.
 ### -v / --verbose
 Verbose mode. Logging will added to the console window
+
+## Running in Docker
+
+To build the Docker Image run the following commands (replace `<VERSION>`):
+
+~~~powershell
+dotnet publish -r linux-x64 -c Release -p:Version=<VERSION> --no-self-contained  -o output/linux-x64
+docker build --pull --rm -f "Dockerfile" -t azdowiki-pdf-export:latest "."
+~~~
+
+Launch a container:
+
+~~~powershell
+docker run -it -v ${pwd}:/usr/root/wiki -w /usr/root/wiki azdowiki-pdf-export:latest bash
+~~~
+
+Change the volume mapping (`-v ${pwd}`) to the location of your wiki and then
+run `azuredevops-export-wiki -p .` to generate your PDF.
 
 ## 😲 Limitations
 
