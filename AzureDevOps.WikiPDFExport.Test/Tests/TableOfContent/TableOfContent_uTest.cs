@@ -72,6 +72,22 @@ namespace AzureDevOps.WikiPDFExport
         }
 
         [Fact]
+        public void CreateGlobalTableOfContent_ShouldIgnoreCodeSectionsSingleTilde()
+        {
+            // Arrange
+            var wikiPDFExporter = new WikiPDFExporter(new Options());
+            var mdContent1 = @"
+                ~~~ code section
+                # SomeHeader
+                ~~~";
+            
+            // Act
+            var result = wikiPDFExporter.CreateGlobalTableOfContent(new List<string> { mdContent1 });
+
+            Assert.False(result.Any());
+        }
+
+        [Fact]
         public void CreateGlobalTableOfContent_ShouldIgnoreCodeSectionsMultiple()
         {
             // Arrange
