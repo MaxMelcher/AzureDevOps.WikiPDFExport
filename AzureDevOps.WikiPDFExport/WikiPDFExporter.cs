@@ -40,8 +40,7 @@ namespace azuredevops_export_wiki
     {
         private Options _options;
         private TelemetryClient _telemetryClient;
-        private string _path;                       //Starting path of the export tree of files - note this may be below the root of the wiki (the path ending ....wiki/)
-        private string _rootWikiPath;               //The path to the root of the wiki
+        private ExportedWikiDoc _wiki;
         private Dictionary<string, string> _iconClass;
 
         public WikiPDFExporter(Options options)
@@ -113,20 +112,12 @@ namespace azuredevops_export_wiki
                 {
                     var timer = Stopwatch.StartNew();
 
-                    _path = _options.Path;
-                    if (_path == null)
+                    if (_options.Path == null)
                     {
                         Log("Using current folder for export, -path is not set.");
-                        _path = Directory.GetCurrentDirectory();
+                        _wiki =  new ExportedWikiDoc(Directory.GetCurrentDirectory());
                     }
-                    else
-                    {
-                        _path = Path.GetFullPath(_path);
-                    }
-
-                    // Set _rootWikiPath...
-                    var split = _path.Split(".wiki");
-                    _rootWikiPath = split[0].IsNullOrEmpty() ? _path : split[0] + ".wiki";
+                    _wiki = new ExportedWikiDoc(_options.Path);
                     
 
                     List<MarkdownFile> files = null;
@@ -154,7 +145,7 @@ namespace azuredevops_export_wiki
                     }
                     else
                     {
-                        files = ReadOrderFiles(_path, 0); // root level
+                        files = ReadOrderFiles(_wiki.exportPath(), 0); // root level
                     }
 
                     _telemetryClient.TrackEvent("Pages", null, new Dictionary<string, double>() { { "Pages", files.Count } });
@@ -412,7 +403,9 @@ namespace azuredevops_export_wiki
                 .UseEmojiAndSmiley()
                 .UseAdvancedExtensions()
                 .UseYamlFrontMatter()
-                .UseTableOfContent();
+                .UseTableOfContent(
+                    tocAction: opt=>{ opt.ContainerTag="div"; opt.ContainerClass="toc"; }
+                );
 
             //must be handled by us to have linking across files
             pipelineBuilder.Extensions.RemoveAll(x => x is Markdig.Extensions.AutoIdentifiers.AutoIdentifierExtension);
@@ -545,12 +538,12 @@ namespace azuredevops_export_wiki
                 }
 
                 //add html anchor
-                var anchorPath = file.FullName.Substring(_path.Length);
+                var anchorPath = file.FullName.Substring(_wiki.exportPath().Length);
                 anchorPath = anchorPath.Replace("\\", "");
                 anchorPath = anchorPath.ToLower();
                 anchorPath = anchorPath.Replace(".md", "");
 
-                var relativePath = file.FullName.Substring(_path.Length);
+                var relativePath = file.FullName.Substring(_wiki.exportPath().Length);
 
                 var anchor = $"<a id=\"{anchorPath}\">&nbsp;</a>";
 
@@ -638,7 +631,7 @@ namespace azuredevops_export_wiki
 
             foreach (var content in filteredContentList) 
             {
-                var headerMatches = Regex.Matches(content, "^ *#+ ?.*$", RegexOptions.Multiline);
+                var headerMatches = Regex.Matches(content, "^ *#{1,2} ?[^#].*$", RegexOptions.Multiline);
                 headers.AddRange(headerMatches.Select(x => x.Value.Trim()));
             }
 
@@ -655,7 +648,7 @@ namespace azuredevops_export_wiki
             var contentWithoutCode = new List<string>();
             for(var i=0; i < contents.Count; i++)
             {
-                var contentWithoutCodeSection = Regex.Replace(contents[i], "^[ \t]*```[^`]*```", "", RegexOptions.Multiline);
+                var contentWithoutCodeSection = Regex.Replace(contents[i], "^[ \t]*(```|~~~)[^`]*(```|~~~)", "", RegexOptions.Multiline);
                 contentWithoutCode.Add(contentWithoutCodeSection);
             }
             return contentWithoutCode;
@@ -769,10 +762,16 @@ namespace azuredevops_export_wiki
                         }
                         else if (link.Url.StartsWith("/"))
                         {
-                            //urls could be encoded and contain spaces - they are then not found on disk
-                            var linkUrl = HttpUtility.UrlDecode(link.Url);
-                            linkUrl = linkUrl.Replace("#", "-");
-                            absPath = Path.GetFullPath(_rootWikiPath + linkUrl);
+                            // Add URL replacements here
+                            var replacements = new Dictionary<string, string>(){
+                                {":", "%3A"},
+                                {"#", "-"}
+                            };
+                            var linkUrl = link.Url;
+                            replacements.ForEach(p => {
+                                linkUrl = linkUrl.Replace(p.Key, p.Value);
+                            });
+                            absPath = Path.GetFullPath(_wiki.basePath() + linkUrl);
                         }
                         else
                         {
@@ -815,7 +814,7 @@ namespace azuredevops_export_wiki
                             
                             relPath = relPath.Replace("/", "\\");
                             // remove relative part if we are not exporting from the root of the wiki
-                            var pathBelowRootWiki = _path.Replace(_rootWikiPath, ""); 
+                            var pathBelowRootWiki = _wiki.exportPath().Replace(_wiki.basePath(), ""); 
                             if( !pathBelowRootWiki.IsNullOrEmpty())
                                 relPath = relPath.Replace(pathBelowRootWiki, "");
                             relPath = relPath.Replace("\\", "");
@@ -949,6 +948,17 @@ namespace azuredevops_export_wiki
                 </span>
             </span>
             ";
+        }
+
+        private String FindBaseOfWikiFromChildPath(String exportBase){
+            var directory = new DirectoryInfo(Path.GetFullPath(exportBase));
+            DirectoryInfo[] gitDirs = directory.GetDirectories("./.git");
+            if (gitDirs == null || gitDirs.Length == 0) {
+
+            }
+            Log($"Reading .order file in directory {exportBase}");
+            var orderFiles = directory.GetFiles(".order", SearchOption.TopDirectoryOnly);
+            return Path.GetFullPath("ds");
         }
     }
 
