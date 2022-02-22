@@ -631,7 +631,7 @@ namespace azuredevops_export_wiki
 
             foreach (var content in filteredContentList) 
             {
-                var headerMatches = Regex.Matches(content, "^ *#{1,2} ?[^#].*$", RegexOptions.Multiline);
+                var headerMatches = Regex.Matches(content, "^ *#+ ?[^#].*$", RegexOptions.Multiline);
                 headers.AddRange(headerMatches.Select(x => x.Value.Trim()));
             }
 
