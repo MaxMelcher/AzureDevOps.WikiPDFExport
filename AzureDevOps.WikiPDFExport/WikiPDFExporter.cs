@@ -949,17 +949,6 @@ namespace azuredevops_export_wiki
             </span>
             ";
         }
-
-        private String FindBaseOfWikiFromChildPath(String exportBase){
-            var directory = new DirectoryInfo(Path.GetFullPath(exportBase));
-            DirectoryInfo[] gitDirs = directory.GetDirectories("./.git");
-            if (gitDirs == null || gitDirs.Length == 0) {
-
-            }
-            Log($"Reading .order file in directory {exportBase}");
-            var orderFiles = directory.GetFiles(".order", SearchOption.TopDirectoryOnly);
-            return Path.GetFullPath("ds");
-        }
     }
 
     public class MarkdownFile
