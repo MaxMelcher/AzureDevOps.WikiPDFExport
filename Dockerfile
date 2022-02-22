@@ -6,18 +6,6 @@
 
 FROM ubuntu:18.04
 
-# Versions of custom installed tools
-# Versions of items installed via NPM or APT are in the command lines below.
-ENV TZ=Europe/Dublin \
-  ANSIBLE_VERSION=2.10.4 \
-  KUBECTL_VERSION=1.19.2 \
-  HELM_VERSION=3.3.4 \
-  AWS_CLI_VERSION=2.1.15 \
-  YQ_VERSION=3.3.2 \
-  FLYWAY_VERSION=7.0.0 \
-  PIP_VERSION=20.3.3 \
-  POWERSHELL_VERSION=7.1*
-
 RUN export DEBIAN_FRONTEND=noninteractive \
     && apt-get -qq -o=Dpkg::Use-Pty=0 update --fix-missing && apt-get -qq -o=Dpkg::Use-Pty=0 install -f -y gconf-service \
     libasound2 \
