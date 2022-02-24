@@ -765,7 +765,8 @@ namespace azuredevops_export_wiki
                             // Add URL replacements here
                             var replacements = new Dictionary<string, string>(){
                                 {":", "%3A"},
-                                {"#", "-"}
+                                {"#", "-"},
+                                {"%20", " "}
                             };
                             var linkUrl = link.Url;
                             replacements.ForEach(p => {
