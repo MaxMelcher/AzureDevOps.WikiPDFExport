@@ -105,6 +105,9 @@ namespace azuredevops_export_wiki
         [Option("globaltoc", Required = false, HelpText = "Title for a global table of content for all markdown files. When not specified each markdown creates its own toc if defined")]
         public string GlobalTOC { get; set; }
 
+        [Option("frontpage", Required = false, HelpText = "Markdown file that should be used as frontpage or first section (even before table of contents)")]
+        public string FrontPage { get; set; }
+
         [Option("printbackground", Required = false, HelpText = "Enable print background when using no header/footer template")]
         public bool PrintBackground { get; set; } = false;
 

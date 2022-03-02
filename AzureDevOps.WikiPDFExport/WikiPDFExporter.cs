@@ -115,10 +115,10 @@ namespace azuredevops_export_wiki
                     if (_options.Path == null)
                     {
                         Log("Using current folder for export, -path is not set.");
-                        _wiki =  new ExportedWikiDoc(Directory.GetCurrentDirectory());
+                        _wiki = new ExportedWikiDoc(Directory.GetCurrentDirectory());
                     }
                     _wiki = new ExportedWikiDoc(_options.Path);
-                    
+
 
                     List<MarkdownFile> files = null;
                     if (!string.IsNullOrEmpty(_options.Single))
@@ -442,6 +442,19 @@ namespace azuredevops_export_wiki
                 files[i].Content = markdownContent;
             }
 
+            MarkdownFile frontPage = null;
+            if (!string.IsNullOrEmpty(_options.FrontPage))
+            {
+                try
+                {
+                    frontPage = files.First(x => new FileInfo(x.AbsolutePath).Name.Contains(_options.FrontPage, StringComparison.InvariantCultureIgnoreCase));
+                }catch(Exception ex)
+                {
+                    Log($"Could not find frontpage file '{_options.FrontPage}' - {ex.Message}", LogLevel.Error);
+                }
+            }
+
+            var tocFileIndex = 0;
             if (!string.IsNullOrEmpty(_options.GlobalTOC))
             {
                 var firstMDFileInfo = new FileInfo(files[0].AbsolutePath);
@@ -450,12 +463,19 @@ namespace azuredevops_export_wiki
                 var relativePath = "/" + tocName + ".md";
                 var tocMDFilePath = new FileInfo(files[0].AbsolutePath).DirectoryName + relativePath;
 
-                var contents = files.Select(x => x.Content).ToList();
+                var contents = files.Where(x => x != frontPage).Select(x => x.Content).ToList();
                 var tocContent = CreateGlobalTableOfContent(contents);
                 var tocString = string.Join("\n", tocContent);
 
                 var tocMarkdownFile = new MarkdownFile { AbsolutePath = tocMDFilePath, Level = 0, RelativePath = relativePath, Content = tocString };
                 files.Insert(0, tocMarkdownFile);
+            }
+
+            if (frontPage != null)
+            {
+                tocFileIndex = 1;
+                files.Remove(frontPage);
+                files.Insert(0, frontPage);
             }
 
             for (var i = 0; i < files.Count; i++)
@@ -531,7 +551,7 @@ namespace azuredevops_export_wiki
                 }
                 html = builder.ToString();
 
-                if (!string.IsNullOrEmpty(_options.GlobalTOC) && i == 0)
+                if (!string.IsNullOrEmpty(_options.GlobalTOC) && i == tocFileIndex)
                 {
                     html = RemoveDuplicatedHeadersFromGlobalTOC(html);
                     Log($"Removed duplicated headers from toc html", LogLevel.Information, 1);
@@ -560,7 +580,7 @@ namespace azuredevops_export_wiki
                 }
 
 
-                if (!string.IsNullOrEmpty(_options.GlobalTOC) && i == 0 && !_options.Heading)
+                if (!string.IsNullOrEmpty(_options.GlobalTOC) && i == tocFileIndex && !_options.Heading)
                 {
                     var heading = $"<h1>{_options.GlobalTOC}</h1>";
                     html = heading + html;
