@@ -145,8 +145,9 @@ namespace azuredevops_export_wiki
                     }
                     else
                     {
-                        files = ReadOrderFiles(_wiki.exportPath(), 0); // root level
+                        files = ReadOrderFiles(_wiki.exportPath()); // root level
                     }
+                    Log($"Found {files.Count} total pages to process");
 
                     _telemetryClient.TrackEvent("Pages", null, new Dictionary<string, double>() { { "Pages", files.Count } });
 
@@ -830,53 +831,75 @@ namespace azuredevops_export_wiki
             }
         }
 
-        private List<MarkdownFile> ReadOrderFiles(string path, int level)
-        {
-            //read the .order file
-            //if there is an entry and a folder with the same name, dive deeper
-            var directory = new DirectoryInfo(Path.GetFullPath(path));
-            Log($"Reading .order file in directory {path}");
-            var orderFiles = directory.GetFiles(".order", SearchOption.TopDirectoryOnly);
+        string BasePath = string.Empty;
 
-            if (orderFiles.Count() > 0)
-            { Log("Order file found", LogLevel.Debug, 1); }
+        private List<MarkdownFile> ReadOrderFiles(string path)
+        {
+            var directory = new DirectoryInfo(Path.GetFullPath(path));
+            BasePath = directory.FullName;
+            return ReadPagesInOrderImpl(path, 0);
+        }
+
+        private List<MarkdownFile> ReadPagesInOrderImpl(string path, int level)
+        {
+            Debug.Print($"{level} scanning {path}");
 
             var result = new List<MarkdownFile>();
-            foreach (var orderFile in orderFiles)
+
+            var directory = new DirectoryInfo(Path.GetFullPath(path));
+            Log($"Reading .md files in directory {path}");
+            var pages = directory.GetFiles("*.md", SearchOption.TopDirectoryOnly);
+            { Log($"Total pages in dir: {pages.Count()}", LogLevel.Information, 1); }
+            
+            Log($"Reading .order file in directory {path}");
+            string orderFile = Path.Combine(directory.FullName, ".order");
+            var pagesInOrder = File.Exists(orderFile) ? ReorderPages(pages, orderFile) : pages;
+
+            foreach (var page in pagesInOrder)
             {
-                var orders = File.ReadAllLines(orderFile.FullName);
-                { Log($"Pages: {orders.Count()}", LogLevel.Information, 2); }
-                var relativePath = orderFile.Directory.FullName.Length > directory.FullName.Length ?
-                    orderFile.Directory.FullName.Substring(directory.FullName.Length) :
-                    "/";
+                var relativePath = directory.FullName.Length > BasePath.Length ?
+                        page.Directory.FullName.Substring(BasePath.Length) :
+                        $"{Path.DirectorySeparatorChar}";
 
+                MarkdownFile mf = new MarkdownFile();
+                mf.AbsolutePath = page.FullName;
+                mf.RelativePath = relativePath;
+                mf.Level = level;
+                result.Add(mf);
 
+                { Log($"Adding page: {mf.AbsolutePath}", LogLevel.Information, 2); }
+            }
 
-                foreach (var order in orders)
+            //recursion
+            result.AddRange(
+                directory.GetDirectories("*", SearchOption.TopDirectoryOnly)
+                    .SkipWhile(d => d.Name.StartsWith('.'))
+                    .SelectMany(d => ReadPagesInOrderImpl(d.FullName, level + 1)));
+
+            return result;
+        }
+
+        private IEnumerable<FileInfo> ReorderPages(FileInfo[] pages, string orderFile)
+        {
+            var result = new List<FileInfo>();
+
+            Log("Order file found", LogLevel.Debug, 1);
+            var orders = File.ReadAllLines(Path.GetFullPath(orderFile));
+            { Log($"Pages in order: {orders.Count()}", LogLevel.Information, 2); }
+
+            // sort pages according to order file
+            // NOTE some may not match or partially match
+            foreach (var order in orders)
+            {
+                // TODO linear search... not very optimal
+                var p = pages.FirstOrDefault(p => string.Compare(p.Name, order, true) == 0);
+                if (p != null)
                 {
-                    //skip empty lines
-                    if (string.IsNullOrEmpty(order))
-                    {
-                        continue;
-                        //todo add log entry that we skipped an empty line
-                    }
-
-                    MarkdownFile mf = new MarkdownFile();
-                    mf.AbsolutePath = Path.Combine(orderFile.Directory.FullName, $"{order}.md");
-                    mf.RelativePath = $"{relativePath}";
-                    mf.Level = level;
-                    result.Add(mf);
-
-                    { Log($"Adding page: {mf.AbsolutePath}", LogLevel.Information, 2); }
-
-                    var childPath = Path.Combine(orderFile.Directory.FullName, order);
-                    if (Directory.Exists(childPath))
-                    {
-                        //recursion
-                        result.AddRange(ReadOrderFiles(childPath, level + 1));
-                    }
+                    result.Add(p);
                 }
             }
+            var notInOrderFile = pages.Except(result);
+            result.AddRange(notInOrderFile);
 
             return result;
         }
