@@ -32,18 +32,19 @@ using Microsoft.VisualStudio.Services.WebApi;
 using Process = System.Diagnostics.Process;
 using System.Runtime.CompilerServices;
 
-[assembly:InternalsVisibleTo("AzureDevOps.WikiPDFExport.Test")]
+[assembly: InternalsVisibleTo("AzureDevOps.WikiPDFExport.Test")]
 
 namespace azuredevops_export_wiki
 {
-    public class WikiPDFExporter : IWikiPDFExporter
+    public class WikiPDFExporter : IWikiPDFExporter, ILogger
     {
+        private ILogger logger;
         private Options _options;
         private TelemetryClient _telemetryClient;
         private ExportedWikiDoc _wiki;
         private Dictionary<string, string> _iconClass;
 
-        public WikiPDFExporter(Options options)
+        public WikiPDFExporter(Options options, ILogger logger)
         {
             _options = options;
 
@@ -120,34 +121,10 @@ namespace azuredevops_export_wiki
                     }
                     _wiki = new ExportedWikiDoc(_options.Path);
                     
+                    IList<MarkdownFile> files = !string.IsNullOrEmpty(_options.Single)
+                        ? ReadSingleFile(_options.Single)
+                        : ReadOrderFiles(_wiki.exportPath(), _options.ExcludePaths); // root level
 
-                    List<MarkdownFile> files = null;
-                    if (!string.IsNullOrEmpty(_options.Single))
-                    {
-                        var filePath = Path.GetFullPath(_options.Single);
-                        var directory = new DirectoryInfo(Path.GetFullPath(filePath));
-
-                        if (!File.Exists(filePath))
-                        {
-                            Log($"Single-File [-s] {filePath} specified not found" + filePath, LogLevel.Error);
-                            return false;
-                        }
-
-                        var relativePath = filePath.Substring(directory.FullName.Length);
-
-                        files = new List<MarkdownFile>()
-                        {
-                            new MarkdownFile() {
-                                AbsolutePath = filePath,
-                                RelativePath = relativePath,
-                                Level = 0 // root level
-                            }
-                        };
-                    }
-                    else
-                    {
-                        files = ReadOrderFiles(_wiki.exportPath(), _options.ExcludePaths); // root level
-                    }
                     Log($"Found {files.Count} total pages to process");
 
                     _telemetryClient.TrackEvent("Pages", null, new Dictionary<string, double>() { { "Pages", files.Count } });
@@ -294,6 +271,29 @@ namespace azuredevops_export_wiki
             return succeeded;
         }
 
+        private IList<MarkdownFile> ReadSingleFile(string single)
+        {
+            var filePath = Path.GetFullPath(_options.Single);
+            var directory = new DirectoryInfo(Path.GetFullPath(filePath));
+
+            if (!File.Exists(filePath))
+            {
+                Log($"Single-File [-s] {filePath} specified not found" + filePath, LogLevel.Error);
+                throw new ArgumentException($"{single} not found");
+            }
+
+            var relativePath = filePath.Substring(directory.FullName.Length);
+
+            return new List<MarkdownFile>()
+                        {
+                            new MarkdownFile() {
+                                AbsolutePath = filePath,
+                                RelativePath = relativePath,
+                                Level = 0 // root level
+                            }
+                        };
+        }
+
         private async Task<string> ConvertHTMLToPDFAsync(string html)
         {
             Log("Converting HTML to PDF");
@@ -397,7 +397,7 @@ namespace azuredevops_export_wiki
             return input;
         }
 
-        private string ConvertMarkdownToHTML(List<MarkdownFile> files)
+        private string ConvertMarkdownToHTML(IList<MarkdownFile> files)
         {
             Log("Converting Markdown to HTML");
             StringBuilder sb = new StringBuilder();
@@ -915,35 +915,6 @@ namespace azuredevops_export_wiki
             return result;
         }
 
-        private void Log(string msg, LogLevel logLevel = LogLevel.Information, int indent = 0)
-        {
-            var indentString = new string(' ', indent * 2);
-            if (_options.Debug && logLevel == LogLevel.Debug)
-            {
-                Console.WriteLine(indentString + msg);
-            }
-
-            if (_options.Verbose && logLevel == LogLevel.Information)
-            {
-                Console.WriteLine(indentString + msg);
-            }
-
-            if (logLevel == LogLevel.Warning)
-            {
-                var color = Console.ForegroundColor;
-                Console.ForegroundColor = ConsoleColor.Yellow;
-                Console.WriteLine(indentString + $"WARN: {msg}");
-                Console.ForegroundColor = color;
-            }
-
-            if (logLevel == LogLevel.Error)
-            {
-                var color = Console.ForegroundColor;
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine(indentString + $"ERR: {msg}");
-                Console.ForegroundColor = color;
-            }
-        }
         async private Task<string> generateWorkItemLink(string stringId, WorkItemTrackingHttpClient witClient)
         {
             int id;
@@ -984,26 +955,10 @@ namespace azuredevops_export_wiki
             </span>
             ";
         }
-    }
 
-    public class MarkdownFile
-    {
-        public string AbsolutePath;
-        public string RelativePath;
-        public int Level;
-        public string Content;
-
-        public override string ToString()
+        public void Log(string msg, LogLevel logLevel = LogLevel.Information, int indent = 0)
         {
-            return $"[{Level}] {AbsolutePath}";
-        }
-
-        internal bool PartialMatches(IList<Regex> excludeRegexes)
-        {
-            var normalizedPath = RelativePath.Replace('\\', '/');
-            return excludeRegexes.Any(
-                regex => regex.Match(normalizedPath).Success
-                );
+            logger.Log(msg, logLevel, indent);
         }
     }
 }
