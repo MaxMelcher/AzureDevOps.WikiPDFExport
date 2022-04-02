@@ -24,11 +24,11 @@ namespace azuredevops_export_wiki
 {
     public class WikiPDFExporter : IWikiPDFExporter, ILogger
     {
-        private ILoggerExtended _logger;
-        private Options _options;
-        private TelemetryClient _telemetryClient;
+        private readonly ILoggerExtended _logger;
+        private readonly Options _options;
+        private readonly TelemetryClient _telemetryClient;
         private ExportedWikiDoc _wiki;
-        private Dictionary<string, string> _iconClass;
+        private readonly Dictionary<string, string> _iconClass;
 
         public WikiPDFExporter(Options options, ILoggerExtended logger)
         {

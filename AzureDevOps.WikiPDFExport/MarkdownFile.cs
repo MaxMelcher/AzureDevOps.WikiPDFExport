@@ -8,8 +8,10 @@ namespace azuredevops_export_wiki
     {
         public string AbsolutePath;
         public string RelativePath;
+        public string FileRelativePath;
         public int Level;
         public string Content;
+
 
         public override string ToString()
         {
@@ -18,7 +20,7 @@ namespace azuredevops_export_wiki
 
         internal bool PartialMatches(IList<Regex> excludeRegexes)
         {
-            var normalizedPath = RelativePath.Replace('\\', '/');
+            var normalizedPath = FileRelativePath.Replace('\\', '/');
             return excludeRegexes.Any(
                 regex => regex.Match(normalizedPath).Success
                 );

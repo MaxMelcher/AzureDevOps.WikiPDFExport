@@ -4,12 +4,12 @@ using System.Collections.Generic;
 using System.Linq;
 using Xunit;
 
-namespace AzureDevOps.WikiPDFExport
+namespace AzureDevOps.WikiPDFExport.Test
 {
     public class TableOfContent_uTest
     {
         ILoggerExtended _voidLogger = Substitute.For<ILoggerExtended>();
-        const string BASE_PATH = "../../../IntegrationTests-Data/";
+        const string BASE_PATH = "../../../test-data/";
         ExportedWikiDoc _dummyWiki = new ExportedWikiDoc(BASE_PATH + "Inputs/Empty-With-Attachments/");
         Options _noOptions = new Options();
 

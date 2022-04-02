@@ -24,7 +24,7 @@ namespace azuredevops_export_wiki
         public IList<MarkdownFile> Scan()
         {
             var directory = new DirectoryInfo(Path.GetFullPath(wikiPath));
-            BasePath = directory.FullName;
+            BasePath = directory.FullName; // to copmute relative path
             var excludeRegexes = (options.ExcludePaths ?? new List<string>())
                 .Select(exclude => new Regex($".*{exclude}.*", RegexOptions.IgnoreCase))
                 .ToList();
@@ -39,8 +39,14 @@ namespace azuredevops_export_wiki
 
             var directory = new DirectoryInfo(Path.GetFullPath(path));
             Log($"Reading .md files in directory {path}");
-            var pages = directory.GetFiles("*.md", SearchOption.TopDirectoryOnly);
-            { Log($"Total pages in dir: {pages.Count()}", LogLevel.Information, 1); }
+            var pages = directory.GetFiles("*.md", SearchOption.TopDirectoryOnly).ToList();
+            Log($"Total pages in dir: {pages.Count()}", LogLevel.Information, 1);
+
+            var subDirs = directory.GetDirectories("*", SearchOption.TopDirectoryOnly)
+                .SkipWhile(d => d.Name.StartsWith('.'))
+                .ToList();
+
+            pages.Sort((a,b) => a.Name.CompareTo(b.Name));
 
             Log($"Reading .order file in directory {path}");
             string orderFile = Path.Combine(directory.FullName, ".order");
@@ -48,47 +54,59 @@ namespace azuredevops_export_wiki
 
             foreach (var page in pagesInOrder)
             {
-                var relativePath = page.Directory.FullName.Substring(BasePath.Length);
+                var pageRelativePath = page.FullName[BasePath.Length..].Replace('\\', '/');
+                //var dirRelativePath = directory.FullName[BasePath.Length..].Replace('\\', '/');
+                //if (string.IsNullOrEmpty(dirRelativePath)) dirRelativePath = "/";
 
-                MarkdownFile mf = new MarkdownFile();
+                var mf = new MarkdownFile();
                 mf.AbsolutePath = page.FullName;
-                mf.RelativePath = relativePath;
+                mf.RelativePath = "/";
+                mf.FileRelativePath = pageRelativePath;
                 mf.Level = level;
                 if (mf.PartialMatches(excludeRegexes))
                 {
-                    { Log($"Skipping page: {mf.AbsolutePath}", LogLevel.Information, 2); }
+                    Log($"Skipping page: {mf.AbsolutePath}", LogLevel.Information, 2);
                 }
                 else
                 {
                     result.Add(mf);
+                    Log($"Adding page: {mf.AbsolutePath}", LogLevel.Information, 2);
+                }
 
-                    { Log($"Adding page: {mf.AbsolutePath}", LogLevel.Information, 2); }
+                var matchingDir = subDirs.FirstOrDefault(
+                    d => string.Compare(d.Name, 
+                            Path.GetFileNameWithoutExtension(page.Name), true) == 0);
+                if (matchingDir is not null)
+                {
+                    // depth first recursion to be coherent with previous versions
+                    result.AddRange(
+                        ReadPagesInOrderImpl(matchingDir.FullName, level + 1, excludeRegexes));
+                    subDirs.Remove(matchingDir);
                 }
             }
 
-            //recursion
+            // any leftover
             result.AddRange(
-                directory.GetDirectories("*", SearchOption.TopDirectoryOnly)
-                    .SkipWhile(d => d.Name.StartsWith('.'))
+                subDirs
                     .SelectMany(d => ReadPagesInOrderImpl(d.FullName, level + 1, excludeRegexes)));
 
             return result;
         }
 
-        private IEnumerable<FileInfo> ReorderPages(FileInfo[] pages, string orderFile)
+        private IEnumerable<FileInfo> ReorderPages(IList<FileInfo> pages, string orderFile)
         {
             var result = new List<FileInfo>();
 
             Log("Order file found", LogLevel.Debug, 1);
             var orders = File.ReadAllLines(Path.GetFullPath(orderFile));
-            { Log($"Pages in order: {orders.Count()}", LogLevel.Information, 2); }
+            Log($"Pages in order: {orders.Count()}", LogLevel.Information, 2);
 
             // sort pages according to order file
             // NOTE some may not match or partially match
             foreach (var order in orders)
             {
                 // TODO linear search... not very optimal
-                var p = pages.FirstOrDefault(p => string.Compare(p.Name, order, true) == 0);
+                var p = pages.FirstOrDefault(p => string.Compare(Path.GetFileNameWithoutExtension(p.Name), order, true) == 0);
                 if (p != null)
                 {
                     result.Add(p);

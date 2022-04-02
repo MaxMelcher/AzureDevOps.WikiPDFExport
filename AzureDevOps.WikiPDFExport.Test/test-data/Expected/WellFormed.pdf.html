@@ -1,0 +1,1793 @@
+<!DOCTYPE html><html><head><meta http-equiv=Content-Type content="text/html; charset=utf-8"></head><a id="contents">&nbsp;</a><h2 id="contents">Contents</h2>
+<ol>
+<li><a href="#contents">Original file</a></li>
+<li><a href="#learn">How to learn</a></li>
+<li>How to automate provisioning</li>
+<li>How to edit pages</li>
+<li>How to make a build process that actually fixes stuff</li>
+<li>How to create a PDF from all this</li>
+</ol>
+<h3 id="happy-wiki-ing">Happy wiki-ing</h3>
+<p>I don't know how to say this, but its awesome</p>
+<h3 id="how-to-create-a-pdf-from-all-this">How to create a PDF from all this?</h3>
+<p><a href="https://github.com/MaxMelcher/AzureDevOps.WikiPDFExport">https://github.com/MaxMelcher/AzureDevOps.WikiPDFExport</a></p>
+<a id="contentsplaceholder">&nbsp;</a><h2 id="placeholder">Placeholder</h2>
+<p>This is just a page with a single header and this single line of text. Use this to see if page breaks work.
+This page also features a markdown comment block, that should not be rendered.</p>
+<a id="contentstest">&nbsp;</a><h2 id="test-with-markdown">Test with markdown</h2>
+<div class='toc'><nav><ul><li><a href='#test-with-markdown'>Test with markdown</a><ul><li><a href='#guidance'>Guidance</a></li><li><a href='#headers'>Headers</a></li></ul></li><li><a href='#this-a-h1-header'>This a H1 header</a><ul><li><a href='#this-a-h2-header'>This a H2 header</a><ul><li><a href='#this-a-h3-header'>This a H3 header</a><ul><li><a href='#this-a-h4-header'>This a H4 header</a><ul><li><a href='#this-a-h5-header'>This a H5 header</a></li></ul></li></ul></li></ul></li><li><a href='#paragraphs-and-line-breaks'>Paragraphs and line breaks</a></li><li><a href='#blockquotes'>Blockquotes</a></li><li><a href='#horizontal-rules'>Horizontal rules</a></li><li><a href='#emphasis-bold-italics-strikethrough'>Emphasis (bold, italics, strikethrough)</a></li><li><a href='#code-highlighting'>Code highlighting</a></li><li><a href='#tables'>Tables</a></li><li><a href='#lists'>Lists</a><ul><li><a href='#ordered-or-numbered-lists'>Ordered or numbered lists</a></li><li><a href='#bullet-lists'>Bullet lists</a></li><li><a href='#nested-lists'>Nested lists</a></li></ul></li><li><a href='#links'>Links</a><ul><li><a href='#anchor-links'>Anchor links</a></li></ul></li><li><a href='#images'>Images</a></li><li><a href='#checklist-or-task-list'>Checklist or task list</a></li><li><a href='#emoji'>Emoji</a></li><li><a href='#ignore-or-escape-markdown-syntax-to-enter-specific-or-literal-characters'>Ignore or escape Markdown syntax to enter specific or literal characters</a></li><li><a href='#mathematical-notation-and-characters'>Mathematical notation and characters</a><ul><li><ul><li><a href='#supported-in-pull-requests-wikis'>Supported in: Pull Requests | Wikis</a></li></ul></li><li><a href='#example-greek-characters'>Example: Greek characters</a></li><li><a href='#example-algebraic-notation'>Example: Algebraic notation</a></li><li><a href='#example-sums-and-integrals'>Example: Sums and Integrals</a></li></ul></li></ul></li><li><a href='#additional'>Additional</a><ul><li><a href='#resources'>Resources</a></li></ul></li></ul></nav></div>
+<p>The table of contents is not supported. Should render just the tag in PDF.</p>
+<h3 id="guidance">Guidance</h3>
+<p>This page implements most of the markdown examples given on the <a href="https://docs.microsoft.com/en-us/azure/devops/project/wiki/markdown-guidance?view=azure-devops">DevOps wiki docs</a></p>
+<p>It is not claimed or stated that all these features should work. However, this a quite complete test for the PDF generation.</p>
+<p>At some points the official docs show images instead of the rendered content. I suspect that this is to support multiple browsers and even the 'print to PDF' functionality in a browser.</p>
+<h3 id="headers">Headers</h3>
+<p>Structure your comments using headers. Headers segment longer comments, making them easier to read.</p>
+<p>Start a line with a hash character <code>#</code> to set a heading. Organize your remarks with subheadings by starting a line with additional hash characters, for example <code>####</code>. Up to six levels of headings are supported.</p>
+<p><strong>Example:</strong></p>
+<pre><code class="language-markdown"># This is a H1 header
+## This is a H2 header
+### This is a H3 header
+#### This is a H4 header
+##### This is a H5 header
+</code></pre>
+<p><strong>Result:</strong></p>
+<h2 id="this-a-h1-header">This a H1 header</h2>
+<h3 id="this-a-h2-header">This a H2 header</h3>
+<h4 id="this-a-h3-header">This a H3 header</h4>
+<h5 id="this-a-h4-header">This a H4 header</h5>
+<h6 id="this-a-h5-header">This a H5 header</h6>
+<h3 id="paragraphs-and-line-breaks">Paragraphs and line breaks</h3>
+<p>Make your text easier to read by breaking it up with paragraphs or line breaks.</p>
+<p>In pull request comments, select <strong>Enter</strong> to insert a line break, and begin text on a new line.</p>
+<p>In a Markdown file or widget, enter two spaces before the line break to begin a new paragraph, or enter two consecutive line breaks to begin a new paragraph.</p>
+<p><strong>Example - pull request comment:</strong></p>
+<pre>
+Add lines between your text with the Enter key.
+This spaces your text better and makes it easier to read.
+</pre>
+<p><strong>Result:</strong>
+Add lines between your text with the Enter key.
+This action spaces your text better and makes it easier to read.</p>
+<p><strong>Example - Markdown file or widget:</strong></p>
+<pre>
+Add two spaces before the end of the line.(space, space)
+This adds space in between paragraphs.
+</pre>
+<p><strong>Result:</strong><br />
+Add two spaces before the end of the line.<br />
+Space is added in between paragraphs.</p>
+<h3 id="blockquotes">Blockquotes</h3>
+<p>Quote previous comments or text to set the context for your comment or text.</p>
+<p>Quote single lines of text with <code>&gt;</code> before the text. Use many <code>&gt;</code> characters to nest quoted text.
+Quote blocks of lines of text by using the same level of <code>&gt;</code> across many lines.</p>
+<p><strong>Example:</strong></p>
+<pre>
+> Single line quote
+>> Nested quote
+>> multiple line
+>> quote
+</pre>
+<p><strong>Result:</strong></p>
+<blockquote>
+<p>Single line quote</p>
+<blockquote>
+<p>Nested quote<br />
+multiple line<br />
+quote</p>
+</blockquote>
+</blockquote>
+<h3 id="horizontal-rules">Horizontal rules</h3>
+<p>To add a horizontal rule, add a line that's a series of dashes <code>---</code>. The line above the line containing the <code>---</code> must be blank.</p>
+<p><strong>Example:</strong></p>
+<div id="do_not_render">
+<pre>
+above
+&nbsp;
+&#45;&#45;&#45;&#45;
+below
+</pre>
+</div>
+<p><strong>Result:</strong></p>
+<p>above</p>
+<hr />
+<p>below</p>
+<h3 id="emphasis-bold-italics-strikethrough">Emphasis (bold, italics, strikethrough)</h3>
+<p>You can emphasize text by applying bold, italics, or strikethrough to characters:</p>
+<ul>
+<li>To apply italics: surround the text with an asterisk <code>*</code> or underscore <code>_</code></li>
+<li>To apply bold: surround the text with double asterisks <code>**</code>.</li>
+<li>To apply strikethrough: surround the text with double tilde characters <code>~~</code>.</li>
+</ul>
+<p>Combine these elements to apply emphasis to text.</p>
+<blockquote>
+<p>There is no Markdown syntax that supports underlining text. Within a wiki page, you can use the HTML <code>&lt;u&gt;</code> tag to generate underlined text. For example, <code>&lt;u&gt;underlined text&lt;/u&gt;</code> yields <u>underlined text</u>.</p>
+</blockquote>
+<p><strong>Example:</strong></p>
+<pre>
+Use _emphasis_ in comments to express **strong** opinions and point out ~~corrections~~  
+**_Bold, italicized text_**  
+**~~Bold, strike-through text~~**
+</pre>
+<br/>
+<p><strong>Result:</strong></p>
+<p>Use <em>emphasis</em> in comments to express <strong>strong</strong> opinions and point out <s>corrections</s><br />
+<strong><em>Bold, italicized text</em></strong>
+<strong><del>Bold, strike-through text</del></strong></p>
+<h3 id="code-highlighting">Code highlighting</h3>
+<p>Highlight suggested code segments using code highlight blocks.
+To indicate a span of code, wrap it with three backtick quotes (<code>```</code>) on a new line at both the start and end of the block. To indicate code inline, wrap it with one backtick quote (<code>`</code>).</p>
+<blockquote>
+<p>Code highlighting entered within the Markdown widget renders code as plain preformatted text.</p>
+</blockquote>
+<p><strong>Example:</strong></p>
+<pre>&#96;&#96;&#96;
+sudo npm install vsoagent-installer -g  
+&#96;&#96;&#96;
+</pre>  
+<br/>
+<p><strong>Result:</strong></p>
+<pre><code>sudo npm install vsoagent-installer -g
+</code></pre>
+<br/>
+<p><strong>Example:</strong></p>
+<pre>
+To install the Microsoft Cross Platform Build & Release Agent, run the following: &#96;$ sudo npm install vsoagent-installer -g&#96;.
+</pre>
+<br/>
+<p><strong>Result:</strong></p>
+<p>To install the Microsoft Cross Platform Build &amp; Release Agent, run the following command: <code>$ sudo npm install vsoagent-installer -g</code>.</p>
+<br/>
+<p>Within a Markdown file, text with four spaces at the beginning of the line automatically converts to a code block.</p>
+<p>Set a language identifier for the code block to enable syntax highlighting for any of the supported languages in <a href="https://github.com/highlightjs/highlight.js/tree/9.10.0/src/languages">highlightjs</a>, version v9.10.0.</p>
+<pre>
+``` language
+code
+```
+</pre>
+<br/>
+<p><strong>Additional examples:</strong></p>
+<pre>
+``` js
+const count = records.length;
+```
+</pre>
+<pre><code class="language-js">const count = records.length;
+</code></pre>
+<br/>
+<pre>
+``` csharp
+Console.WriteLine("Hello, World!");
+```
+</pre>
+<pre><code class="language-csharp">Console.WriteLine(&quot;Hello, World!&quot;);
+</code></pre>
+<h3 id="tables">Tables</h3>
+<p>Organize structured data with tables. Tables are especially useful for describing function parameters, object methods, and other data that have
+a clear name to description mapping. You can format tables in pull requests, wiki, and Markdown files such as README files and Markdown widgets.</p>
+<ul>
+<li>Place each table row on its own line</li>
+<li>Separate table cells using the pipe character <code>|</code></li>
+<li>The first two lines of a table set the column headers and the alignment of elements in the table</li>
+<li>Use colons (<code>:</code>) when dividing the header and body of tables to specify column alignment (left, center, right)</li>
+<li>To start a new line, use the HTML break tag (<code>&lt;br/&gt;</code>) (Works within a Wiki but not elsewhere)</li>
+<li>Make sure to end each row with a CR or LF.</li>
+<li>A blank space is required before and after work item or pull request (PR) mentions inside a table cell.</li>
+</ul>
+<p><strong>Example:</strong></p>
+<pre><code class="language-markdown">| Heading 1 | Heading 2 | Heading 3 |  
+|-----------|:-----------:|-----------:|  
+| Cell A1 | Cell A2 | Cell A3 |  
+| Cell B1 | Cell B2 | Cell B3&lt;br/&gt;second line of text |  
+</code></pre>
+<p><strong>Result:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Heading 1</th>
+<th style="text-align: center;">Heading 2</th>
+<th style="text-align: right;">Heading 3</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Cell A1</td>
+<td style="text-align: center;">Cell A2</td>
+<td style="text-align: right;">Cell A3</td>
+</tr>
+<tr>
+<td>Cell B1</td>
+<td style="text-align: center;">Cell B2</td>
+<td style="text-align: right;">Cell B3<br/>second line of text</td>
+</tr>
+</tbody>
+</table>
+<h3 id="lists">Lists</h3>
+<p>Organize related items with lists. You can add ordered lists with numbers, or unordered lists with just bullets.</p>
+<p>Ordered lists start with a number followed by a period for each list item. Unordered lists start with a <code>-</code>. Begin each list item on a new line. In a Markdown file or widget, enter two spaces before the line break to begin a new paragraph, or enter two line breaks consecutively to begin a new paragraph.</p>
+<h4 id="ordered-or-numbered-lists">Ordered or numbered lists</h4>
+<p><strong>Example:</strong></p>
+<pre><code class="language-markdown">1. First item.
+1. Second item.
+1. Third item.
+</code></pre>
+<p><strong>Result:</strong></p>
+<ol>
+<li>First item.</li>
+<li>Second item.</li>
+<li>Third item.</li>
+</ol>
+<h4 id="bullet-lists">Bullet lists</h4>
+<p><strong>Example:</strong></p>
+<pre><code>- Item 1
+- Item 2
+- Item 3
+</code></pre>
+<p><strong>Result:</strong></p>
+<ul>
+<li>Item 1</li>
+<li>Item 2</li>
+<li>Item 3</li>
+</ul>
+<h4 id="nested-lists">Nested lists</h4>
+<p><strong>Example:</strong></p>
+<pre><code>1. First item.
+   - Item 1
+   - Item 2
+   - Item 3
+1. Second item.
+   - Nested item 1
+   - Nested item 2
+   - Nested item 3 
+</code></pre>
+<p><strong>Result:</strong></p>
+<ol>
+<li>First item.
+<ul>
+<li>Item 1</li>
+<li>Item 2</li>
+<li>Item 3</li>
+</ul>
+</li>
+<li>Second item.
+<ul>
+<li>Nested item 1</li>
+<li>Nested item 2</li>
+<li>Nested item 3</li>
+</ul>
+</li>
+</ol>
+<h3 id="links">Links</h3>
+<p>In pull request comments and wikis, HTTP and HTTPS URLs are automatically formatted as links. You can link to work items by entering the <em>#</em> key and a work item ID, and then choosing the work item from the list.</p>
+<p>Avoid auto suggestions for work items by prefixing <em>#</em> with a backslash (<code>\</code>). This action can be useful if you want to use <em>#</em> for color hex codes.</p>
+<p>In Markdown files and widgets, you can set text hyperlinks for your URL using the standard Markdown link syntax:</p>
+<pre><code class="language-markdown">[Link Text](Link URL)
+</code></pre>
+<p>When linking to another Markdown page in the same Git or TFVC repository, the link target can be a relative path or an absolute path in the repository.</p>
+<p><strong>Supported links for Welcome pages:</strong></p>
+<ul>
+<li>Relative path: <code>[text to display](/target.md)</code></li>
+<li>Absolute path in Git: <code>[text to display](/folder/target.md)</code></li>
+<li>Absolute path in TFVC: <code>[text to display]($/project/folder/target.md)</code></li>
+<li>URL: <code>[text to display](http://address.com)</code></li>
+</ul>
+<p><strong>Supported links for Markdown widget:</strong></p>
+<ul>
+<li>URL: <code>[text to display](http://address.com)</code>  </li>
+</ul>
+<p><strong>Supported links for Wiki:</strong></p>
+<ul>
+<li>Absolute path of Wiki pages: <code>[text to display](/parent-page/child-page)</code> </li>
+<li>URL: <code>[text to display](http://address.com)</code>  </li>
+</ul>
+<h4 id="anchor-links">Anchor links</h4>
+<p>Within Markdown files, anchor IDs are assigned to all headings when rendered as HTML. The ID is the heading text, with the spaces replaced by dashes (-) and all lower case. In general, the following conventions apply:</p>
+<ul>
+<li>Punctuation marks and leading white spaces within a file name are ignored</li>
+<li>Upper case letters are  converted to lower</li>
+<li>Spaces between letters are converted to dashes (-).</li>
+</ul>
+<p><strong>Example:</strong></p>
+<pre><code>###Link to a heading in the page
+</code></pre>
+<p><strong>Result:</strong></p>
+<p>The syntax for an anchor link to a section...</p>
+<pre>
+[Link to a heading in the page](#link-to-a-heading-in-the-page)
+</pre>
+<br/>
+The ID is all lower case, and the link is case-sensitive, so be sure to use lower case, even though the heading itself uses upper case.
+<p>You can also reference headings within another Markdown file:</p>
+<pre>
+[text to display](./target.md#heading-id)  
+</pre>
+<br/>
+In wiki, you can also reference heading in another page:
+<pre>
+[text to display](/page-name#section-name)
+</pre>
+<p><a name="images"> </a></p>
+<h3 id="images">Images</h3>
+<p>To highlight issues or make things more interesting, you can add images and animated GIFs to the following aspects in your pull requests:</p>
+<ul>
+<li>Comments</li>
+<li>Markdown files</li>
+<li>Wiki pages</li>
+</ul>
+<p>Use the following syntax to add an image: <div id="do_not_render"><pre>![Text](URL)</pre></div> The text in the brackets describes the image being linked and the URL points to the image location.</p>
+<p><strong>Example:</strong></p>
+<pre>
+![Illustration to use for new users](https://azurecomcdn.azureedge.net/cvt-779fa2985e70b1ef1c34d319b505f7b4417add09948df4c5b81db2a9bad966e5/images/page/services/devops/hero-images/index-hero.jpg)
+</pre>
+<p><strong>Result:</strong></p>
+<p><img src="https://azurecomcdn.azureedge.net/cvt-779fa2985e70b1ef1c34d319b505f7b4417add09948df4c5b81db2a9bad966e5/images/page/services/devops/hero-images/index-hero.jpg" alt="Illustration of linked image" /></p>
+<p>The path to the image file can be a relative path or the absolute path in Git or TFVC, just like the path to another Markdown file in a link.</p>
+<ul>
+<li>Relative path: <code>![Image alt text](./image.png)</code></li>
+<li>Absolute path in Git: <code>![Image alt text](/media/markdown-guidance/image.png)</code></li>
+<li>Absolute path in TFVC: <code>![Image alt text]($/project/folder/media/markdown-guidance/image.png)</code></li>
+<li>Resize image: <code>IMAGE_URL =WIDTHxHEIGHT</code></li>
+</ul>
+<blockquote>
+<p>Be sure to include a space before the equal sign.</p>
+</blockquote>
+<ul>
+<li>Example: <code>![Image alt text]($/project/folder/media/markdown-guidance/image.png){width=500 height=250}</code></li>
+<li>It's also possible to specify only the WIDTH by leaving out the HEIGHT value: <code>IMAGE_URL =WIDTHx</code></li>
+</ul>
+<h3 id="checklist-or-task-list">Checklist or task list</h3>
+<p>You can Use <code>[ ]</code> or <code>[x]</code> to support checklists. Precede the checklist with either <code>-&lt;space&gt;</code> or <code>1.&lt;space&gt;</code> (any numeral).</p>
+<p><strong>Example - Format a list as a task list</strong></p>
+<pre>
+- [ ] A  
+- [ ] B  
+- [ ] C  
+- [x] A  
+- [x] B  
+- [x] C  
+</pre>
+<p><strong>Result:</strong></p>
+<ul class="contains-task-list">
+<li class="task-list-item"><input disabled="disabled" type="checkbox" /> A</li>
+<li class="task-list-item"><input disabled="disabled" type="checkbox" /> B</li>
+<li class="task-list-item"><input disabled="disabled" type="checkbox" /> C</li>
+<li class="task-list-item"><input disabled="disabled" type="checkbox" checked="checked" /> A</li>
+<li class="task-list-item"><input disabled="disabled" type="checkbox" checked="checked" /> B</li>
+<li class="task-list-item"><input disabled="disabled" type="checkbox" checked="checked" /> C</li>
+</ul>
+<blockquote>
+<p>A checklist within a table cell isn't supported.</p>
+</blockquote>
+<h3 id="emoji">Emoji</h3>
+<p><strong>Example:</strong></p>
+<pre>
+:smile:
+:angry:
+</pre>
+<p><strong>Result:</strong></p>
+<p>😄
+😠</p>
+<p>To escape emojis, enclose them using the ` character.</p>
+<p><strong>Example:</strong></p>
+<pre>`:smile:` `:)` `:angry:`</pre>
+<p><strong>Result:</strong></p>
+<p><code>:smile:</code> <code>:)</code> <code>:angry:</code></p>
+<p>See a full list of emoji and how they render <a href="#.emoji">on the Emoji page</a>
+(this is also an example of a link wiht an anchor to another pase)</p>
+<h3 id="ignore-or-escape-markdown-syntax-to-enter-specific-or-literal-characters">Ignore or escape Markdown syntax to enter specific or literal characters</h3>
+<table width="650px">
+<tbody valign="top">
+<tr>
+<th width="300px">Syntax</th>
+<th width="350px">Example/notes</th>
+</tr>
+<tr>
+<td>
+<p>To insert one of the following characters, prefix with a <code>&#92;</code>(backslash).</p>
+<p style="margin-bottom:2px;"><code>&#92;</code>, backslash </p>
+<p style="margin-bottom:2px;"><code>&#96;</code>, backtick</p>
+<p style="margin-bottom:2px;"><code>&#95;</code>, underscore</p>
+<p style="margin-bottom:2px;"><code>{}</code>, curly braces </p>
+<p style="margin-bottom:2px;"><code>[]</code>, square brackets</p>
+<p style="margin-bottom:2px;"><code>()</code>, parentheses</p>
+<p style="margin-bottom:2px;"><code>#</code>, hash mark </p>
+<p style="margin-bottom:2px;"><code>+</code>, plus sign</p>
+<p style="margin-bottom:2px;"><code>-</code>, minus sign (hyphen)</p>
+<p style="margin-bottom:2px;"><code>.</code>, period </p>
+<p style="margin-bottom:2px;"><code>!</code>, exclamation mark</p>
+<p style="margin-bottom:2px;"><code>*</code>, asterisk</p>
+</td>
+<td>
+<p>Some examples on inserting special characters:</p>
+<p>Enter <code>&#92;&#92;</code> to get \ </p>
+<p>Enter <code>&#92;&#95;</code> to get &#95; </p>
+<p>Enter <code>&#92;# </code> to get # </p>
+<p>Enter <code>&#92;(</code> to get ( </p> 
+<p>Enter <code>&#92;.</code> to get . </p>
+<p>Enter <code>&#92;!</code> to get ! </p>
+<p>Enter <code>&#92;*</code> to get * </p>
+</td>
+</tr>
+</tbody>
+</table>
+<h3 id="mathematical-notation-and-characters">Mathematical notation and characters</h3>
+<h5 id="supported-in-pull-requests-wikis">Supported in: Pull Requests | Wikis</h5>
+<p>Both inline and block <a href="https://khan.github.io/KaTeX/function-support.html">KaTeX</a> notation is supported in wiki pages and pull requests. The following supported elements are included:</p>
+<ul>
+<li>Symbols</li>
+<li>Greek letters</li>
+<li>Mathematical operators</li>
+<li>Powers and indices</li>
+<li>Fractions and binomials</li>
+<li>Other KaTeX supported elements</li>
+</ul>
+<p>To include mathematical notation, surround the mathematical notation with a <code>$</code> sign, for inline, and <code>$$</code> for block,  as shown in the following examples:</p>
+<blockquote>
+<p>This feature is supported within Wiki pages and pull requests for TFS 2018.2 or later versions.</p>
+</blockquote>
+<h4 id="example-greek-characters">Example: Greek characters</h4>
+<pre><code class="language-KaTeX">$
+\alpha, \beta, \gamma, \delta, \epsilon, \zeta, \eta, \theta, \kappa, \lambda, \mu, \nu, \omicron, \pi, \rho, \sigma, \tau, \upsilon, \phi, ...
+$  
+
+
+$\Gamma,  \Delta,  \Theta, \Lambda, \Xi, \Pi, \Sigma, \Upsilon, \Phi, \Psi, \Omega$
+</code></pre>
+<p><strong>Result:</strong></p>
+<p>$
+\alpha, \beta, \gamma, \delta, \epsilon, \zeta, \eta, \theta, \kappa, \lambda, \mu, \nu, \omicron, \pi, \rho, \sigma, \tau, \upsilon, \phi, ...
+$</p>
+<p>$\Gamma,  \Delta,  \Theta, \Lambda, \Xi, \Pi, \Sigma, \Upsilon, \Phi, \Psi, \Omega$</p>
+<h4 id="example-algebraic-notation">Example: Algebraic notation</h4>
+<pre><code class="language-KaTeX">Area of a circle is $\pi r^2$
+
+And, the area of a triangle is:
+
+$$
+A_{triangle}=\frac{1}{2}({b}\cdot{h})
+$$
+</code></pre>
+<p><strong>Result:</strong></p>
+<p>Area of a circle is $\pi r^2$</p>
+<p>And, the area of a triangle is:</p>
+<p b="" h="">$$
+A_=\frac{1}{2}(\cdot)
+$$</p>
+<h4 id="example-sums-and-integrals">Example: Sums and Integrals</h4>
+<pre><code class="language-KaTeX">$$
+\sum_{i=1}^{10} t_i
+$$
+
+
+$$
+\int_0^\infty \mathrm{e}^{-x}\,\mathrm{d}x
+$$     
+</code></pre>
+<p><strong>Result:</strong></p>
+<p>$$
+\sum_^{10} t_i
+$$</p>
+<p e="" d="">$$
+\int_0^\infty \mathrm^{-x},\mathrmx
+$$</p>
+<h2 id="additional">Additional</h2>
+<p>I tried to recreate the <a href="https://docs.microsoft.com/en-us/contribute/markdown-reference#selectors">Microsoft Docs Alerts</a>
+They need additional styling. Might be best to somehow implement custom markdown tags. Then you can improve by adding HTML to get an example like this:
+<a href="#learn">Improved alerts</a></p>
+<p>This one needs a red background</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">❌ <strong>CAUTION</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">There will be irreversible consequences</td>
+</tr>
+</tbody>
+</table>
+<p>This one needs a yellow background</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">⚠️ <strong>WARNING</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Dangerous certain consequences of an action can apply</td>
+</tr>
+</tbody>
+</table>
+<p>This one needs a purlple background</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">❕ <strong>Important</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Essential information required for success</td>
+</tr>
+</tbody>
+</table>
+<p>This one needs a light blue background</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">💡 <strong>Tip</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Optional information to help the user be more successful!</td>
+</tr>
+</tbody>
+</table>
+<p>This one needs a green background</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">✏️ <strong>Note</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Information the user should note when skimming the document!</td>
+</tr>
+</tbody>
+</table>
+<h3 id="resources">Resources</h3>
+<p>Emoji cheat sheet: <a href="https://www.webfx.com/tools/emoji-cheat-sheet/">https://www.webfx.com/tools/emoji-cheat-sheet/</a></p>
+<a id="contentsemoji">&nbsp;</a><h2 id="emoji">Emoji</h2>
+<p>This page contains all the details from the emoji cheat sheet.</p>
+<h3 id="sources">Sources</h3>
+<p>As described on the Microsoft Docs, basic Emoji is here.
+<a href="https://docs.microsoft.com/azure/devops/project/wiki/markdown-guidance?view=azure-devops#emoji">https://docs.microsoft.com/azure/devops/project/wiki/markdown-guidance?view=azure-devops#emoji</a></p>
+<h3 id="full-set-of-emoji">Full set of Emoji</h3>
+<p>The following list is copied from <a href="https://www.webfx.com/tools/emoji-cheat-sheet/">https://www.webfx.com/tools/emoji-cheat-sheet/</a></p>
+<h4 id="people">People</h4>
+<table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+<th></th>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>:bowtie: <code>:bowtie:</code></td>
+<td>😄 <code>:smile:</code></td>
+<td>😒imple_smile: <code>:simple_smile:</code></td>
+<td>😆 <code>:laughing:</code></td>
+<td>😊 <code>:blush:</code></td>
+</tr>
+<tr>
+<td>😃 <code>:smiley:</code></td>
+<td>☺️ <code>:relaxed:</code></td>
+<td>😏 <code>:smirk:</code></td>
+<td>😍 <code>:heart_eyes:</code></td>
+<td>😘 <code>:kissing_heart:</code></td>
+</tr>
+<tr>
+<td>😚 <code>:kissing_closed_eyes:</code></td>
+<td>😳 <code>:flushed:</code></td>
+<td>😌 <code>:relieved:</code></td>
+<td>😆 <code>:satisfied:</code></td>
+<td>😁 <code>:grin:</code></td>
+</tr>
+<tr>
+<td>😉 <code>:wink:</code></td>
+<td>😜 <code>:stuck_out_tongue_winking_eye:</code></td>
+<td>😝 <code>:stuck_out_tongue_closed_eyes:</code></td>
+<td>😀 <code>:grinning:</code></td>
+<td>😗 <code>:kissing:</code></td>
+</tr>
+<tr>
+<td>😙 <code>:kissing_smiling_eyes:</code></td>
+<td>😛 <code>:stuck_out_tongue:</code></td>
+<td>😴 <code>:sleeping:</code></td>
+<td>😟 <code>:worried:</code></td>
+<td>😦 <code>:frowning:</code></td>
+</tr>
+<tr>
+<td>😧 <code>:anguished:</code></td>
+<td>😮 <code>:open_mouth:</code></td>
+<td>😬 <code>:grimacing:</code></td>
+<td>😕 <code>:confused:</code></td>
+<td>😯 <code>:hushed:</code></td>
+</tr>
+<tr>
+<td>😑 <code>:expressionless:</code></td>
+<td>😒 <code>:unamused:</code></td>
+<td>😅 <code>:sweat_smile:</code></td>
+<td>😓 <code>:sweat:</code></td>
+<td>😥 <code>:disappointed_relieved:</code></td>
+</tr>
+<tr>
+<td>😩 <code>:weary:</code></td>
+<td>😔 <code>:pensive:</code></td>
+<td>😞 <code>:disappointed:</code></td>
+<td>😖 <code>:confounded:</code></td>
+<td>😨 <code>:fearful:</code></td>
+</tr>
+<tr>
+<td>😰 <code>:cold_sweat:</code></td>
+<td>😣 <code>:persevere:</code></td>
+<td>😢 <code>:cry:</code></td>
+<td>😭 <code>:sob:</code></td>
+<td>😂 <code>:joy:</code></td>
+</tr>
+<tr>
+<td>😲 <code>:astonished:</code></td>
+<td>😱 <code>:scream:</code></td>
+<td>:neckbeard: <code>:neckbeard:</code></td>
+<td>😫 <code>:tired_face:</code></td>
+<td>😠 <code>:angry:</code></td>
+</tr>
+<tr>
+<td>😡 <code>:rage:</code></td>
+<td>😤 <code>:triumph:</code></td>
+<td>😪 <code>:sleepy:</code></td>
+<td>😋 <code>:yum:</code></td>
+<td>😷 <code>:mask:</code></td>
+</tr>
+<tr>
+<td>😎 <code>:sunglasses:</code></td>
+<td>😵 <code>:dizzy_face:</code></td>
+<td>👿 <code>:imp:</code></td>
+<td>😈 <code>:smiling_imp:</code></td>
+<td>😐 <code>:neutral_face:</code></td>
+</tr>
+<tr>
+<td>😶 <code>:no_mouth:</code></td>
+<td>😇 <code>:innocent:</code></td>
+<td>👽 <code>:alien:</code></td>
+<td>💛 <code>:yellow_heart:</code></td>
+<td>💙 <code>:blue_heart:</code></td>
+</tr>
+<tr>
+<td>💜 <code>:purple_heart:</code></td>
+<td>❤️ <code>:heart:</code></td>
+<td>💚 <code>:green_heart:</code></td>
+<td>💔 <code>:broken_heart:</code></td>
+<td>💓 <code>:heartbeat:</code></td>
+</tr>
+<tr>
+<td>💗 <code>:heartpulse:</code></td>
+<td>💕 <code>:two_hearts:</code></td>
+<td>💞 <code>:revolving_hearts:</code></td>
+<td>💘 <code>:cupid:</code></td>
+<td>💖 <code>:sparkling_heart:</code></td>
+</tr>
+<tr>
+<td>✨ <code>:sparkles:</code></td>
+<td>⭐ <code>:star:</code></td>
+<td>🌟 <code>:star2:</code></td>
+<td>💫 <code>:dizzy:</code></td>
+<td>💥 <code>:boom:</code></td>
+</tr>
+<tr>
+<td>💥 <code>:collision:</code></td>
+<td>💢 <code>:anger:</code></td>
+<td>❗ <code>:exclamation:</code></td>
+<td>❓ <code>:question:</code></td>
+<td>❕ <code>:grey_exclamation:</code></td>
+</tr>
+<tr>
+<td>❔ <code>:grey_question:</code></td>
+<td>💤 <code>:zzz:</code></td>
+<td>💨 <code>:dash:</code></td>
+<td>💦 <code>:sweat_drops:</code></td>
+<td>🎶 <code>:notes:</code></td>
+</tr>
+<tr>
+<td>🎵 <code>:musical_note:</code></td>
+<td>🔥 <code>:fire:</code></td>
+<td>💩 <code>:hankey:</code></td>
+<td>💩 <code>:poop:</code></td>
+<td>💩 <code>:shit:</code></td>
+</tr>
+<tr>
+<td>👍 <code>:+1:</code></td>
+<td>👍 <code>:thumbsup:</code></td>
+<td>👎 <code>:-1:</code></td>
+<td>👎 <code>:thumbsdown:</code></td>
+<td>👌 <code>:ok_hand:</code></td>
+</tr>
+<tr>
+<td>👊 <code>:punch:</code></td>
+<td>👊 <code>:facepunch:</code></td>
+<td>✊ <code>:fist:</code></td>
+<td>✌️ <code>:v:</code></td>
+<td>👋 <code>:wave:</code></td>
+</tr>
+<tr>
+<td>✋ <code>:hand:</code></td>
+<td>✋ <code>:raised_hand:</code></td>
+<td>👐 <code>:open_hands:</code></td>
+<td>☝️ <code>:point_up:</code></td>
+<td>👇 <code>:point_down:</code></td>
+</tr>
+<tr>
+<td>👈 <code>:point_left:</code></td>
+<td>👉 <code>:point_right:</code></td>
+<td>🙌 <code>:raised_hands:</code></td>
+<td>🙏 <code>:pray:</code></td>
+<td>👆 <code>:point_up_2:</code></td>
+</tr>
+<tr>
+<td>👏 <code>:clap:</code></td>
+<td>💪 <code>:muscle:</code></td>
+<td>🤘 <code>:metal:</code></td>
+<td>:fu: <code>:fu:</code></td>
+<td>🏃 <code>:runner:</code></td>
+</tr>
+<tr>
+<td>🏃 <code>:running:</code></td>
+<td>👫 <code>:couple:</code></td>
+<td>👪 <code>:family:</code></td>
+<td>👬 <code>:two_men_holding_hands:</code></td>
+<td>👭 <code>:two_women_holding_hands:</code></td>
+</tr>
+<tr>
+<td>💃 <code>:dancer:</code></td>
+<td>👯 <code>:dancers:</code></td>
+<td>🙆 <code>:ok_woman:</code></td>
+<td>🙅 <code>:no_good:</code></td>
+<td>💁 <code>:information_desk_person:</code></td>
+</tr>
+<tr>
+<td>🙋 <code>:raising_hand:</code></td>
+<td>👰 <code>:bride_with_veil:</code></td>
+<td>🙎 <code>:person_with_pouting_face:</code></td>
+<td>🙍 <code>:person_frowning:</code></td>
+<td>🙇 <code>:bow:</code></td>
+</tr>
+<tr>
+<td>💏 <code>:couplekiss:</code></td>
+<td>💑 <code>:couple_with_heart:</code></td>
+<td>💆 <code>:massage:</code></td>
+<td>💇 <code>:haircut:</code></td>
+<td>💅 <code>:nail_care:</code></td>
+</tr>
+<tr>
+<td>👦 <code>:boy:</code></td>
+<td>👧 <code>:girl:</code></td>
+<td>👩 <code>:woman:</code></td>
+<td>👨 <code>:man:</code></td>
+<td>👶 <code>:baby:</code></td>
+</tr>
+<tr>
+<td>👵 <code>:older_woman:</code></td>
+<td>👴 <code>:older_man:</code></td>
+<td>👱 <code>:person_with_blond_hair:</code></td>
+<td>👲 <code>:man_with_gua_pi_mao:</code></td>
+<td>👳 <code>:man_with_turban:</code></td>
+</tr>
+<tr>
+<td>👷 <code>:construction_worker:</code></td>
+<td>👮 <code>:cop:</code></td>
+<td>👼 <code>:angel:</code></td>
+<td>👸 <code>:princess:</code></td>
+<td>😺 <code>:smiley_cat:</code></td>
+</tr>
+<tr>
+<td>😸 <code>:smile_cat:</code></td>
+<td>😻 <code>:heart_eyes_cat:</code></td>
+<td>😽 <code>:kissing_cat:</code></td>
+<td>😼 <code>:smirk_cat:</code></td>
+<td>🙀 <code>:scream_cat:</code></td>
+</tr>
+<tr>
+<td>😿 <code>:crying_cat_face:</code></td>
+<td>😹 <code>:joy_cat:</code></td>
+<td>😾 <code>:pouting_cat:</code></td>
+<td>👹 <code>:japanese_ogre:</code></td>
+<td>👺 <code>:japanese_goblin:</code></td>
+</tr>
+<tr>
+<td>🙈 <code>:see_no_evil:</code></td>
+<td>🙉 <code>:hear_no_evil:</code></td>
+<td>🙊 <code>:speak_no_evil:</code></td>
+<td>💂 <code>:guardsman:</code></td>
+<td>💀 <code>:skull:</code></td>
+</tr>
+<tr>
+<td>🐾 <code>:feet:</code></td>
+<td>👄 <code>:lips:</code></td>
+<td>💋 <code>:kiss:</code></td>
+<td>💧 <code>:droplet:</code></td>
+<td>👂 <code>:ear:</code></td>
+</tr>
+<tr>
+<td>👀 <code>:eyes:</code></td>
+<td>👃 <code>:nose:</code></td>
+<td>👅 <code>:tongue:</code></td>
+<td>💌 <code>:love_letter:</code></td>
+<td>👤 <code>:bust_in_silhouette:</code></td>
+</tr>
+<tr>
+<td>👥 <code>:busts_in_silhouette:</code></td>
+<td>💬 <code>:speech_balloon:</code></td>
+<td>💭 <code>:thought_balloon:</code></td>
+<td>:feelsgood: <code>:feelsgood:</code></td>
+<td>:finnadie: <code>:finnadie:</code></td>
+</tr>
+<tr>
+<td>:goberserk: <code>:goberserk:</code></td>
+<td>:godmode: <code>:godmode:</code></td>
+<td>:hurtrealbad: <code>:hurtrealbad:</code></td>
+<td>:rage1: <code>:rage1:</code></td>
+<td>:rage2: <code>:rage2:</code></td>
+</tr>
+<tr>
+<td>:rage3: <code>:rage3:</code></td>
+<td>:rage4: <code>:rage4:</code></td>
+<td>😒uspect: <code>:suspect:</code></td>
+<td>:trollface: <code>:trollface:</code></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h4 id="nature">Nature</h4>
+<table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+<th></th>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>☀️ <code>:sunny:</code></td>
+<td>☔ <code>:umbrella:</code></td>
+<td>☁️ <code>:cloud:</code></td>
+<td>❄️ <code>:snowflake:</code></td>
+<td>⛄ <code>:snowman:</code></td>
+</tr>
+<tr>
+<td>⚡ <code>:zap:</code></td>
+<td>🌀 <code>:cyclone:</code></td>
+<td>🌁 <code>:foggy:</code></td>
+<td>🌊 <code>:ocean:</code></td>
+<td>🐱 <code>:cat:</code></td>
+</tr>
+<tr>
+<td>🐶 <code>:dog:</code></td>
+<td>🐭 <code>:mouse:</code></td>
+<td>🐹 <code>:hamster:</code></td>
+<td>🐰 <code>:rabbit:</code></td>
+<td>🐺 <code>:wolf:</code></td>
+</tr>
+<tr>
+<td>🐸 <code>:frog:</code></td>
+<td>🐯 <code>:tiger:</code></td>
+<td>🐨 <code>:koala:</code></td>
+<td>🐻 <code>:bear:</code></td>
+<td>🐷 <code>:pig:</code></td>
+</tr>
+<tr>
+<td>🐽 <code>:pig_nose:</code></td>
+<td>🐮 <code>:cow:</code></td>
+<td>🐗 <code>:boar:</code></td>
+<td>🐵 <code>:monkey_face:</code></td>
+<td>🐒 <code>:monkey:</code></td>
+</tr>
+<tr>
+<td>🐴 <code>:horse:</code></td>
+<td>🐎 <code>:racehorse:</code></td>
+<td>🐫 <code>:camel:</code></td>
+<td>🐑 <code>:sheep:</code></td>
+<td>🐘 <code>:elephant:</code></td>
+</tr>
+<tr>
+<td>🐼 <code>:panda_face:</code></td>
+<td>🐍 <code>:snake:</code></td>
+<td>🐦 <code>:bird:</code></td>
+<td>🐤 <code>:baby_chick:</code></td>
+<td>🐥 <code>:hatched_chick:</code></td>
+</tr>
+<tr>
+<td>🐣 <code>:hatching_chick:</code></td>
+<td>🐔 <code>:chicken:</code></td>
+<td>🐧 <code>:penguin:</code></td>
+<td>🐢 <code>:turtle:</code></td>
+<td>🐛 <code>:bug:</code></td>
+</tr>
+<tr>
+<td>🐝 <code>:honeybee:</code></td>
+<td>🐜 <code>:ant:</code></td>
+<td>🐞 <code>:beetle:</code></td>
+<td>🐌 <code>:snail:</code></td>
+<td>🐙 <code>:octopus:</code></td>
+</tr>
+<tr>
+<td>🐠 <code>:tropical_fish:</code></td>
+<td>🐟 <code>:fish:</code></td>
+<td>🐳 <code>:whale:</code></td>
+<td>🐋 <code>:whale2:</code></td>
+<td>🐬 <code>:dolphin:</code></td>
+</tr>
+<tr>
+<td>🐄 <code>:cow2:</code></td>
+<td>🐏 <code>:ram:</code></td>
+<td>🐀 <code>:rat:</code></td>
+<td>🐃 <code>:water_buffalo:</code></td>
+<td>🐅 <code>:tiger2:</code></td>
+</tr>
+<tr>
+<td>🐇 <code>:rabbit2:</code></td>
+<td>🐉 <code>:dragon:</code></td>
+<td>🐐 <code>:goat:</code></td>
+<td>🐓 <code>:rooster:</code></td>
+<td>🐕 <code>:dog2:</code></td>
+</tr>
+<tr>
+<td>🐖 <code>:pig2:</code></td>
+<td>🐁 <code>:mouse2:</code></td>
+<td>🐂 <code>:ox:</code></td>
+<td>🐲 <code>:dragon_face:</code></td>
+<td>🐡 <code>:blowfish:</code></td>
+</tr>
+<tr>
+<td>🐊 <code>:crocodile:</code></td>
+<td>🐪 <code>:dromedary_camel:</code></td>
+<td>🐆 <code>:leopard:</code></td>
+<td>🐈 <code>:cat2:</code></td>
+<td>🐩 <code>:poodle:</code></td>
+</tr>
+<tr>
+<td>🐾 <code>:paw_prints:</code></td>
+<td>💐 <code>:bouquet:</code></td>
+<td>🌸 <code>:cherry_blossom:</code></td>
+<td>🌷 <code>:tulip:</code></td>
+<td>🍀 <code>:four_leaf_clover:</code></td>
+</tr>
+<tr>
+<td>🌹 <code>:rose:</code></td>
+<td>🌻 <code>:sunflower:</code></td>
+<td>🌺 <code>:hibiscus:</code></td>
+<td>🍁 <code>:maple_leaf:</code></td>
+<td>🍃 <code>:leaves:</code></td>
+</tr>
+<tr>
+<td>🍂 <code>:fallen_leaf:</code></td>
+<td>🌿 <code>:herb:</code></td>
+<td>🍄 <code>:mushroom:</code></td>
+<td>🌵 <code>:cactus:</code></td>
+<td>🌴 <code>:palm_tree:</code></td>
+</tr>
+<tr>
+<td>🌲 <code>:evergreen_tree:</code></td>
+<td>🌳 <code>:deciduous_tree:</code></td>
+<td>🌰 <code>:chestnut:</code></td>
+<td>🌱 <code>:seedling:</code></td>
+<td>🌼 <code>:blossom:</code></td>
+</tr>
+<tr>
+<td>🌾 <code>:ear_of_rice:</code></td>
+<td>🐚 <code>:shell:</code></td>
+<td>🌐 <code>:globe_with_meridians:</code></td>
+<td>🌞 <code>:sun_with_face:</code></td>
+<td>🌝 <code>:full_moon_with_face:</code></td>
+</tr>
+<tr>
+<td>🌚 <code>:new_moon_with_face:</code></td>
+<td>🌑 <code>:new_moon:</code></td>
+<td>🌒 <code>:waxing_crescent_moon:</code></td>
+<td>🌓 <code>:first_quarter_moon:</code></td>
+<td>🌔 <code>:waxing_gibbous_moon:</code></td>
+</tr>
+<tr>
+<td>🌕 <code>:full_moon:</code></td>
+<td>🌖 <code>:waning_gibbous_moon:</code></td>
+<td>🌗 <code>:last_quarter_moon:</code></td>
+<td>🌘 <code>:waning_crescent_moon:</code></td>
+<td>🌜 <code>:last_quarter_moon_with_face:</code></td>
+</tr>
+<tr>
+<td>🌛 <code>:first_quarter_moon_with_face:</code></td>
+<td>🌙 <code>:crescent_moon:</code></td>
+<td>🌍 <code>:earth_africa:</code></td>
+<td>🌎 <code>:earth_americas:</code></td>
+<td>🌏 <code>:earth_asia:</code></td>
+</tr>
+<tr>
+<td>🌋 <code>:volcano:</code></td>
+<td>🌌 <code>:milky_way:</code></td>
+<td>⛅ <code>:partly_sunny:</code></td>
+<td>😮ctocat: <code>:octocat:</code></td>
+<td>😒quirrel: <code>:squirrel:</code></td>
+</tr>
+</tbody>
+</table>
+<h4 id="objects">Objects</h4>
+<table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+<th></th>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>🎍 <code>:bamboo:</code></td>
+<td>💝 <code>:gift_heart:</code></td>
+<td>🎎 <code>:dolls:</code></td>
+<td>🎒 <code>:school_satchel:</code></td>
+<td>🎓 <code>:mortar_board:</code></td>
+</tr>
+<tr>
+<td>🎏 <code>:flags:</code></td>
+<td>🎆 <code>:fireworks:</code></td>
+<td>🎇 <code>:sparkler:</code></td>
+<td>🎐 <code>:wind_chime:</code></td>
+<td>🎑 <code>:rice_scene:</code></td>
+</tr>
+<tr>
+<td>🎃 <code>:jack_o_lantern:</code></td>
+<td>👻 <code>:ghost:</code></td>
+<td>🎅 <code>:santa:</code></td>
+<td>🎄 <code>:christmas_tree:</code></td>
+<td>🎁 <code>:gift:</code></td>
+</tr>
+<tr>
+<td>🔔 <code>:bell:</code></td>
+<td>🔕 <code>:no_bell:</code></td>
+<td>🎋 <code>:tanabata_tree:</code></td>
+<td>🎉 <code>:tada:</code></td>
+<td>🎊 <code>:confetti_ball:</code></td>
+</tr>
+<tr>
+<td>🎈 <code>:balloon:</code></td>
+<td>🔮 <code>:crystal_ball:</code></td>
+<td>💿 <code>:cd:</code></td>
+<td>📀 <code>:dvd:</code></td>
+<td>💾 <code>:floppy_disk:</code></td>
+</tr>
+<tr>
+<td>📷 <code>:camera:</code></td>
+<td>📹 <code>:video_camera:</code></td>
+<td>🎥 <code>:movie_camera:</code></td>
+<td>💻 <code>:computer:</code></td>
+<td>📺 <code>:tv:</code></td>
+</tr>
+<tr>
+<td>📱 <code>:iphone:</code></td>
+<td>☎️ <code>:phone:</code></td>
+<td>☎️ <code>:telephone:</code></td>
+<td>📞 <code>:telephone_receiver:</code></td>
+<td>📟 <code>:pager:</code></td>
+</tr>
+<tr>
+<td>📠 <code>:fax:</code></td>
+<td>💽 <code>:minidisc:</code></td>
+<td>📼 <code>:vhs:</code></td>
+<td>🔉 <code>:sound:</code></td>
+<td>🔈 <code>:speaker:</code></td>
+</tr>
+<tr>
+<td>🔇 <code>:mute:</code></td>
+<td>📢 <code>:loudspeaker:</code></td>
+<td>📣 <code>:mega:</code></td>
+<td>⌛ <code>:hourglass:</code></td>
+<td>⏳ <code>:hourglass_flowing_sand:</code></td>
+</tr>
+<tr>
+<td>⏰ <code>:alarm_clock:</code></td>
+<td>⌚ <code>:watch:</code></td>
+<td>📻 <code>:radio:</code></td>
+<td>📡 <code>:satellite:</code></td>
+<td>➿ <code>:loop:</code></td>
+</tr>
+<tr>
+<td>🔍 <code>:mag:</code></td>
+<td>🔎 <code>:mag_right:</code></td>
+<td>🔓 <code>:unlock:</code></td>
+<td>🔒 <code>:lock:</code></td>
+<td>🔏 <code>:lock_with_ink_pen:</code></td>
+</tr>
+<tr>
+<td>🔐 <code>:closed_lock_with_key:</code></td>
+<td>🔑 <code>:key:</code></td>
+<td>💡 <code>:bulb:</code></td>
+<td>🔦 <code>:flashlight:</code></td>
+<td>🔆 <code>:high_brightness:</code></td>
+</tr>
+<tr>
+<td>🔅 <code>:low_brightness:</code></td>
+<td>🔌 <code>:electric_plug:</code></td>
+<td>🔋 <code>:battery:</code></td>
+<td>📲 <code>:calling:</code></td>
+<td>✉️ <code>:email:</code></td>
+</tr>
+<tr>
+<td>📫 <code>:mailbox:</code></td>
+<td>📮 <code>:postbox:</code></td>
+<td>🛀 <code>:bath:</code></td>
+<td>🛁 <code>:bathtub:</code></td>
+<td>🚿 <code>:shower:</code></td>
+</tr>
+<tr>
+<td>🚽 <code>:toilet:</code></td>
+<td>🔧 <code>:wrench:</code></td>
+<td>🔩 <code>:nut_and_bolt:</code></td>
+<td>🔨 <code>:hammer:</code></td>
+<td>💺 <code>:seat:</code></td>
+</tr>
+<tr>
+<td>💰 <code>:moneybag:</code></td>
+<td>💴 <code>:yen:</code></td>
+<td>💵 <code>:dollar:</code></td>
+<td>💷 <code>:pound:</code></td>
+<td>💶 <code>:euro:</code></td>
+</tr>
+<tr>
+<td>💳 <code>:credit_card:</code></td>
+<td>💸 <code>:money_with_wings:</code></td>
+<td>📧 <code>:e-mail:</code></td>
+<td>📥 <code>:inbox_tray:</code></td>
+<td>📤 <code>:outbox_tray:</code></td>
+</tr>
+<tr>
+<td>✉️ <code>:envelope:</code></td>
+<td>📨 <code>:incoming_envelope:</code></td>
+<td>📯 <code>:postal_horn:</code></td>
+<td>📪 <code>:mailbox_closed:</code></td>
+<td>📬 <code>:mailbox_with_mail:</code></td>
+</tr>
+<tr>
+<td>📭 <code>:mailbox_with_no_mail:</code></td>
+<td>📦 <code>:package:</code></td>
+<td>🚪 <code>:door:</code></td>
+<td>🚬 <code>:smoking:</code></td>
+<td>💣 <code>:bomb:</code></td>
+</tr>
+<tr>
+<td>🔫 <code>:gun:</code></td>
+<td>🔪 <code>:hocho:</code></td>
+<td>💊 <code>:pill:</code></td>
+<td>💉 <code>:syringe:</code></td>
+<td>📄 <code>:page_facing_up:</code></td>
+</tr>
+<tr>
+<td>📃 <code>:page_with_curl:</code></td>
+<td>📑 <code>:bookmark_tabs:</code></td>
+<td>📊 <code>:bar_chart:</code></td>
+<td>📈 <code>:chart_with_upwards_trend:</code></td>
+<td>📉 <code>:chart_with_downwards_trend:</code></td>
+</tr>
+<tr>
+<td>📜 <code>:scroll:</code></td>
+<td>📋 <code>:clipboard:</code></td>
+<td>📆 <code>:calendar:</code></td>
+<td>📅 <code>:date:</code></td>
+<td>📇 <code>:card_index:</code></td>
+</tr>
+<tr>
+<td>📁 <code>:file_folder:</code></td>
+<td>📂 <code>:open_file_folder:</code></td>
+<td>✂️ <code>:scissors:</code></td>
+<td>📌 <code>:pushpin:</code></td>
+<td>📎 <code>:paperclip:</code></td>
+</tr>
+<tr>
+<td>✒️ <code>:black_nib:</code></td>
+<td>✏️ <code>:pencil2:</code></td>
+<td>📏 <code>:straight_ruler:</code></td>
+<td>📐 <code>:triangular_ruler:</code></td>
+<td>📕 <code>:closed_book:</code></td>
+</tr>
+<tr>
+<td>📗 <code>:green_book:</code></td>
+<td>📘 <code>:blue_book:</code></td>
+<td>📙 <code>:orange_book:</code></td>
+<td>📓 <code>:notebook:</code></td>
+<td>📔 <code>:notebook_with_decorative_cover:</code></td>
+</tr>
+<tr>
+<td>📒 <code>:ledger:</code></td>
+<td>📚 <code>:books:</code></td>
+<td>🔖 <code>:bookmark:</code></td>
+<td>📛 <code>:name_badge:</code></td>
+<td>🔬 <code>:microscope:</code></td>
+</tr>
+<tr>
+<td>🔭 <code>:telescope:</code></td>
+<td>📰 <code>:newspaper:</code></td>
+<td>🏈 <code>:football:</code></td>
+<td>🏀 <code>:basketball:</code></td>
+<td>⚽ <code>:soccer:</code></td>
+</tr>
+<tr>
+<td>⚾️ <code>:baseball:</code></td>
+<td>🎾 <code>:tennis:</code></td>
+<td>🎱 <code>:8ball:</code></td>
+<td>🏉 <code>:rugby_football:</code></td>
+<td>🎳 <code>:bowling:</code></td>
+</tr>
+<tr>
+<td>⛳ <code>:golf:</code></td>
+<td>🚵 <code>:mountain_bicyclist:</code></td>
+<td>🚴 <code>:bicyclist:</code></td>
+<td>🏇 <code>:horse_racing:</code></td>
+<td>🏂 <code>:snowboarder:</code></td>
+</tr>
+<tr>
+<td>🏊 <code>:swimmer:</code></td>
+<td>🏄 <code>:surfer:</code></td>
+<td>🎿 <code>:ski:</code></td>
+<td>♠️ <code>:spades:</code></td>
+<td>♥️ <code>:hearts:</code></td>
+</tr>
+<tr>
+<td>♣️ <code>:clubs:</code></td>
+<td>♦️ <code>:diamonds:</code></td>
+<td>💎 <code>:gem:</code></td>
+<td>💍 <code>:ring:</code></td>
+<td>🏆 <code>:trophy:</code></td>
+</tr>
+<tr>
+<td>🎼 <code>:musical_score:</code></td>
+<td>🎹 <code>:musical_keyboard:</code></td>
+<td>🎻 <code>:violin:</code></td>
+<td>👾 <code>:space_invader:</code></td>
+<td>🎮 <code>:video_game:</code></td>
+</tr>
+<tr>
+<td>🃏 <code>:black_joker:</code></td>
+<td>🎴 <code>:flower_playing_cards:</code></td>
+<td>🎲 <code>:game_die:</code></td>
+<td>🎯 <code>:dart:</code></td>
+<td>🀄 <code>:mahjong:</code></td>
+</tr>
+<tr>
+<td>🎬 <code>:clapper:</code></td>
+<td>📝 <code>:memo:</code></td>
+<td>📝 <code>:pencil:</code></td>
+<td>📖 <code>:book:</code></td>
+<td>🎨 <code>:art:</code></td>
+</tr>
+<tr>
+<td>🎤 <code>:microphone:</code></td>
+<td>🎧 <code>:headphones:</code></td>
+<td>🎺 <code>:trumpet:</code></td>
+<td>🎷 <code>:saxophone:</code></td>
+<td>🎸 <code>:guitar:</code></td>
+</tr>
+<tr>
+<td>👞 <code>:shoe:</code></td>
+<td>👡 <code>:sandal:</code></td>
+<td>👠 <code>:high_heel:</code></td>
+<td>💄 <code>:lipstick:</code></td>
+<td>👢 <code>:boot:</code></td>
+</tr>
+<tr>
+<td>👕 <code>:shirt:</code></td>
+<td>👕 <code>:tshirt:</code></td>
+<td>👔 <code>:necktie:</code></td>
+<td>👚 <code>:womans_clothes:</code></td>
+<td>👗 <code>:dress:</code></td>
+</tr>
+<tr>
+<td>🎽 <code>:running_shirt_with_sash:</code></td>
+<td>👖 <code>:jeans:</code></td>
+<td>👘 <code>:kimono:</code></td>
+<td>👙 <code>:bikini:</code></td>
+<td>🎀 <code>:ribbon:</code></td>
+</tr>
+<tr>
+<td>🎩 <code>:tophat:</code></td>
+<td>👑 <code>:crown:</code></td>
+<td>👒 <code>:womans_hat:</code></td>
+<td>👞 <code>:mans_shoe:</code></td>
+<td>🌂 <code>:closed_umbrella:</code></td>
+</tr>
+<tr>
+<td>💼 <code>:briefcase:</code></td>
+<td>👜 <code>:handbag:</code></td>
+<td>👝 <code>:pouch:</code></td>
+<td>👛 <code>:purse:</code></td>
+<td>👓 <code>:eyeglasses:</code></td>
+</tr>
+<tr>
+<td>🎣 <code>:fishing_pole_and_fish:</code></td>
+<td>☕ <code>:coffee:</code></td>
+<td>🍵 <code>:tea:</code></td>
+<td>🍶 <code>:sake:</code></td>
+<td>🍼 <code>:baby_bottle:</code></td>
+</tr>
+<tr>
+<td>🍺 <code>:beer:</code></td>
+<td>🍻 <code>:beers:</code></td>
+<td>🍸 <code>:cocktail:</code></td>
+<td>🍹 <code>:tropical_drink:</code></td>
+<td>🍷 <code>:wine_glass:</code></td>
+</tr>
+<tr>
+<td>🍴 <code>:fork_and_knife:</code></td>
+<td>🍕 <code>:pizza:</code></td>
+<td>🍔 <code>:hamburger:</code></td>
+<td>🍟 <code>:fries:</code></td>
+<td>🍗 <code>:poultry_leg:</code></td>
+</tr>
+<tr>
+<td>🍖 <code>:meat_on_bone:</code></td>
+<td>🍝 <code>:spaghetti:</code></td>
+<td>🍛 <code>:curry:</code></td>
+<td>🍤 <code>:fried_shrimp:</code></td>
+<td>🍱 <code>:bento:</code></td>
+</tr>
+<tr>
+<td>🍣 <code>:sushi:</code></td>
+<td>🍥 <code>:fish_cake:</code></td>
+<td>🍙 <code>:rice_ball:</code></td>
+<td>🍘 <code>:rice_cracker:</code></td>
+<td>🍚 <code>:rice:</code></td>
+</tr>
+<tr>
+<td>🍜 <code>:ramen:</code></td>
+<td>🍲 <code>:stew:</code></td>
+<td>🍢 <code>:oden:</code></td>
+<td>🍡 <code>:dango:</code></td>
+<td>🍳 <code>:egg:</code></td>
+</tr>
+<tr>
+<td>🍞 <code>:bread:</code></td>
+<td>🍩 <code>:doughnut:</code></td>
+<td>🍮 <code>:custard:</code></td>
+<td>🍦 <code>:icecream:</code></td>
+<td>🍨 <code>:ice_cream:</code></td>
+</tr>
+<tr>
+<td>🍧 <code>:shaved_ice:</code></td>
+<td>🎂 <code>:birthday:</code></td>
+<td>🍰 <code>:cake:</code></td>
+<td>🍪 <code>:cookie:</code></td>
+<td>🍫 <code>:chocolate_bar:</code></td>
+</tr>
+<tr>
+<td>🍬 <code>:candy:</code></td>
+<td>🍭 <code>:lollipop:</code></td>
+<td>🍯 <code>:honey_pot:</code></td>
+<td>🍎 <code>:apple:</code></td>
+<td>🍏 <code>:green_apple:</code></td>
+</tr>
+<tr>
+<td>🍊 <code>:tangerine:</code></td>
+<td>🍋 <code>:lemon:</code></td>
+<td>🍒 <code>:cherries:</code></td>
+<td>🍇 <code>:grapes:</code></td>
+<td>🍉 <code>:watermelon:</code></td>
+</tr>
+<tr>
+<td>🍓 <code>:strawberry:</code></td>
+<td>🍑 <code>:peach:</code></td>
+<td>🍈 <code>:melon:</code></td>
+<td>🍌 <code>:banana:</code></td>
+<td>🍐 <code>:pear:</code></td>
+</tr>
+<tr>
+<td>🍍 <code>:pineapple:</code></td>
+<td>🍠 <code>:sweet_potato:</code></td>
+<td>🍆 <code>:eggplant:</code></td>
+<td>🍅 <code>:tomato:</code></td>
+<td>🌽 <code>:corn:</code></td>
+</tr>
+</tbody>
+</table>
+<h4 id="places">Places</h4>
+<table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+<th></th>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>🏠 <code>:house:</code></td>
+<td>🏡 <code>:house_with_garden:</code></td>
+<td>🏫 <code>:school:</code></td>
+<td>🏢 <code>:office:</code></td>
+<td>🏣 <code>:post_office:</code></td>
+</tr>
+<tr>
+<td>🏥 <code>:hospital:</code></td>
+<td>🏦 <code>:bank:</code></td>
+<td>🏪 <code>:convenience_store:</code></td>
+<td>🏩 <code>:love_hotel:</code></td>
+<td>🏨 <code>:hotel:</code></td>
+</tr>
+<tr>
+<td>💒 <code>:wedding:</code></td>
+<td>⛪ <code>:church:</code></td>
+<td>🏬 <code>:department_store:</code></td>
+<td>🏤 <code>:european_post_office:</code></td>
+<td>🌇 <code>:city_sunrise:</code></td>
+</tr>
+<tr>
+<td>🌆 <code>:city_sunset:</code></td>
+<td>🏯 <code>:japanese_castle:</code></td>
+<td>🏰 <code>:european_castle:</code></td>
+<td>⛺ <code>:tent:</code></td>
+<td>🏭 <code>:factory:</code></td>
+</tr>
+<tr>
+<td>🗼 <code>:tokyo_tower:</code></td>
+<td>🗾 <code>:japan:</code></td>
+<td>🗻 <code>:mount_fuji:</code></td>
+<td>🌄 <code>:sunrise_over_mountains:</code></td>
+<td>🌅 <code>:sunrise:</code></td>
+</tr>
+<tr>
+<td>🌠 <code>:stars:</code></td>
+<td>🗽 <code>:statue_of_liberty:</code></td>
+<td>🌉 <code>:bridge_at_night:</code></td>
+<td>🎠 <code>:carousel_horse:</code></td>
+<td>🌈 <code>:rainbow:</code></td>
+</tr>
+<tr>
+<td>🎡 <code>:ferris_wheel:</code></td>
+<td>⛲ <code>:fountain:</code></td>
+<td>🎢 <code>:roller_coaster:</code></td>
+<td>🚢 <code>:ship:</code></td>
+<td>🚤 <code>:speedboat:</code></td>
+</tr>
+<tr>
+<td>⛵ <code>:boat:</code></td>
+<td>⛵ <code>:sailboat:</code></td>
+<td>🚣 <code>:rowboat:</code></td>
+<td>⚓ <code>:anchor:</code></td>
+<td>🚀 <code>:rocket:</code></td>
+</tr>
+<tr>
+<td>✈️ <code>:airplane:</code></td>
+<td>🚁 <code>:helicopter:</code></td>
+<td>🚂 <code>:steam_locomotive:</code></td>
+<td>🚊 <code>:tram:</code></td>
+<td>🚞 <code>:mountain_railway:</code></td>
+</tr>
+<tr>
+<td>🚲 <code>:bike:</code></td>
+<td>🚡 <code>:aerial_tramway:</code></td>
+<td>🚟 <code>:suspension_railway:</code></td>
+<td>🚠 <code>:mountain_cableway:</code></td>
+<td>🚜 <code>:tractor:</code></td>
+</tr>
+<tr>
+<td>🚙 <code>:blue_car:</code></td>
+<td>🚘 <code>:oncoming_automobile:</code></td>
+<td>🚗 <code>:car:</code></td>
+<td>🚗 <code>:red_car:</code></td>
+<td>🚕 <code>:taxi:</code></td>
+</tr>
+<tr>
+<td>🚖 <code>:oncoming_taxi:</code></td>
+<td>🚛 <code>:articulated_lorry:</code></td>
+<td>🚌 <code>:bus:</code></td>
+<td>🚍 <code>:oncoming_bus:</code></td>
+<td>🚨 <code>:rotating_light:</code></td>
+</tr>
+<tr>
+<td>🚓 <code>:police_car:</code></td>
+<td>🚔 <code>:oncoming_police_car:</code></td>
+<td>🚒 <code>:fire_engine:</code></td>
+<td>🚑 <code>:ambulance:</code></td>
+<td>🚐 <code>:minibus:</code></td>
+</tr>
+<tr>
+<td>🚚 <code>:truck:</code></td>
+<td>🚋 <code>:train:</code></td>
+<td>🚉 <code>:station:</code></td>
+<td>🚆 <code>:train2:</code></td>
+<td>🚅 <code>:bullettrain_front:</code></td>
+</tr>
+<tr>
+<td>🚄 <code>:bullettrain_side:</code></td>
+<td>🚈 <code>:light_rail:</code></td>
+<td>🚝 <code>:monorail:</code></td>
+<td>🚃 <code>:railway_car:</code></td>
+<td>🚎 <code>:trolleybus:</code></td>
+</tr>
+<tr>
+<td>🎫 <code>:ticket:</code></td>
+<td>⛽ <code>:fuelpump:</code></td>
+<td>🚦 <code>:vertical_traffic_light:</code></td>
+<td>🚥 <code>:traffic_light:</code></td>
+<td>⚠️ <code>:warning:</code></td>
+</tr>
+<tr>
+<td>🚧 <code>:construction:</code></td>
+<td>🔰 <code>:beginner:</code></td>
+<td>🏧 <code>:atm:</code></td>
+<td>🎰 <code>:slot_machine:</code></td>
+<td>🚏 <code>:busstop:</code></td>
+</tr>
+<tr>
+<td>💈 <code>:barber:</code></td>
+<td>♨️ <code>:hotsprings:</code></td>
+<td>🏁 <code>:checkered_flag:</code></td>
+<td>🎌 <code>:crossed_flags:</code></td>
+<td>🏮 <code>:izakaya_lantern:</code></td>
+</tr>
+<tr>
+<td>🗿 <code>:moyai:</code></td>
+<td>🎪 <code>:circus_tent:</code></td>
+<td>🎭 <code>:performing_arts:</code></td>
+<td>📍 <code>:round_pushpin:</code></td>
+<td>🚩 <code>:triangular_flag_on_post:</code></td>
+</tr>
+<tr>
+<td>🇯🇵 <code>:jp:</code></td>
+<td>🇰🇷 <code>:kr:</code></td>
+<td>🇨🇳 <code>:cn:</code></td>
+<td>🇺🇸 <code>:us:</code></td>
+<td>🇫🇷 <code>:fr:</code></td>
+</tr>
+<tr>
+<td>🇪🇸 <code>:es:</code></td>
+<td>🇮🇹 <code>:it:</code></td>
+<td>🇷🇺 <code>:ru:</code></td>
+<td>🇬🇧 <code>:gb:</code></td>
+<td>🇬🇧 <code>:uk:</code></td>
+</tr>
+<tr>
+<td>🇩🇪 <code>:de:</code></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h4 id="symbols">Symbols</h4>
+<table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+<th></th>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>🔜 <code>:soon:</code></td>
+<td>🕐 <code>:clock1:</code></td>
+<td>🕜 <code>:clock130:</code></td>
+<td>🕙 <code>:clock10:</code></td>
+<td>🕥 <code>:clock1030:</code></td>
+</tr>
+<tr>
+<td>🕚 <code>:clock11:</code></td>
+<td>🕦 <code>:clock1130:</code></td>
+<td>🕛 <code>:clock12:</code></td>
+<td>🕧 <code>:clock1230:</code></td>
+<td>🕑 <code>:clock2:</code></td>
+</tr>
+<tr>
+<td>🕝 <code>:clock230:</code></td>
+<td>🕒 <code>:clock3:</code></td>
+<td>🕞 <code>:clock330:</code></td>
+<td>🕓 <code>:clock4:</code></td>
+<td>🕟 <code>:clock430:</code></td>
+</tr>
+<tr>
+<td>🕔 <code>:clock5:</code></td>
+<td>🕠 <code>:clock530:</code></td>
+<td>🕕 <code>:clock6:</code></td>
+<td>🕡 <code>:clock630:</code></td>
+<td>🕖 <code>:clock7:</code></td>
+</tr>
+<tr>
+<td>🕢 <code>:clock730:</code></td>
+<td>🕗 <code>:clock8:</code></td>
+<td>🕣 <code>:clock830:</code></td>
+<td>🕘 <code>:clock9:</code></td>
+<td>🕤 <code>:clock930:</code></td>
+</tr>
+<tr>
+<td>💲 <code>:heavy_dollar_sign:</code></td>
+<td>©️ <code>:copyright:</code></td>
+<td>®️ <code>:registered:</code></td>
+<td>™️ <code>:tm:</code></td>
+<td>❌ <code>:x:</code></td>
+</tr>
+<tr>
+<td>❗ <code>:heavy_exclamation_mark:</code></td>
+<td>‼️ <code>:bangbang:</code></td>
+<td>⁉️ <code>:interrobang:</code></td>
+<td>⭕ <code>:o:</code></td>
+<td>✖️ <code>:heavy_multiplication_x:</code></td>
+</tr>
+<tr>
+<td>➕ <code>:heavy_plus_sign:</code></td>
+<td>➖ <code>:heavy_minus_sign:</code></td>
+<td>➗ <code>:heavy_division_sign:</code></td>
+<td>💮 <code>:white_flower:</code></td>
+<td>💯 <code>:100:</code></td>
+</tr>
+<tr>
+<td>✔️ <code>:heavy_check_mark:</code></td>
+<td>☑️ <code>:ballot_box_with_check:</code></td>
+<td>🔘 <code>:radio_button:</code></td>
+<td>🔗 <code>:link:</code></td>
+<td>➰ <code>:curly_loop:</code></td>
+</tr>
+<tr>
+<td>〰️ <code>:wavy_dash:</code></td>
+<td>〽️ <code>:part_alternation_mark:</code></td>
+<td>🔱 <code>:trident:</code></td>
+<td>▪️ <code>:black_small_square:</code></td>
+<td>▫️ <code>:white_small_square:</code></td>
+</tr>
+<tr>
+<td>◾ <code>:black_medium_small_square:</code></td>
+<td>◽ <code>:white_medium_small_square:</code></td>
+<td>◼️ <code>:black_medium_square:</code></td>
+<td>◻️ <code>:white_medium_square:</code></td>
+<td>⬛ <code>:black_large_square:</code></td>
+</tr>
+<tr>
+<td>⬜ <code>:white_large_square:</code></td>
+<td>✅ <code>:white_check_mark:</code></td>
+<td>🔲 <code>:black_square_button:</code></td>
+<td>🔳 <code>:white_square_button:</code></td>
+<td>⚫ <code>:black_circle:</code></td>
+</tr>
+<tr>
+<td>⚪ <code>:white_circle:</code></td>
+<td>🔴 <code>:red_circle:</code></td>
+<td>🔵 <code>:large_blue_circle:</code></td>
+<td>🔷 <code>:large_blue_diamond:</code></td>
+<td>🔶 <code>:large_orange_diamond:</code></td>
+</tr>
+<tr>
+<td>🔹 <code>:small_blue_diamond:</code></td>
+<td>🔸 <code>:small_orange_diamond:</code></td>
+<td>🔺 <code>:small_red_triangle:</code></td>
+<td>🔻 <code>:small_red_triangle_down:</code></td>
+<td>😒hipit: <code>:shipit:</code></td>
+</tr>
+</tbody>
+</table>
+<a id="learn">&nbsp;</a><h2 id="how-to-learn">How to learn</h2>
+<p>Here are a few recources</p>
+<ul>
+<li><a href="https://docs.microsoft.com/en-us/azure/devops/project/wiki/publish-repo-to-wiki?view=azure-devops&amp;tabs=browser">https://docs.microsoft.com/en-us/azure/devops/project/wiki/publish-repo-to-wiki?view=azure-devops&amp;tabs=browser</a></li>
+</ul>
+<h3 id="markdown-examples">Markdown examples</h3>
+<h3 id="text">Text</h3>
+<p><strong>bold</strong>, <em>italic</em>, <del>strickthrough</del>, <u>underline using html</u></p>
+<blockquote>
+<p>blockqote example</p>
+</blockquote>
+<p>above a line</p>
+<hr />
+<p>under the line</p>
+<p><code>Single line of code</code></p>
+<pre><code class="language-js">print(&quot;block of code&quot;);
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>table</th>
+<th>header1</th>
+<th>column</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>cell</td>
+<td>cell</td>
+<td>cell</td>
+</tr>
+<tr>
+<td>cell</td>
+<td>cell</td>
+<td>cell</td>
+</tr>
+</tbody>
+</table>
+<h3 id="mermaid-diagram">Mermaid diagram</h3>
+<div class="mermaid"><p>graph LR;
+A[Wiki supports Mermaid] --&gt; B[Visit https://mermaidjs.github.io/ for Mermaid syntax];</p>
+</div>
+<h3 id="pointers">pointers</h3>
+<p>This one needs a red background</p>
+<div class="is-caution">
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">❌ <strong>CAUTION</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">There will be irreversible consequences</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>This one needs a yellow background</p>
+<div class="is-warning">
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">⚠️ <strong>WARNING</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Dangerous certain consequences of an action can apply</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>This one needs a purlple background</p>
+<div class="is-important">
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">❕ <strong>Important</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Essential information required for success</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>This one needs a light blue background</p>
+<div class="is-tip">
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">💡 <strong>Tip</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Optional information to help the user be more successful!</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>This one needs a green background</p>
+<div class="is-note">
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">✏️ <strong>Note</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Information the user should note when skimming the document!</td>
+</tr>
+</tbody>
+</table>
+</div>
+<h3 id="shorthand">Shorthand</h3>
+<p>Here is an example of how to render a PDF from the command line.</p>
+<pre><code> .\azuredevops-export-wiki.exe -v --debug --css .\style.css --header-url .\header.html --footer-url .\footer.html
+</code></pre>
+<footer><style></style></footer></html>

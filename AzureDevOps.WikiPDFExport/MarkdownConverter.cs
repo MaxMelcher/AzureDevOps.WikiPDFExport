@@ -21,9 +21,9 @@ namespace azuredevops_export_wiki
 {
     internal class MarkdownConverter : ILogger
     {
-        private ILogger _logger;
-        private Options _options;
-        private ExportedWikiDoc _wiki;
+        private readonly ILogger _logger;
+        private readonly Options _options;
+        private readonly ExportedWikiDoc _wiki;
 
         internal MarkdownConverter(ExportedWikiDoc wiki, Options options, ILogger logger)
         {
@@ -35,7 +35,7 @@ namespace azuredevops_export_wiki
         internal string ConvertToHTML(IList<MarkdownFile> files)
         {
             Log("Converting Markdown to HTML");
-            StringBuilder sb = new StringBuilder();
+            StringBuilder sb = new();
 
             //setup the markdown pipeline to support tables
             var pipelineBuilder = new MarkdownPipelineBuilder()

@@ -7,7 +7,7 @@ namespace AzureDevOps.WikiPDFExport.Test
 {
     public class ExportedWikiDocTest
     {
-        const string WIKI_PATH = "../../../Tests/Code";
+        const string WIKI_PATH = "../../../test-data/Inputs/Code";
         DirectoryInfo codeWiki = new DirectoryInfo(Path.GetFullPath(WIKI_PATH, Environment.CurrentDirectory));
 
         [Fact]

@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net6</TargetFramework>
@@ -7,11 +7,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Content Include="IntegrationTests-Data\Inputs\Dis-ordered\.attachments\pic1.png" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Include="IntegrationTests-Data\Inputs\Empty-With-Attachments\.attachments\.gitkeep" />
+    <Compile Remove="test-data\**" />
+    <EmbeddedResource Remove="test-data\**" />
   </ItemGroup>
 
   <ItemGroup>
@@ -28,4 +25,11 @@
     <ProjectReference Include="..\AzureDevOps.WikiPDFExport\azuredevops-export-wiki.csproj" />
   </ItemGroup>
 
+  <Target Name="CleanIntegrationTestOuputs" BeforeTargets="CoreClean">
+    <ItemGroup>
+      <_CustomFilesToDelete Include="test-data\Outputs\**" Exclude=".gitkeep" />
+    </ItemGroup>
+    <Delete Files='@(_CustomFilesToDelete)'/>
+  </Target>
+    
 </Project>
