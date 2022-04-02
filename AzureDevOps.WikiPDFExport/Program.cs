@@ -6,13 +6,13 @@ namespace azuredevops_export_wiki
 {
     partial class Program
     {
-        static async Task Main(string[] args)
+        static async Task<int> Main(string[] args)
         {
-            // TODO bubble up result
-            await Parser.Default.ParseArguments<Options>(args)
+            var returnCode = await Parser.Default.ParseArguments<Options>(args)
                 .MapResult(
                     ExecuteWikiPDFExporter,
                     e => Task.FromResult(-1));
+            return returnCode;
         }
 
         static async Task<int> ExecuteWikiPDFExporter(Options options)
