@@ -1,6 +1,6 @@
+using azuredevops_export_wiki;
 using System;
 using System.IO;
-using azuredevops_export_wiki;
 using Xunit;
 
 namespace AzureDevOps.WikiPDFExport.Test
@@ -46,7 +46,7 @@ namespace AzureDevOps.WikiPDFExport.Test
         [Fact]
         public void givenAbsoluteValidLocation_whenCtor_thenSuccessful()
         {
-            Assert.NotEmpty(new ExportedWikiDoc(Path.GetFullPath(WIKI_PATH, 
+            Assert.NotEmpty(new ExportedWikiDoc(Path.GetFullPath(WIKI_PATH,
                 Environment.CurrentDirectory)).baseDir.FullName);
         }
 
@@ -70,7 +70,7 @@ namespace AzureDevOps.WikiPDFExport.Test
             Assert.NotEmpty(dir.FullName);
             Assert.DoesNotMatch("^/s+$", dir.FullName);
             Assert.True(dir.Exists, $"{dir.Name} does not exist");
-            Assert.True((dir.Extension.Length == 0 || dir.Extension == dir.Name), 
+            Assert.True((dir.Extension.Length == 0 || dir.Extension == dir.Name),
                 $"{dir.Name} has extension: {dir.Extension}");
         }
     }

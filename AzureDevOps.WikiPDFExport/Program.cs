@@ -1,5 +1,5 @@
-﻿using System.Threading.Tasks;
-using CommandLine;
+﻿using CommandLine;
+using System.Threading.Tasks;
 
 namespace azuredevops_export_wiki
 {

@@ -13,7 +13,7 @@ namespace azuredevops_export_wiki.MermaidContainer
         /// </summary>
         public MermaidContainerParser()
         {
-            OpeningCharacters = new[] {':'};
+            OpeningCharacters = new[] { ':' };
             InfoPrefix = DefaultInfoPrefix;
         }
 
@@ -21,7 +21,7 @@ namespace azuredevops_export_wiki.MermaidContainer
         {
             var line = processor.Line.ToString();
             line = line.TrimStart(':', ' ');
-            
+
             if (!line.StartsWith("mermaid", true, CultureInfo.InvariantCulture))
             {
                 return BlockState.None;

@@ -1,4 +1,5 @@
 ﻿using azuredevops_export_wiki;
+using NSubstitute;
 using System.Collections.Generic;
 using System.Linq;
 using Xunit;
@@ -7,16 +8,21 @@ namespace AzureDevOps.WikiPDFExport
 {
     public class TableOfContent_uTest
     {
+        ILoggerExtended _voidLogger = Substitute.For<ILoggerExtended>();
+        const string BASE_PATH = "../../../IntegrationTests-Data/";
+        ExportedWikiDoc _dummyWiki = new ExportedWikiDoc(BASE_PATH + "Inputs/Empty-With-Attachments/");
+        Options _noOptions = new Options();
+
         [Fact]
         public void CreateGlobalTableOfContent_ShouldReturnTOCandSingleHeaderLine()
         {
             // Arrange
-            var wikiPDFExporter = new WikiPDFExporter(new Options());
+            var MarkdownConverter = new MarkdownConverter(_dummyWiki, _noOptions, _voidLogger);
             var mdContent1 = "\n# SomeHeader\n"
                 + "SomeText";
 
             // Act
-            var result = wikiPDFExporter.CreateGlobalTableOfContent(new List<string> { mdContent1 });
+            var result = MarkdownConverter.CreateGlobalTableOfContent(new List<string> { mdContent1 });
 
             Assert.Equal("[TOC]", result[0]);
             Assert.Equal("# SomeHeader", result[1]);
@@ -26,12 +32,12 @@ namespace AzureDevOps.WikiPDFExport
         public void CreateGlobalTableOfContent_ShouldNotReturnTOC_WhenNoHeaderFound()
         {
             // Arrange
-            var wikiPDFExporter = new WikiPDFExporter(new Options());
+            var MarkdownConverter = new MarkdownConverter(_dummyWiki, _noOptions, _voidLogger);
             var mdContent1 = "\nOnly boring text\n"
                 + "No header here";
 
             // Act
-            var result = wikiPDFExporter.CreateGlobalTableOfContent(new List<string> { mdContent1 });
+            var result = MarkdownConverter.CreateGlobalTableOfContent(new List<string> { mdContent1 });
 
             Assert.False(result.Any());
         }
@@ -40,7 +46,7 @@ namespace AzureDevOps.WikiPDFExport
         public void CreateGlobalTableOfContent_ShouldReturnTOCandMultipleHeaderLines()
         {
             // Arrange
-            var wikiPDFExporter = new WikiPDFExporter(new Options());
+            var MarkdownConverter = new MarkdownConverter(_dummyWiki, _noOptions, _voidLogger);
             var mdContent1 = @"
                 # SomeHeader
                 SomeText";
@@ -48,7 +54,7 @@ namespace AzureDevOps.WikiPDFExport
                 []() #Some very interesting text in wrong header format #";
 
             // Act
-            var result = wikiPDFExporter.CreateGlobalTableOfContent(new List<string> { mdContent1, mdContent2 });
+            var result = MarkdownConverter.CreateGlobalTableOfContent(new List<string> { mdContent1, mdContent2 });
 
             Assert.Equal("[TOC]", result[0]);
             Assert.Equal("# SomeHeader", result[1]);
@@ -59,14 +65,14 @@ namespace AzureDevOps.WikiPDFExport
         public void CreateGlobalTableOfContent_ShouldIgnoreCodeSectionsSingle()
         {
             // Arrange
-            var wikiPDFExporter = new WikiPDFExporter(new Options());
+            var MarkdownConverter = new MarkdownConverter(_dummyWiki, _noOptions, _voidLogger);
             var mdContent1 = @"
                 ``` code section
                 # SomeHeader
                 ```";
-            
+
             // Act
-            var result = wikiPDFExporter.CreateGlobalTableOfContent(new List<string> { mdContent1 });
+            var result = MarkdownConverter.CreateGlobalTableOfContent(new List<string> { mdContent1 });
 
             Assert.False(result.Any());
         }
@@ -75,14 +81,14 @@ namespace AzureDevOps.WikiPDFExport
         public void CreateGlobalTableOfContent_ShouldIgnoreCodeSectionsSingleTilde()
         {
             // Arrange
-            var wikiPDFExporter = new WikiPDFExporter(new Options());
+            var MarkdownConverter = new MarkdownConverter(_dummyWiki, _noOptions, _voidLogger);
             var mdContent1 = @"
                 ~~~ code section
                 # SomeHeader
                 ~~~";
-            
+
             // Act
-            var result = wikiPDFExporter.CreateGlobalTableOfContent(new List<string> { mdContent1 });
+            var result = MarkdownConverter.CreateGlobalTableOfContent(new List<string> { mdContent1 });
 
             Assert.False(result.Any());
         }
@@ -91,7 +97,7 @@ namespace AzureDevOps.WikiPDFExport
         public void CreateGlobalTableOfContent_ShouldIgnoreCodeSectionsMultiple()
         {
             // Arrange
-            var wikiPDFExporter = new WikiPDFExporter(new Options());
+            var MarkdownConverter = new MarkdownConverter(_dummyWiki, _noOptions, _voidLogger);
             var mdContent1 = @"
                 ``` code section
                 ## SomeHeader
@@ -102,7 +108,7 @@ namespace AzureDevOps.WikiPDFExport
                 # A valid header";
 
             // Act
-            var result = wikiPDFExporter.CreateGlobalTableOfContent(new List<string> { mdContent1 });
+            var result = MarkdownConverter.CreateGlobalTableOfContent(new List<string> { mdContent1 });
 
             Assert.Equal(2, result.Count);
             Assert.Equal("[TOC]", result[0]);
@@ -113,7 +119,7 @@ namespace AzureDevOps.WikiPDFExport
         public void CreateGlobalTableOfContent_ShouldNotIgnoreInvalidCodeSections()
         {
             // Arrange
-            var wikiPDFExporter = new WikiPDFExporter(new Options());
+            var MarkdownConverter = new MarkdownConverter(_dummyWiki, _noOptions, _voidLogger);
             var mdContent1 = @"
                 Not at the beginning ```
                 # A valid header
@@ -121,7 +127,7 @@ namespace AzureDevOps.WikiPDFExport
                 ";
 
             // Act
-            var result = wikiPDFExporter.CreateGlobalTableOfContent(new List<string> { mdContent1 });
+            var result = MarkdownConverter.CreateGlobalTableOfContent(new List<string> { mdContent1 });
 
             Assert.Equal(2, result.Count);
             Assert.Equal("[TOC]", result[0]);
@@ -132,14 +138,14 @@ namespace AzureDevOps.WikiPDFExport
         public void CreateGlobalTableOfContent_ShouldNotIgnoreUnclosedCodeSections()
         {
             // Arrange
-            var wikiPDFExporter = new WikiPDFExporter(new Options());
+            var MarkdownConverter = new MarkdownConverter(_dummyWiki, _noOptions, _voidLogger);
             var mdContent1 = @"
                 ``` unclosed comment
                 # A valid header
                 ";
 
             // Act
-            var result = wikiPDFExporter.CreateGlobalTableOfContent(new List<string> { mdContent1 });
+            var result = MarkdownConverter.CreateGlobalTableOfContent(new List<string> { mdContent1 });
 
             Assert.Equal(2, result.Count);
             Assert.Equal("[TOC]", result[0]);
@@ -150,12 +156,12 @@ namespace AzureDevOps.WikiPDFExport
         public void RemoveDuplicatedHeadersFromGlobalTOC()
         {
             // Arrange
-            var wikiPDFExporter = new WikiPDFExporter(new Options());
+            var MarkdownConverter = new MarkdownConverter(_dummyWiki, _noOptions, _voidLogger);
             var htmlContent = "<h1>SomeHeader</h1>\n"
                 + "<h2>SomeOtherHeader</h2>\n";
 
             // Act
-            var result = wikiPDFExporter.RemoveDuplicatedHeadersFromGlobalTOC(htmlContent);
+            var result = MarkdownConverter.RemoveDuplicatedHeadersFromGlobalTOC(htmlContent);
 
             Assert.Equal("", result);
         }
@@ -164,12 +170,12 @@ namespace AzureDevOps.WikiPDFExport
         public void RemoveDuplicatedHeadersFromGlobalTOC_WhenIdsDefined()
         {
             // Arrange
-            var wikiPDFExporter = new WikiPDFExporter(new Options());
+            var MarkdownConverter = new MarkdownConverter(_dummyWiki, _noOptions, _voidLogger);
             var htmlContent = "<h1 id='interestingID'>SomeHeader</h1>\n"
                 + "<h2>SomeOtherHeader</h2>\n";
 
             // Act
-            var result = wikiPDFExporter.RemoveDuplicatedHeadersFromGlobalTOC(htmlContent);
+            var result = MarkdownConverter.RemoveDuplicatedHeadersFromGlobalTOC(htmlContent);
 
             Assert.Equal("", result);
         }
@@ -178,14 +184,14 @@ namespace AzureDevOps.WikiPDFExport
         public void RemoveDuplicatedHeadersFromGlobalTOC_ExceptNavTag()
         {
             // Arrange
-            var wikiPDFExporter = new WikiPDFExporter(new Options());
+            var MarkdownConverter = new MarkdownConverter(_dummyWiki, _noOptions, _voidLogger);
             var nav = "<nav>Some cool nav content</nav>\n";
             var htmlContent = nav
                 + "<h1>SomeHeader</h1>\n"
                 + "<h2>SomeOtherHeader</h2>\n";
 
             // Act
-            var result = wikiPDFExporter.RemoveDuplicatedHeadersFromGlobalTOC(htmlContent);
+            var result = MarkdownConverter.RemoveDuplicatedHeadersFromGlobalTOC(htmlContent);
 
             Assert.Equal(nav.Trim('\n'), result);
         }

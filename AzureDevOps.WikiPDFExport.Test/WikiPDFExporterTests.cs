@@ -1,12 +1,14 @@
 using azuredevops_export_wiki;
-using Xunit;
+using NSubstitute;
 using System.IO;
+using Xunit;
 
 namespace AzureDevOps.WikiPDFExport.Test
 {
     public class WikiPDFExporterTests
     {
         const string BASE_PATH = "../../../IntegrationTests-Data/";
+        ILoggerExtended _dummyLogger = Substitute.For<ILoggerExtended>();
 
         [Fact]
         public async void givenWikiPDFExporter_whenWikiHasPagesOutsideOrderFile_thenTheyAreIncludedAsWell()
@@ -19,7 +21,7 @@ namespace AzureDevOps.WikiPDFExport.Test
                 Debug = true,
                 Output = BASE_PATH + "Outputs/Dis-ordered",
             };
-            var export = new WikiPDFExporter(options);
+            var export = new WikiPDFExporter(options, _dummyLogger);
 
             bool ok = await export.Export();
 
@@ -44,7 +46,7 @@ namespace AzureDevOps.WikiPDFExport.Test
                 Output = BASE_PATH + "Outputs/Exclude1",
                 ExcludePaths = new[] { "Home" }
             };
-            var export = new WikiPDFExporter(options);
+            var export = new WikiPDFExporter(options, _dummyLogger);
 
             bool ok = await export.Export();
 
@@ -68,7 +70,7 @@ namespace AzureDevOps.WikiPDFExport.Test
                 Output = BASE_PATH + "Outputs/Exclude2",
                 ExcludePaths = new[] { "In-.+Section", "Start" }
             };
-            var export = new WikiPDFExporter(options);
+            var export = new WikiPDFExporter(options, _dummyLogger);
 
             bool ok = await export.Export();
 

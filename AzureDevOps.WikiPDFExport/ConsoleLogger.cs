@@ -3,7 +3,7 @@ using System;
 
 namespace azuredevops_export_wiki
 {
-    internal class ConsoleLogger : ILogger
+    internal class ConsoleLogger : ILoggerExtended
     {
         private Options _options;
 
@@ -37,6 +37,15 @@ namespace azuredevops_export_wiki
                 Console.WriteLine(indentString + $"ERR: {msg}");
                 Console.ForegroundColor = color;
             }
+        }
+
+        public void LogMeasure(string msg)
+        {
+            var color = Console.ForegroundColor;
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine();
+            Console.WriteLine(msg);
+            Console.ForegroundColor = color;
         }
     }
 }
