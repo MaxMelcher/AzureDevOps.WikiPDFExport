@@ -1,6 +1,6 @@
 using azuredevops_export_wiki;
 using Xunit;
-using AzureDevOps.WikiPDFExport.Test.Helpers;
+using System.IO;
 
 namespace AzureDevOps.WikiPDFExport.Test
 {
@@ -9,22 +9,75 @@ namespace AzureDevOps.WikiPDFExport.Test
         const string BASE_PATH = "../../../IntegrationTests-Data/";
 
         [Fact]
-        public async void givenWikiPDFExporter_whenGetProperties_thenNoneAreBlank()
+        public async void givenWikiPDFExporter_whenWikiHasPagesOutsideOrderFile_thenTheyAreIncludedAsWell()
         {
-            var options = new Options {
+            var options = new Options
+            {
                 Path = BASE_PATH + "Inputs/Dis-ordered",
-                BreakPage = true,
+                CSS = BASE_PATH + "Inputs/void.css",
                 DisableTelemetry = true,
                 Debug = true,
                 Output = BASE_PATH + "Outputs/Dis-ordered",
             };
             var export = new WikiPDFExporter(options);
 
-            await export.Export();
+            bool ok = await export.Export();
 
-            string expectedHtmlPath = BASE_PATH + "Expected/expected.Dis-ordered.html";
+            Assert.True(ok);
+            string expectedHtmlPath = BASE_PATH + "Expected/Dis-ordered.html";
             string outputHtmlPath = options.Output + ".html";
-            Assert.True(FileComparer.SameContent(expectedHtmlPath, outputHtmlPath));
+            Assert.True(File.Exists(outputHtmlPath));
+            var expected = File.ReadAllText(expectedHtmlPath);
+            var actual = File.ReadAllText(outputHtmlPath);
+            Assert.Equal(expected, actual);
+        }
+
+        [Fact]
+        public async void givenWikiPDFExporter_whenAPatternIsExcluded_thenTheFilesAreNotIncluded()
+        {
+            var options = new Options
+            {
+                Path = BASE_PATH + "Inputs/Dis-ordered",
+                CSS = BASE_PATH + "Inputs/void.css",
+                DisableTelemetry = true,
+                Debug = true,
+                Output = BASE_PATH + "Outputs/Exclude1",
+                ExcludePaths = new[] { "Home" }
+            };
+            var export = new WikiPDFExporter(options);
+
+            bool ok = await export.Export();
+
+            Assert.True(ok);
+            string expectedHtmlPath = BASE_PATH + "Expected/Exclude1.html";
+            string outputHtmlPath = options.Output + ".html";
+            var expected = File.ReadAllText(expectedHtmlPath);
+            var actual = File.ReadAllText(outputHtmlPath);
+            Assert.Equal(expected, actual);
+        }
+
+        [Fact]
+        public async void givenWikiPDFExporter_whenTwoPatternAreExcluded_thenTheFilesAreNotIncluded()
+        {
+            var options = new Options
+            {
+                Path = BASE_PATH + "Inputs/Dis-ordered",
+                CSS = BASE_PATH + "Inputs/void.css",
+                DisableTelemetry = true,
+                Debug = true,
+                Output = BASE_PATH + "Outputs/Exclude2",
+                ExcludePaths = new[] { "In-.+Section", "Start" }
+            };
+            var export = new WikiPDFExporter(options);
+
+            bool ok = await export.Export();
+
+            Assert.True(ok);
+            string expectedHtmlPath = BASE_PATH + "Expected/Exclude2.html";
+            string outputHtmlPath = options.Output + ".html";
+            var expected = File.ReadAllText(expectedHtmlPath);
+            var actual = File.ReadAllText(outputHtmlPath);
+            Assert.Equal(expected, actual);
         }
     }
 }

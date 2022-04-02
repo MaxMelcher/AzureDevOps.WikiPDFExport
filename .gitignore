@@ -40,3 +40,4 @@ AzureDevOps.WikiPDFExport.Test/Tests/example-footer.html
 AzureDevOps.WikiPDFExport.Test/Tests/example-header.html
 output/*
 /AzureDevOps.WikiPDFExport/Properties/launchSettings.json
+AzureDevOps.WikiPDFExport.Test/IntegrationTests-Data/Outputs

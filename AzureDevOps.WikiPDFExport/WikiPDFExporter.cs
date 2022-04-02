@@ -104,8 +104,9 @@ namespace azuredevops_export_wiki
             };
         }
 
-        public async Task Export()
+        public async Task<bool> Export()
         {
+            bool succeeded = true;
             try
             {
                 using (var operation = _telemetryClient.StartOperation<RequestTelemetry>("export"))
@@ -129,7 +130,7 @@ namespace azuredevops_export_wiki
                         if (!File.Exists(filePath))
                         {
                             Log($"Single-File [-s] {filePath} specified not found" + filePath, LogLevel.Error);
-                            return;
+                            return false;
                         }
 
                         var relativePath = filePath.Substring(directory.FullName.Length);
@@ -145,7 +146,7 @@ namespace azuredevops_export_wiki
                     }
                     else
                     {
-                        files = ReadOrderFiles(_wiki.exportPath()); // root level
+                        files = ReadOrderFiles(_wiki.exportPath(), _options.ExcludePaths); // root level
                     }
                     Log($"Found {files.Count} total pages to process");
 
@@ -283,11 +284,14 @@ namespace azuredevops_export_wiki
             }
             catch (Exception ex)
             {
+                succeeded = false;
                 Log($"Something bad happend.\n{ex}", LogLevel.Error);
                 _telemetryClient.TrackException(ex);
                 _telemetryClient.Flush();
                 Thread.Sleep(TimeSpan.FromSeconds(5));
             }
+
+            return succeeded;
         }
 
         private async Task<string> ConvertHTMLToPDFAsync(string html)
@@ -833,14 +837,17 @@ namespace azuredevops_export_wiki
 
         string BasePath = string.Empty;
 
-        private List<MarkdownFile> ReadOrderFiles(string path)
+        private List<MarkdownFile> ReadOrderFiles(string path, IEnumerable<string> excludePaths)
         {
             var directory = new DirectoryInfo(Path.GetFullPath(path));
             BasePath = directory.FullName;
-            return ReadPagesInOrderImpl(path, 0);
+            var excludeRegexes = (excludePaths ?? new List<string>())
+                .Select(exclude => new Regex($".*{exclude}.*", RegexOptions.IgnoreCase))
+                .ToList();
+            return ReadPagesInOrderImpl(path, 0, excludeRegexes);
         }
 
-        private List<MarkdownFile> ReadPagesInOrderImpl(string path, int level)
+        private List<MarkdownFile> ReadPagesInOrderImpl(string path, int level, IList<Regex> excludeRegexes)
         {
             Debug.Print($"{level} scanning {path}");
 
@@ -857,24 +864,28 @@ namespace azuredevops_export_wiki
 
             foreach (var page in pagesInOrder)
             {
-                var relativePath = directory.FullName.Length > BasePath.Length ?
-                        page.Directory.FullName.Substring(BasePath.Length) :
-                        $"{Path.DirectorySeparatorChar}";
+                var relativePath = page.Directory.FullName.Substring(BasePath.Length);
 
                 MarkdownFile mf = new MarkdownFile();
                 mf.AbsolutePath = page.FullName;
                 mf.RelativePath = relativePath;
                 mf.Level = level;
-                result.Add(mf);
+                if (mf.PartialMatches(excludeRegexes))
+                {
+                    { Log($"Skipping page: {mf.AbsolutePath}", LogLevel.Information, 2); }
+                } else
+                {
+                    result.Add(mf);
 
-                { Log($"Adding page: {mf.AbsolutePath}", LogLevel.Information, 2); }
+                    { Log($"Adding page: {mf.AbsolutePath}", LogLevel.Information, 2); }
+                }
             }
 
             //recursion
             result.AddRange(
                 directory.GetDirectories("*", SearchOption.TopDirectoryOnly)
                     .SkipWhile(d => d.Name.StartsWith('.'))
-                    .SelectMany(d => ReadPagesInOrderImpl(d.FullName, level + 1)));
+                    .SelectMany(d => ReadPagesInOrderImpl(d.FullName, level + 1, excludeRegexes)));
 
             return result;
         }
@@ -985,6 +996,14 @@ namespace azuredevops_export_wiki
         public override string ToString()
         {
             return $"[{Level}] {AbsolutePath}";
+        }
+
+        internal bool PartialMatches(IList<Regex> excludeRegexes)
+        {
+            var normalizedPath = RelativePath.Replace('\\', '/');
+            return excludeRegexes.Any(
+                regex => regex.Match(normalizedPath).Success
+                );
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using CommandLine;
 
 namespace azuredevops_export_wiki
@@ -7,6 +8,7 @@ namespace azuredevops_export_wiki
     {
         static async Task Main(string[] args)
         {
+            // TODO bubble up result
             await Parser.Default.ParseArguments<Options>(args)
                 .MapResult(
                     ExecuteWikiPDFExporter,
@@ -16,9 +18,9 @@ namespace azuredevops_export_wiki
         static async Task<int> ExecuteWikiPDFExporter(Options options)
         {
             WikiPDFExporter exporter = new WikiPDFExporter(options);
-            await exporter.Export();
+            bool succeeded = await exporter.Export();
 
-            return 0;
+            return succeeded ? 0 : 1;
         }
     }
 
@@ -86,6 +88,9 @@ namespace azuredevops_export_wiki
 
         [Option("open", Required = false, HelpText = "Opens the PDF after conversion")]
         public bool Open { get; set; }
+
+        [Option("exclude-paths", Required = false, HelpText = "Skip pages partially matching the pattern.")]
+        public IEnumerable<string> ExcludePaths { get; set; }
 
         [Option("filter", Required = false, HelpText = "Only export if page has a tag with the specified filter. E.g. tags:service, category:azure would only export pages with both frontmatter tags present")]
         public string Filter { get; set; }
