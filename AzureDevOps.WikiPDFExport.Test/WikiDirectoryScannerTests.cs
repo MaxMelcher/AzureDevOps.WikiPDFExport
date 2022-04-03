@@ -1,6 +1,5 @@
 ﻿using azuredevops_export_wiki;
 using NSubstitute;
-using System.IO;
 using Xunit;
 
 namespace AzureDevOps.WikiPDFExport.Test

@@ -46,7 +46,7 @@ namespace azuredevops_export_wiki
                 .SkipWhile(d => d.Name.StartsWith('.'))
                 .ToList();
 
-            pages.Sort((a,b) => a.Name.CompareTo(b.Name));
+            pages.Sort((a, b) => a.Name.CompareTo(b.Name));
 
             Log($"Reading .order file in directory {path}");
             string orderFile = Path.Combine(directory.FullName, ".order");
@@ -74,7 +74,7 @@ namespace azuredevops_export_wiki
                 }
 
                 var matchingDir = subDirs.FirstOrDefault(
-                    d => string.Compare(d.Name, 
+                    d => string.Compare(d.Name,
                             Path.GetFileNameWithoutExtension(page.Name), true) == 0);
                 if (matchingDir is not null)
                 {
