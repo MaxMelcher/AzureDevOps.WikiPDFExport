@@ -12,7 +12,7 @@ Once you have cloned the wiki, you must download the Azure DevOps WikiPDFExport 
 **[azuredevops-export-wiki.exe](https://github.com/MaxMelcher/AzureDevOps.WikiPDFExport/releases)** (~30MB)
 
 You can drop it right into the cloned folder and execute it there. 
-Launched without parameters, the tool will detect all wiki files next to it and convert it to a PDF called export.pdf right next to it. Similar to this [pdf](https://github.com/MaxMelcher/AzureDevOps.WikiPDFExport/blob/main/AzureDevOps.WikiPDFExport/export.pdf).
+Launched without parameters, the tool will detect all wiki files next to it and convert it to a PDF called export.pdf right next to it. Similar to this [pdf](./doc/export.pdf).
 
 If you need more control over the output, please see the Configuration Options below or by launching the tool with --help parameter.
 
@@ -25,7 +25,7 @@ The tool currently supports the following:
 * If you link to other wiki pages, the link in the PDF will work, too. 
 * Everything self-contained. Download the .exe file, run it, done.
 * It is fast. A PDF with 160 pages is created in less than a second.
-* Tool can be used as part of a build, see [BuildTask](AzureDevOps.WikiPDFExport/Build-Task.md)
+* Tool can be used as part of a build, see [BuildTask](doc/Build-Task.md)
 * Supports emoticons :) ⚠ ℹ
 * Mermaid supported 
 * Workitems can be referenced and will be included in the pdf as link with the current status, e.g. #7.
@@ -49,13 +49,15 @@ For every wiki page a new page in the PDF will be created
 ### --chrome-path
 Path of the chrome or chromium executable. It'll be used if mermaid diagrams support is turned on (-m/--mermaid). If not specified, a headless version will be downloaded.
 ### --css 
-Path to the stylesheet to overwrite the look of certain components in the PDF. See [styles.css](styles.css) for examples. To get the html file, use the [--debug flag](#-d----debug) to inspect and style it.
+Path to the stylesheet to overwrite the look of certain components in the PDF. See [styles.css](./doc/styles.css) for examples. To get the html file, use the [--debug flag](#-d----debug) to inspect and style it.
 ### -c / --highlight-code 
 Highlight code blocks using highligh.js
 ### -d / --debug
 Debug mode. Logs tons of stuff and even exports the intermediate html file
 ### --disableTelemetry
 Disables the telemetry tracking, see [Telemetry](#telemetry)
+### --exclude-paths
+Skip pages whose path matches the [regular expression](https://docs.microsoft.com/en-us/dotnet/standard/base-types/regular-expression-language-quick-reference) patterns.
 ### --filter
 Filters the pages depending on the page [yaml tags](https://docs.microsoft.com/en-us/azure/devops/project/wiki/wiki-markdown-guidance?view=azure-devops#yaml-tags).
 ### --footer-template, --header-template,
@@ -68,10 +70,13 @@ Headers and footers can be added to the document by the --header-* and
    * [totalPages]       Replaced by the current date in system local format
 
 ### --footer-template-path, --header-template-path
-Provide a path to html files that will be added as header and footer. See [example-footer.html](example-footer.html), [example-header.html](example-header.html).
+Provide a path to html files that will be added as header and footer. See [example-footer.html](./doc/example-footer.html), [example-header.html](./doc/example-header.html).
 
 ### --GlobalTOC
 Title for a global table of content for all markdown files. When not specified each markdown creates its own toc if defined
+
+### --include-unlisted-pages
+By default only pages listed in `.order` files are considered. Setting this option any Markdown file (`.md`) found will be included as-well.
 
 ### --no-frontmatter
 If you want to remove the [frontmatter / YAML tags](https://docs.microsoft.com/en-us/azure/devops/project/wiki/wiki-markdown-guidance?view=azure-devops#yaml-tags) from the PDF. 
