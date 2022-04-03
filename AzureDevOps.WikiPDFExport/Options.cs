@@ -71,6 +71,9 @@ namespace azuredevops_export_wiki
         [Option("exclude-paths", Required = false, HelpText = "Skip pages partially matching the pattern.")]
         public IEnumerable<string> ExcludePaths { get; set; }
 
+        [Option("include-unlisted-pages", Required = false, HelpText = "By default only pages listed in .order files are considered. Setting this option any Markdown file found will be included as-well")]
+        public bool IncludeUnlistedPages { get; set; }
+
         [Option("filter", Required = false, HelpText = "Only export if page has a tag with the specified filter. E.g. tags:service, category:azure would only export pages with both frontmatter tags present")]
         public string Filter { get; set; }
 

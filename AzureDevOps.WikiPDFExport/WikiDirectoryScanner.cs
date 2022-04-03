@@ -24,7 +24,7 @@ namespace azuredevops_export_wiki
         public IList<MarkdownFile> Scan()
         {
             var directory = new DirectoryInfo(Path.GetFullPath(wikiPath));
-            BasePath = directory.FullName; // to copmute relative path
+            BasePath = directory.FullName; // to compute relative path
             var excludeRegexes = (options.ExcludePaths ?? new List<string>())
                 .Select(exclude => new Regex($".*{exclude}.*", RegexOptions.IgnoreCase))
                 .ToList();
@@ -55,8 +55,6 @@ namespace azuredevops_export_wiki
             foreach (var page in pagesInOrder)
             {
                 var pageRelativePath = page.FullName[BasePath.Length..].Replace('\\', '/');
-                //var dirRelativePath = directory.FullName[BasePath.Length..].Replace('\\', '/');
-                //if (string.IsNullOrEmpty(dirRelativePath)) dirRelativePath = "/";
 
                 var mf = new MarkdownFile();
                 mf.AbsolutePath = page.FullName;
