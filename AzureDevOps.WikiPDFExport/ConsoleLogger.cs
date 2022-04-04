@@ -1,17 +1,34 @@
 ﻿using Microsoft.Extensions.Logging;
 using System;
+using System.Diagnostics;
 
 namespace azuredevops_export_wiki
 {
     internal class ConsoleLogger : ILoggerExtended
     {
-        private Options _options;
+        private readonly Options _options;
+        private readonly Stopwatch stopwatch;
 
-        internal ConsoleLogger(Options options) { _options = options; }
+        internal ConsoleLogger(Options options, bool measureTime = true)//TODO what should be the default value?
+        {
+            _options = options;
+            if (measureTime)
+            {
+                stopwatch = Stopwatch.StartNew();
+            }
+        }
 
         public void Log(string msg, LogLevel logLevel = LogLevel.Information, int indent = 0)
         {
+            string prefix = String.Empty;
+            if (stopwatch is not null)
+            {
+                stopwatch.Stop();
+                prefix = $"{stopwatch.Elapsed:hh\\:mm\\:ss\\.ff} ";
+                stopwatch.Start();
+            }
             var indentString = new string(' ', indent * 2);
+            indentString = prefix + indentString;
             if (_options.Debug && logLevel == LogLevel.Debug)
             {
                 Console.WriteLine(indentString + msg);
