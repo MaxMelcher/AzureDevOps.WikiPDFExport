@@ -83,8 +83,11 @@ If you want to remove the [frontmatter / YAML tags](https://docs.microsoft.com/e
 
 ### --disableTelemetry
 Disables the telemetry tracking, see [Telemetry](#telemetry)
+### --chrome-timeout
+Timeout for Chrome operations in seconds (default 30 seconds).
+
 ### --open
-Opens the PFD file after conversion. Great for development, not great in a build task.
+Opens the PDF file after conversion. Great for development, not great in a build task.
 ### -o / --output
 The path to the export file including the filename, e.g. c:\export.pdf
 ### --organization 
