@@ -29,13 +29,8 @@ namespace azuredevops_export_wiki
 
             var relativePath = filePath.Substring(directory.FullName.Length);
 
-            return new List<MarkdownFile>()
-                        {
-                            new MarkdownFile() {
-                                AbsolutePath = filePath,
-                                RelativePath = relativePath,
-                                Level = 0 // root level
-                            }
+            return new List<MarkdownFile>() {
+                            new MarkdownFile(new FileInfo(filePath), relativePath, 0, "/")
                         };
         }
 

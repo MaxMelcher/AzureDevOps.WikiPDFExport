@@ -46,11 +46,13 @@ namespace azuredevops_export_wiki
                         //todo add log entry that we skipped an empty line
                     }
 
-                    MarkdownFile mf = new MarkdownFile();
-                    mf.AbsolutePath = Path.Combine(orderFile.Directory.FullName, $"{order}.md");
-                    mf.RelativePath = $"{relativePath}";
-                    mf.FileRelativePath = mf.AbsolutePath[BasePath.Length..].Replace('\\', '/');
-                    mf.Level = level;
+                    string absolutePath = Path.Combine(orderFile.Directory.FullName, $"{order}.md");
+                    MarkdownFile mf = new MarkdownFile(
+                        new FileInfo(absolutePath),
+                        $"{relativePath}",
+                        level,
+                        absolutePath[BasePath.Length..].Replace('\\', '/')
+                        );
                     if (mf.PartialMatches(excludeRegexes))
                     {
                         Log($"Skipping page: {mf.AbsolutePath}", LogLevel.Information, 2);

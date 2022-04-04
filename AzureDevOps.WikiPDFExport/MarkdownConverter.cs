@@ -64,44 +64,26 @@ namespace azuredevops_export_wiki
                 pipelineBuilder = pipelineBuilder.UseMermaidContainers();
             }
 
-            for (var i = 0; i < files.Count; i++)
-            {
-                var mf = files[i];
-                var file = new FileInfo(files[i].AbsolutePath);
-
-                Log($"{file.Name}", LogLevel.Information, 1);
-                var htmlfile = file.FullName.Replace(".md", ".html");
-
-                if (!File.Exists(file.FullName))
-                {
-                    Log($"File {file.FullName} specified in the order file was not found and will be skipped!", LogLevel.Error, 1);
-                    continue;
-                }
-
-                var markdownContent = File.ReadAllText(file.FullName);
-                files[i].Content = markdownContent;
-            }
-
             if (!string.IsNullOrEmpty(_options.GlobalTOC))
             {
-                var firstMDFileInfo = new FileInfo(files[0].AbsolutePath);
+                var firstMDFileInfo = files[0].FileInfo;
                 var directoryName = firstMDFileInfo.Directory.Name;
                 var tocName = _options.GlobalTOC == "" ? directoryName : _options.GlobalTOC;
                 var relativePath = "/" + tocName + ".md";
-                var tocMDFilePath = new FileInfo(files[0].AbsolutePath).DirectoryName + relativePath;
+                var tocMDFilePath = firstMDFileInfo.DirectoryName + relativePath;
 
                 var contents = files.Select(x => x.Content).ToList();
                 var tocContent = CreateGlobalTableOfContent(contents);
                 var tocString = string.Join("\n", tocContent);
 
-                var tocMarkdownFile = new MarkdownFile { AbsolutePath = tocMDFilePath, Level = 0, RelativePath = relativePath, Content = tocString };
+                var tocMarkdownFile = new MarkdownFile(new FileInfo(tocMDFilePath), relativePath, 0, relativePath, tocString);
                 files.Insert(0, tocMarkdownFile);
             }
 
             for (var i = 0; i < files.Count; i++)
             {
                 var mf = files[i];
-                var file = new FileInfo(files[i].AbsolutePath);
+                var file = mf.FileInfo;
 
                 Log($"{file.Name}", LogLevel.Information, 1);
 
@@ -160,7 +142,7 @@ namespace azuredevops_export_wiki
 
 
                 //adjust the links
-                CorrectLinksAndImages(document, file, mf);
+                CorrectLinksAndImages(document, mf);
 
                 string html = null;
                 var builder = new StringBuilder();
@@ -179,6 +161,7 @@ namespace azuredevops_export_wiki
                     Log($"Removed duplicated headers from toc html", LogLevel.Information, 1);
                 }
 
+                //TODO how is this different from data in MarkdownFile?
                 //add html anchor
                 var anchorPath = file.FullName.Substring(_wiki.exportPath().Length);
                 anchorPath = anchorPath.Replace("\\", "");
@@ -259,7 +242,7 @@ namespace azuredevops_export_wiki
             return result;
         }
 
-        internal List<string> CreateGlobalTableOfContent(List<string> contents)
+        internal static List<string> CreateGlobalTableOfContent(List<string> contents)
         {
             var headers = new List<string>();
             var filteredContentList = RemoveCodeSections(contents);
@@ -278,7 +261,7 @@ namespace azuredevops_export_wiki
             return tocContent;
         }
 
-        private List<string> RemoveCodeSections(List<string> contents)
+        private static List<string> RemoveCodeSections(List<string> contents)
         {
             var contentWithoutCode = new List<string>();
             for (var i = 0; i < contents.Count; i++)
@@ -361,9 +344,10 @@ namespace azuredevops_export_wiki
             return true;
         }
 
-        public void CorrectLinksAndImages(MarkdownObject document, FileInfo file, MarkdownFile mf)
+        public void CorrectLinksAndImages(MarkdownObject document, MarkdownFile mf)
         {
             Log("Correcting Links and Images", LogLevel.Information, 2);
+            FileInfo file = mf.FileInfo;
             // walk the document node tree and replace relative image links
             // and relative links to markdown pages
             foreach (var link in document.Descendants().OfType<LinkInline>())
@@ -455,7 +439,7 @@ namespace azuredevops_export_wiki
                         }
                     }
                 }
-                CorrectLinksAndImages(link, file, mf);
+                CorrectLinksAndImages(link, mf);
             }
         }
 

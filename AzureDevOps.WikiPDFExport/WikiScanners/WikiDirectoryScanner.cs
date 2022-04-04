@@ -42,11 +42,7 @@ namespace azuredevops_export_wiki
             {
                 var pageRelativePath = page.FullName[BasePath.Length..].Replace('\\', '/');
 
-                var mf = new MarkdownFile();
-                mf.AbsolutePath = page.FullName;
-                mf.RelativePath = "/";
-                mf.FileRelativePath = pageRelativePath;
-                mf.Level = level;
+                var mf = new MarkdownFile(page, "/", level, pageRelativePath);
                 if (mf.PartialMatches(excludeRegexes))
                 {
                     Log($"Skipping page: {mf.AbsolutePath}", LogLevel.Information, 2);
