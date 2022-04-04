@@ -62,6 +62,9 @@ namespace azuredevops_export_wiki
         [Option("chrome-path", Required = false, HelpText = "Path of the chrome or chromium executable. It'll be used if mermaid diagrams support is turned on (-m/--mermaid). If not specified, a headless version will be downloaded.")]
         public string ChromeExecutablePath { get; set; }
 
+        [Option("chrome-timeout", Required = false, HelpText = "Timeout for Chrome operations in seconds (default 30 seconds).", Default = 30)]
+        public int ChromeTimeout { get; set; }
+
         [Option("disableTelemetry", Required = false, HelpText = "Disable telemetry - page count and runtime are collected to detect performance degradation")]
         public bool DisableTelemetry { get; set; }
 

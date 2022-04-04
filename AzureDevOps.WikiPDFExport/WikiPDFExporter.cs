@@ -224,15 +224,29 @@ namespace azuredevops_export_wiki
                     //build the html for rendering
                     html = $"{htmlStart}{headStart}{string.Concat(header)}{headEnd}{html}<footer>{string.Concat(footer)}</footer>{htmlEnd}";
 
+#if HTML_IN_MEMORY
                     if (_options.Debug)
                     {
                         var htmlPath = string.Concat(_options.Output, ".html");
                         Log($"Writing converted html to path: {htmlPath}");
                         File.WriteAllText(htmlPath, html);
                     }
-
                     var generator = new PDFGenerator(_options, _logger);
                     var path = await generator.ConvertHTMLToPDFAsync(html);
+#else
+                    using var tempHtmlFile = new SelfDeletingTemporaryFile(html.Length, "html");
+                    File.WriteAllText(tempHtmlFile.FilePath, html);
+                    html = string.Empty;
+                    var generator = new PDFGenerator(_options, _logger);
+                    var path = await generator.ConvertHTMLToPDFAsync(tempHtmlFile);
+                    if (_options.Debug)
+                    {
+                        var htmlPath = string.Concat(_options.Output, ".html");
+                        Log($"Writing converted html to path: {htmlPath}");
+                        tempHtmlFile.KeepAs(htmlPath);
+                        Log($"HTML saved.");
+                    }
+#endif
 
                     _logger.LogMeasure($"Export done in {timer.Elapsed}");
 

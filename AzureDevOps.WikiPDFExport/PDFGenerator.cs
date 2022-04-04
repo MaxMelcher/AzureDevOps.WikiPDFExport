@@ -17,7 +17,11 @@ namespace azuredevops_export_wiki
             _logger = logger;
         }
 
+#if HTML_IN_MEMORY
         internal async Task<string> ConvertHTMLToPDFAsync(string html)
+#else
+        internal async Task<string> ConvertHTMLToPDFAsync(SelfDeletingTemporaryFile tempHtmlFile)
+#endif
         {
             _logger.Log("Converting HTML to PDF");
             var output = _options.Output;
@@ -40,14 +44,14 @@ namespace azuredevops_export_wiki
                 Headless = true, //set to false for easier debugging
                 Args = new[] { "--no-sandbox", "--single-process" }, //required to launch in linux
                 Devtools = false,
-                // TODO from options
-                Timeout = (int)System.TimeSpan.FromMinutes(5).TotalMilliseconds
+                Timeout = _options.ChromeTimeout * 1000
             };
 
             // TODO add logging to Puppeteer
             using (var browser = await Puppeteer.LaunchAsync(launchOptions))
             {
                 var page = await browser.NewPageAsync();
+#if HTML_IN_MEMORY
                 _logger.Log($"Sending {html.Length:N0} bytes to Chrome...");
                 if (html.Length > MAX_PAGE_SIZE)
                 {
@@ -55,6 +59,16 @@ namespace azuredevops_export_wiki
                 }
                 await page.SetContentAsync(html);
                 _logger.Log($"HTML page filled.");
+#else
+                var f = new FileInfo(tempHtmlFile.FilePath);
+                _logger.Log($"Asking Chrome to open {f.Length:N0} bytes page at {tempHtmlFile.FilePath}...");
+                if (f.Length > MAX_PAGE_SIZE)
+                {
+                    _logger.Log($"This may take a few minutes, given the file size.");
+                }
+                await page.GoToAsync($"file://{tempHtmlFile.FilePath}", launchOptions.Timeout);
+                _logger.Log($"HTML file loaded.");
+#endif
 
                 //todo load header/footer template from file
                 var pdfoptions = new PdfOptions();
