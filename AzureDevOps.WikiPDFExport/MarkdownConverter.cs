@@ -237,7 +237,7 @@ namespace azuredevops_export_wiki
 
                 if (_options.BreakPage)
                 {
-                    //if not one the last page
+                    // add break at the end of each page except the last one
                     if (i + 1 < files.Count)
                     {
                         Log("----------------------", LogLevel.Information);
@@ -252,7 +252,7 @@ namespace azuredevops_export_wiki
                     Log($"html:\n{html}", LogLevel.Debug, 1);
                 }
                 sb.Append(html);
-            }
+            }//for
 
             var result = sb.ToString();
 

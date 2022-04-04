@@ -113,7 +113,7 @@ namespace azuredevops_export_wiki
                         : (_options.IncludeUnlistedPages
                             ? new WikiDirectoryScanner(_wiki.exportPath(), _options, _logger)
                             : new WikiOptionFilesScanner(_wiki.exportPath(), _options, _logger));
-                    
+
                     IList<MarkdownFile> files = scanner.Scan();
 
                     Log($"Found {files.Count} total pages to process");
@@ -237,17 +237,14 @@ namespace azuredevops_export_wiki
                     _logger.LogMeasure($"Export done in {timer.Elapsed}");
 
                     _telemetryClient.StopOperation(operation);
-                    _telemetryClient.Flush();
 
                     if (_options.Open)
                     {
                         Process fileopener = new Process();
                         fileopener.StartInfo.FileName = "explorer";
-                        fileopener.StartInfo.Arguments = "\"" + path + "\"";
+                        fileopener.StartInfo.Arguments = "\"" + Path.GetFullPath(path) + "\"";
                         fileopener.Start();
                     }
-
-                    Thread.Sleep(TimeSpan.FromSeconds(5));
                 }
             }
             catch (Exception ex)
@@ -255,6 +252,9 @@ namespace azuredevops_export_wiki
                 succeeded = false;
                 Log($"Something bad happend.\n{ex}", LogLevel.Error);
                 _telemetryClient.TrackException(ex);
+            }
+            finally
+            {
                 _telemetryClient.Flush();
                 Thread.Sleep(TimeSpan.FromSeconds(5));
             }

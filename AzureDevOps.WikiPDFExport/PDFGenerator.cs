@@ -110,8 +110,10 @@ namespace azuredevops_export_wiki
                 }
 
 
+                _logger.Log($"Generating PDF document...");
                 await page.PdfAsync(output, pdfoptions);
                 await browser.CloseAsync();
+                _logger.Log($"PDF document is ready.");
             }
 
             _logger.Log($"PDF created at: {output}");

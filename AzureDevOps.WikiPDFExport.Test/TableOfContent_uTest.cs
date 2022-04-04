@@ -22,7 +22,7 @@ namespace AzureDevOps.WikiPDFExport.Test
                 + "SomeText";
 
             // Act
-            var result = MarkdownConverter.CreateGlobalTableOfContent(new List<string> { mdContent1 });
+            var result = azuredevops_export_wiki.MarkdownConverter.CreateGlobalTableOfContent(new List<string> { mdContent1 });
 
             Assert.Equal("[TOC]", result[0]);
             Assert.Equal("# SomeHeader", result[1]);
@@ -37,7 +37,7 @@ namespace AzureDevOps.WikiPDFExport.Test
                 + "No header here";
 
             // Act
-            var result = MarkdownConverter.CreateGlobalTableOfContent(new List<string> { mdContent1 });
+            var result = azuredevops_export_wiki.MarkdownConverter.CreateGlobalTableOfContent(new List<string> { mdContent1 });
 
             Assert.False(result.Any());
         }
@@ -54,7 +54,7 @@ namespace AzureDevOps.WikiPDFExport.Test
                 []() #Some very interesting text in wrong header format #";
 
             // Act
-            var result = MarkdownConverter.CreateGlobalTableOfContent(new List<string> { mdContent1, mdContent2 });
+            var result = azuredevops_export_wiki.MarkdownConverter.CreateGlobalTableOfContent(new List<string> { mdContent1, mdContent2 });
 
             Assert.Equal("[TOC]", result[0]);
             Assert.Equal("# SomeHeader", result[1]);
@@ -72,7 +72,7 @@ namespace AzureDevOps.WikiPDFExport.Test
                 ```";
 
             // Act
-            var result = MarkdownConverter.CreateGlobalTableOfContent(new List<string> { mdContent1 });
+            var result = azuredevops_export_wiki.MarkdownConverter.CreateGlobalTableOfContent(new List<string> { mdContent1 });
 
             Assert.False(result.Any());
         }
@@ -88,7 +88,7 @@ namespace AzureDevOps.WikiPDFExport.Test
                 ~~~";
 
             // Act
-            var result = MarkdownConverter.CreateGlobalTableOfContent(new List<string> { mdContent1 });
+            var result = azuredevops_export_wiki.MarkdownConverter.CreateGlobalTableOfContent(new List<string> { mdContent1 });
 
             Assert.False(result.Any());
         }
@@ -108,7 +108,7 @@ namespace AzureDevOps.WikiPDFExport.Test
                 # A valid header";
 
             // Act
-            var result = MarkdownConverter.CreateGlobalTableOfContent(new List<string> { mdContent1 });
+            var result = azuredevops_export_wiki.MarkdownConverter.CreateGlobalTableOfContent(new List<string> { mdContent1 });
 
             Assert.Equal(2, result.Count);
             Assert.Equal("[TOC]", result[0]);
@@ -127,7 +127,7 @@ namespace AzureDevOps.WikiPDFExport.Test
                 ";
 
             // Act
-            var result = MarkdownConverter.CreateGlobalTableOfContent(new List<string> { mdContent1 });
+            var result = azuredevops_export_wiki.MarkdownConverter.CreateGlobalTableOfContent(new List<string> { mdContent1 });
 
             Assert.Equal(2, result.Count);
             Assert.Equal("[TOC]", result[0]);
@@ -145,7 +145,7 @@ namespace AzureDevOps.WikiPDFExport.Test
                 ";
 
             // Act
-            var result = MarkdownConverter.CreateGlobalTableOfContent(new List<string> { mdContent1 });
+            var result = azuredevops_export_wiki.MarkdownConverter.CreateGlobalTableOfContent(new List<string> { mdContent1 });
 
             Assert.Equal(2, result.Count);
             Assert.Equal("[TOC]", result[0]);
