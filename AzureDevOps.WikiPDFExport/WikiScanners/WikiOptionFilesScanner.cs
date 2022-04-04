@@ -6,28 +6,14 @@ using System.Text.RegularExpressions;
 
 namespace azuredevops_export_wiki
 {
-    internal class WikiOptionFilesScanner : IWikiDirectoryScanner, ILogger
+    internal class WikiOptionFilesScanner : WikiScannerBase, IWikiDirectoryScanner, ILogger
     {
-        private readonly string wikiPath;
-        private readonly Options options;
-        private readonly ILogger logger;
-        string BasePath = string.Empty;
 
         public WikiOptionFilesScanner(string wikiPath, Options options, ILogger logger)
-        {
-            this.wikiPath = wikiPath;
-            this.options = options;
-            this.logger = logger;
-        }
+            : base(wikiPath, options, logger) { }
 
         public IList<MarkdownFile> Scan()
         {
-            var directory = new DirectoryInfo(Path.GetFullPath(wikiPath));
-            BasePath = directory.FullName; // to compute relative path
-            // TODO this is duplicate, move to... base class?
-            var excludeRegexes = (options.ExcludePaths ?? new List<string>())
-                .Select(exclude => new Regex($".*{exclude}.*", RegexOptions.IgnoreCase))
-                .ToList();
             return ReadOrderFiles(wikiPath, 0, excludeRegexes); // root level
         }
 
