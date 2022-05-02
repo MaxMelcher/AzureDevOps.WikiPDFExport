@@ -25,11 +25,10 @@ namespace azuredevops_export_wiki
         {
             if (!exportBase.Exists)
             {
-                throw new WikiPdfExportException("The wiki export location does not exist");
+                throw new WikiPdfExportException($"The wiki export location {exportBase} does not exist");
             }
             this.exportDir = exportBase;
             this.baseDir = FindNearestParentAttachmentsDirectory(exportBase);
-            this.attachments = baseDir.GetDirectories("./.attachments")[0];
         }
 
         /// <summary>
@@ -53,7 +52,9 @@ namespace azuredevops_export_wiki
             {
                 return FindNearestParentAttachmentsDirectory(exportBase.Parent);
             }
-            throw new WikiPdfExportException("Failed to locate the base of the Wiki using attachment detection");
+
+            //return the base path and hope for the best
+            return exportBase;
         }
 
         public DirectoryInfo exportDir { get; }
@@ -66,6 +67,5 @@ namespace azuredevops_export_wiki
         {
             return baseDir.FullName;
         }
-        public DirectoryInfo attachments { get; }
     }
 }

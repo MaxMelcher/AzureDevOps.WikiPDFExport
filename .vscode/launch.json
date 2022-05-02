@@ -13,9 +13,9 @@
             "args": [
                 "--verbose",
                 //"-p..\\AzureDevOps.WikiPDFExport.Test\\test-data\\Inputs\\DeepLink",
-                //"-p..\\AzureDevOps.WikiPDFExport.Test\\Tests\\AzureDevOps.WikiPDFExport.wiki",
+                "-p..\\AzureDevOps.WikiPDFExport.Test\\test-data\\Inputs\\1k",
                 //                 "--attachments-path=..\\AzureDevOps.WikiPDFExport.Test\\Tests\\AzureDevOps.WikiPDFExport.wiki\\.attachments\\",
-                                 "-p..\\AzureDevOps.WikiPDFExport.Test\\Tests\\Code",
+                //                 "-p..\\AzureDevOps.WikiPDFExport.Test\\test-data\\Inputs\\Code",
                 //                 "-p..\\AzureDevOps.WikiPDFExport.Test\\Tests\\Azure-Platform-Design",
                                  //"-p..\\AzureDevOps.WikiPDFExport.Test\\test-data\\Inputs\\Test-Emoticon",
                                 // "-s..\\AzureDevOps.WikiPDFExport.Test\\test-data\\Inputs\\Test-Emoticon\\emoji.md",

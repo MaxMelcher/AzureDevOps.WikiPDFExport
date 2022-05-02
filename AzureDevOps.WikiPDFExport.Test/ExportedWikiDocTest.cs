@@ -62,7 +62,6 @@ namespace AzureDevOps.WikiPDFExport.Test
             var export = new ExportedWikiDoc(codeWiki);
             AssertExistingValidDirectory(export.exportDir);
             AssertExistingValidDirectory(export.baseDir);
-            AssertExistingValidDirectory(export.attachments);
         }
 
         private static void AssertExistingValidDirectory(DirectoryInfo dir)
