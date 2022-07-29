@@ -358,6 +358,7 @@ namespace azuredevops_export_wiki
                     {
                         string absPath = null;
                         string anchor = null;
+                        bool isBase64 = false;
 
                         //handle --attachments-path case
                         if (
@@ -387,6 +388,10 @@ namespace azuredevops_export_wiki
                             });
                             absPath = Path.GetFullPath(_wiki.basePath() + linkUrl);
                         }
+                        else if (link.Url.StartsWith("data:"))
+                        {
+                            isBase64 = true;
+                        }
                         else
                         {
                             var split = link.Url.Split("#");
@@ -397,24 +402,28 @@ namespace azuredevops_export_wiki
 
                         //the file is a markdown file, create a link to it
                         var isMarkdown = false;
-                        var fileInfo = new FileInfo(absPath);
-                        if (fileInfo.Exists && fileInfo.Extension.Equals(".md", StringComparison.InvariantCultureIgnoreCase))
+                        if (!isBase64)
                         {
-                            isMarkdown = true;
-                        }
-                        else if (fileInfo.Exists)
-                        {
-                            //convert images to base64 and embed them in the html. Chrome/Puppeter does not show local files because of security reasons.
-                            Byte[] bytes = File.ReadAllBytes(fileInfo.FullName);
-                            String base64 = Convert.ToBase64String(bytes);
 
-                            link.Url = $"data:image/{fileInfo.Extension};base64,{base64}";
-                        }
+                            var fileInfo = new FileInfo(absPath);
+                            if (fileInfo.Exists && fileInfo.Extension.Equals(".md", StringComparison.InvariantCultureIgnoreCase))
+                            {
+                                isMarkdown = true;
+                            }
+                            else if (fileInfo.Exists)
+                            {
+                                //convert images to base64 and embed them in the html. Chrome/Puppeter does not show local files because of security reasons.
+                                Byte[] bytes = File.ReadAllBytes(fileInfo.FullName);
+                                String base64 = Convert.ToBase64String(bytes);
 
-                        fileInfo = new FileInfo($"{absPath}.md");
-                        if (fileInfo.Exists && fileInfo.Extension.Equals(".md", StringComparison.InvariantCultureIgnoreCase))
-                        {
-                            isMarkdown = true;
+                                link.Url = $"data:image/{fileInfo.Extension};base64,{base64}";
+                            }
+
+                            fileInfo = new FileInfo($"{absPath}.md");
+                            if (fileInfo.Exists && fileInfo.Extension.Equals(".md", StringComparison.InvariantCultureIgnoreCase))
+                            {
+                                isMarkdown = true;
+                            }
                         }
 
                         //only markdown files get a pdf internal link
