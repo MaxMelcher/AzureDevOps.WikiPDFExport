@@ -109,7 +109,7 @@ namespace azuredevops_export_wiki
                     _wiki = new ExportedWikiDoc(_options.Path);
 
                     IWikiDirectoryScanner scanner = !string.IsNullOrEmpty(_options.Single)
-                        ? new SingleFileScanner(_options.Single, _logger)
+                        ? new SingleFileScanner(_options.Single, _wiki.exportPath(), _options, _logger)
                         : (_options.IncludeUnlistedPages
                             ? new WikiDirectoryScanner(_wiki.exportPath(), _options, _logger)
                             : new WikiOptionFilesScanner(_wiki.exportPath(), _options, _logger));

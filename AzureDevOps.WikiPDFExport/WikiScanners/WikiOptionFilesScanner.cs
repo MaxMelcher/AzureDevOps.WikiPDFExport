@@ -12,7 +12,7 @@ namespace azuredevops_export_wiki
         public WikiOptionFilesScanner(string wikiPath, Options options, ILogger logger)
             : base(wikiPath, options, logger) { }
 
-        public IList<MarkdownFile> Scan()
+        public virtual IList<MarkdownFile> Scan()
         {
             return ReadOrderFiles(wikiPath, 0, excludeRegexes); // root level
         }
