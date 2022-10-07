@@ -31,16 +31,28 @@ namespace azuredevops_export_wiki
                 output = Path.Combine(Directory.GetCurrentDirectory(), "export.pdf");
             }
 
-            if (string.IsNullOrEmpty(_options.ChromeExecutablePath))
+            string chromePath = _options.ChromeExecutablePath;
+
+            if (string.IsNullOrEmpty(chromePath))
             {
-                _logger.Log("No Chrome path defined, downloading...");
-                _ = await new BrowserFetcher().DownloadAsync(BrowserFetcher.DefaultChromiumRevision);
+                string tempFolder = Path.Join(Path.GetTempPath(), "AzureDevOpsWikiExporter");
+
+                _logger.Log("No Chrome path defined, downloading to user temp...");
+
+                var fetcherOptions = new BrowserFetcherOptions
+                {
+                    Path = tempFolder,
+                };
+
+                var info = await new BrowserFetcher(fetcherOptions).DownloadAsync(BrowserFetcher.DefaultChromiumRevision);
+                chromePath = info.ExecutablePath;
+
                 _logger.Log("Chrome ready.");
             }
 
             var launchOptions = new LaunchOptions
             {
-                ExecutablePath = _options.ChromeExecutablePath ?? string.Empty,
+                ExecutablePath = chromePath,
                 Headless = true, //set to false for easier debugging
                 Args = new[] { "--no-sandbox", "--single-process" }, //required to launch in linux
                 Devtools = false,

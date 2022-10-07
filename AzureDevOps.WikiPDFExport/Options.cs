@@ -59,7 +59,7 @@ namespace azuredevops_export_wiki
         [Option("mermaidjs-path", Required = false, HelpText = "Path of the mermaid.js file. It'll be used if mermaid diagrams support is turned on (-m/--mermaid). If not specified, 'https://cdnjs.cloudflare.com/ajax/libs/mermaid/8.6.4/mermaid.min.js' will be used.")]
         public string MermaidJsPath { get; set; }
 
-        [Option("chrome-path", Required = false, HelpText = "Path of the chrome or chromium executable. It'll be used if mermaid diagrams support is turned on (-m/--mermaid). If not specified, a headless version will be downloaded.")]
+        [Option("chrome-path", Required = false, HelpText = "Path of the chrome or chromium executable. If not specified, a headless version will be downloaded.")]
         public string ChromeExecutablePath { get; set; }
 
         [Option("chrome-timeout", Required = false, HelpText = "Timeout for Chrome operations in seconds (default 30 seconds).", Default = 30)]
