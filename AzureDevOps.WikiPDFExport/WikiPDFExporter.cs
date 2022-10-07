@@ -222,7 +222,7 @@ namespace azuredevops_export_wiki
                     }
 
                     //build the html for rendering
-                    html = $"{htmlStart}{headStart}{string.Concat(header)}{headEnd}{html}<footer>{string.Concat(footer)}</footer>{htmlEnd}";
+                    html = $"{htmlStart}{headStart}{string.Concat(header)}{headEnd}<body>{html}<footer>{string.Concat(footer)}</footer></body>{htmlEnd}";
 
 #if HTML_IN_MEMORY
                     if (_options.Debug)
