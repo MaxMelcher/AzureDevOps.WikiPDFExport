@@ -13,7 +13,7 @@
             "args": [
                 "--verbose",
                 //"-p..\\AzureDevOps.WikiPDFExport.Test\\test-data\\Inputs\\DeepLink",
-                "-p..\\AzureDevOps.WikiPDFExport.Test\\test-data\\Inputs\\1k",
+                //"-s..\\AzureDevOps.WikiPDFExport.Test\\test-data\\Inputs\\Code\\Another-Page.md",
                 //                 "--attachments-path=..\\AzureDevOps.WikiPDFExport.Test\\Tests\\AzureDevOps.WikiPDFExport.wiki\\.attachments\\",
                 //                 "-p..\\AzureDevOps.WikiPDFExport.Test\\test-data\\Inputs\\Code",
                 //                 "-p..\\AzureDevOps.WikiPDFExport.Test\\Tests\\Azure-Platform-Design",
@@ -30,8 +30,8 @@
                 //    "--footer-template=<div style='padding-right: 10px; padding-top:2px; margin: 0; -webkit-print-color-adjust: exact; border-top:1px solid grey; color: grey; width: 100%; text-align: right; font-size: 6px;'>Print: <span class='date'></span> Page: </span><span class='pageNumber'></span>/<span class='totalPages'></span></div>",
                 //"--css=..\\doc\\styles.css", //not needed, its the default now.
                 "--open",
-                "--footer-template-path=..\\doc\\example-footer.html",
-                "--header-template-path=..\\doc\\example-header.html",
+                //"--footer-template-path=..\\doc\\example-footer.html",
+                //"--header-template-path=..\\doc\\example-header.html",
                 "--no-frontmatter",
                 //"-s..\\AzureDevOps.WikiPDFExport.Test\\Tests\\Real\\AzureDevOps.WikiPDFExport\\TEST%2DPAGE.md"
                 //"-s..\\AzureDevOps.WikiPDFExport.Test\\test-data\\Inputs\\TEST%2DPAGE.md",

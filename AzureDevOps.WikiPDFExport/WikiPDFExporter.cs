@@ -106,7 +106,10 @@ namespace azuredevops_export_wiki
                         Log("Using current folder for export, -path is not set.");
                         _wiki = new ExportedWikiDoc(Directory.GetCurrentDirectory());
                     }
-                    _wiki = new ExportedWikiDoc(_options.Path);
+                    else
+                    {
+                        _wiki = new ExportedWikiDoc(_options.Path);
+                    }
 
                     IWikiDirectoryScanner scanner = !string.IsNullOrEmpty(_options.Single)
                         ? new SingleFileScanner(_options.Single, _wiki.exportPath(), _options, _logger)
@@ -270,7 +273,9 @@ namespace azuredevops_export_wiki
             finally
             {
                 _telemetryClient.Flush();
+#if !DEBUG
                 Thread.Sleep(TimeSpan.FromSeconds(5));
+#endif
             }
 
             return succeeded;

@@ -12,6 +12,7 @@ namespace AzureDevOps.WikiPDFExport.Test
         ILoggerExtended _dummyLogger = Substitute.For<ILoggerExtended>();
 
         [Theory]
+        [InlineData("SingleFileNoOrder")]
         [InlineData("Code")]
         [InlineData("DeepLink")]
         [InlineData("Dis-ordered")]
@@ -51,6 +52,7 @@ namespace AzureDevOps.WikiPDFExport.Test
         [InlineData("EmptyOrderFile")]
         [InlineData("Flat")]
         [InlineData("WellFormed")]
+        [InlineData("SingleFileNoOrder")]
         public async void ExportWiki_OnlyOrderListedPages_Succeeds(string wikiToExport)
         {
             var options = new Options

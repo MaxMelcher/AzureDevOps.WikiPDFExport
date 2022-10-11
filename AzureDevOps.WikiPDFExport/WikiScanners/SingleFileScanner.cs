@@ -21,7 +21,17 @@ namespace azuredevops_export_wiki
 
         public override IList<MarkdownFile> Scan()
         {
+            //handle the case that we have a .order file
             var allFiles = base.Scan(); 
+
+            //handle the case that we have a single file only by providing a .md file in the -s parameter
+            if (singleFilePath.EndsWith(".md", true, System.Globalization.CultureInfo.InvariantCulture))
+            {
+                var fileInfo = new FileInfo(singleFilePath);
+                var file  = new MarkdownFile(fileInfo, "", 0, Path.GetRelativePath(wikiPath, fileInfo.FullName));
+                return new List<MarkdownFile>() { file };
+            }
+
             var current = allFiles.FirstOrDefault(m => m.FileRelativePath.Contains(singleFilePath));
             var idx = allFiles.IndexOf(current);
 
