@@ -1,5 +1,7 @@
 ﻿using CommandLine;
+using System;
 using System.Collections.Generic;
+using System.Net;
 
 namespace azuredevops_export_wiki
 {
@@ -97,6 +99,16 @@ namespace azuredevops_export_wiki
 
         [Option("printbackground", Required = false, HelpText = "Enable print background when using no header/footer template")]
         public bool PrintBackground { get; set; } = false;
+
+        [Option("proxyurl", Required = false, HelpText = "Proxy Url for accesing internet")]
+        public string ProxyUrl { get; set; }
+
+        public IWebProxy WebProxy => string.IsNullOrEmpty(ProxyUrl) ? null : new WebProxy
+        {
+            Address = new Uri(ProxyUrl),
+            BypassProxyOnLocal = true,
+            UseDefaultCredentials = true
+        };
 
     }
 }

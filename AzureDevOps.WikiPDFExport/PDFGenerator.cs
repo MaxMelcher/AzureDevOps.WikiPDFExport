@@ -1,6 +1,8 @@
 ﻿using Microsoft.Extensions.Logging;
 using PuppeteerSharp;
+using System;
 using System.IO;
+using System.Net;
 using System.Threading.Tasks;
 
 namespace azuredevops_export_wiki
@@ -41,10 +43,13 @@ namespace azuredevops_export_wiki
 
                 var fetcherOptions = new BrowserFetcherOptions
                 {
-                    Path = tempFolder,
+                    Path = tempFolder
                 };
 
-                var info = await new BrowserFetcher(fetcherOptions).DownloadAsync(BrowserFetcher.DefaultChromiumRevision);
+                var info = await new BrowserFetcher(fetcherOptions)
+                {
+                    WebProxy = _options.WebProxy 
+                }.DownloadAsync(BrowserFetcher.DefaultChromiumRevision);
                 chromePath = info.ExecutablePath;
 
                 _logger.Log("Chrome ready.");
