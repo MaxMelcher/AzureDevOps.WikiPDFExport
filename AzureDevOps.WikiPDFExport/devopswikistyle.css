@@ -388,15 +388,21 @@ a.mention-link, a.mention-link :hover {
     vertical-align: bottom;
     color: rgba(0, 0, 0, 0.9);
 }
+
+.mention-widget-workitem-state .workitem-state-color::after {
+    content: "\0000B7";
+    font-size: 6em;
+    top: -12px;
+    left: 0px;
+    display: inline-block;
+    position: relative;
+}
+
 .mention-widget-workitem-state .workitem-state-color {
-    border: 3px solid transparent;
     width: 16px;
     height: 16px;
-    border-radius: 50%;
-    margin: 0 4px;
-    background-clip: padding-box;
-    box-sizing: border-box;
 }
+
 .work-item-type-icon-host {
     display: inline-block;
 }

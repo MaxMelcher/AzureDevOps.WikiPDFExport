@@ -141,7 +141,7 @@ namespace azuredevops_export_wiki
                     {
                         string mermaid = !string.IsNullOrEmpty(_options.MermaidJsPath) ?
                             $"<script>{File.ReadAllText(_options.MermaidJsPath)}</script>"
-                            : @"<script src=""https://cdnjs.cloudflare.com/ajax/libs/mermaid/8.6.4/mermaid.min.js""></script>";
+                            : @"<script src=""https://cdnjs.cloudflare.com/ajax/libs/mermaid/9.1.6/mermaid.min.js""></script>";
 
                         var mermaidInitialize = "<script>mermaid.initialize({ startOnLoad:true });</script>";
 
@@ -153,8 +153,8 @@ namespace azuredevops_export_wiki
 
                     if (_options.Math)
                     {
-                        var katex = "<script src=\"https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/katex.min.js\"></script><script src=\"https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/contrib/auto-render.min.js\" onload=\"renderMathInElement(document.body, {delimiters: [{left: '$$', right: '$$', display: true},{left: '$', right: '$', display: true}]});\"></script>";
-                        var katexCss = "<link rel=\"stylesheet\" href=\"https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/katex.min.css\">";
+                        var katex = "<script src=\"https://cdn.jsdelivr.net/npm/katex@0.16.2/dist/katex.min.js\"></script><script src=\"https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/contrib/auto-render.min.js\" onload=\"renderMathInElement(document.body, {delimiters: [{left: '$$', right: '$$', display: true},{left: '$', right: '$', display: true}]});\"></script>";
+                        var katexCss = "<link rel=\"stylesheet\" href=\"https://cdn.jsdelivr.net/npm/katex@0.16.2/dist/katex.min.css\">";
 
                         header.Add(katexCss);
                         footer.Add(katex);
@@ -163,8 +163,8 @@ namespace azuredevops_export_wiki
                     if (_options.HighlightCode)
                     {
                         string hightlightStyle = _options.HighlightStyle ?? "vs";
-                        string hightlight = $@"<link rel=""stylesheet"" href=""https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.1.0/styles/{hightlightStyle}.min.css"">
-                                                     <script src=""https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.1.0/highlight.min.js""></script>
+                        string hightlight = $@"<link rel=""stylesheet"" href=""https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/styles/{hightlightStyle}.min.css"">
+                                                     <script src=""https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/highlight.min.js""></script>
                                                      ";
                         var hightlightInitialize = @"<script>hljs.highlightAll();</script>";
 
@@ -315,7 +315,7 @@ namespace azuredevops_export_wiki
                     <span class=""mention-widget-workitem-title fontWeightSemiBold"">{title}</span>
                 </a>
                 <span class=""mention-widget-workitem-state"">
-                    <span class=""workitem-state-color"" style=""background-color: #{stateColor};""></span>
+                    <span class=""workitem-state-color"" style=""color: #{stateColor};""></span>
                     <span>{state}</span>
                 </span>
             </span>
