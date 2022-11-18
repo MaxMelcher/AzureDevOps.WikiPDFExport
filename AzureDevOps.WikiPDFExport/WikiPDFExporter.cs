@@ -203,7 +203,7 @@ namespace azuredevops_export_wiki
                     var cssPath = "";
                     if (string.IsNullOrEmpty(_options.CSS))
                     {
-                        cssPath = "devopswikistyle.css";
+                        cssPath = AppDomain.CurrentDomain.BaseDirectory + "devopswikistyle.css";
                         Log("No CSS specified, using devopswikistyle.css", LogLevel.Information, 0);
                     }
                     else
