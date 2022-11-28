@@ -75,6 +75,9 @@ Provide a path to html files that will be added as header and footer. See [examp
 ### --GlobalTOC
 Title for a global table of content for all markdown files. When not specified each markdown creates its own toc if defined
 
+### --GlobalTOCPosition
+Order of TOC within all files (starting from 0). When not specified TOC will be printed on the first page
+
 ### --include-unlisted-pages
 By default only pages listed in `.order` files are considered. Setting this option any Markdown file (`.md`) found will be included as-well.
 

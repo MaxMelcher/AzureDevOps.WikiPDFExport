@@ -66,7 +66,9 @@ namespace azuredevops_export_wiki
 
             if (!string.IsNullOrEmpty(_options.GlobalTOC))
             {
-                var firstMDFileInfo = files[0].FileInfo;
+                if (_options.GlobalTOCPosition > files.Count)
+                    _options.GlobalTOCPosition = files.Count;
+                var firstMDFileInfo = files[_options.GlobalTOCPosition].FileInfo;
                 var directoryName = firstMDFileInfo.Directory.Name;
                 var tocName = _options.GlobalTOC == "" ? directoryName : _options.GlobalTOC;
                 var relativePath = "/" + tocName + ".md";
@@ -75,9 +77,9 @@ namespace azuredevops_export_wiki
                 var contents = files.Select(x => x.Content).ToList();
                 var tocContent = CreateGlobalTableOfContent(contents);
                 var tocString = string.Join("\n", tocContent);
-
                 var tocMarkdownFile = new MarkdownFile(new FileInfo(tocMDFilePath), relativePath, 0, relativePath, tocString);
-                files.Insert(0, tocMarkdownFile);
+
+                files.Insert(_options.GlobalTOCPosition, tocMarkdownFile);
             }
 
             for (var i = 0; i < files.Count; i++)
@@ -155,7 +157,7 @@ namespace azuredevops_export_wiki
                 }
                 html = builder.ToString();
 
-                if (!string.IsNullOrEmpty(_options.GlobalTOC) && i == 0)
+                if (!string.IsNullOrEmpty(_options.GlobalTOC) && i == _options.GlobalTOCPosition)
                 {
                     html = RemoveDuplicatedHeadersFromGlobalTOC(html);
                     Log($"Removed duplicated headers from toc html", LogLevel.Information, 1);
@@ -185,7 +187,7 @@ namespace azuredevops_export_wiki
                 }
 
 
-                if (!string.IsNullOrEmpty(_options.GlobalTOC) && i == 0 && !_options.Heading)
+                if (!string.IsNullOrEmpty(_options.GlobalTOC) && i == _options.GlobalTOCPosition && !_options.Heading)
                 {
                     var heading = $"<h1>{_options.GlobalTOC}</h1>";
                     html = heading + html;
