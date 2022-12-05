@@ -84,8 +84,6 @@ By default only pages listed in `.order` files are considered. Setting this opti
 ### --no-frontmatter
 If you want to remove the [frontmatter / YAML tags](https://docs.microsoft.com/en-us/azure/devops/project/wiki/wiki-markdown-guidance?view=azure-devops#yaml-tags) from the PDF. 
 
-### --disableTelemetry
-Disables the telemetry tracking, see [Telemetry](#telemetry)
 ### --chrome-timeout
 Timeout for Chrome operations in seconds (default 30 seconds).
 
