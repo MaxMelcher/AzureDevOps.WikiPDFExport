@@ -55,7 +55,7 @@ Highlight code blocks using highligh.js
 ### -d / --debug
 Debug mode. Logs tons of stuff and even exports the intermediate html file
 ### --disableTelemetry
-Disables the telemetry tracking, see [Telemetry](#telemetry)
+Disables the telemetry tracking, see [Telemetry](#-telemetry)
 ### --exclude-paths
 Skip pages whose path matches the [regular expression](https://docs.microsoft.com/en-us/dotnet/standard/base-types/regular-expression-language-quick-reference) patterns.
 ### --filter
@@ -135,7 +135,7 @@ So far the following limitations are known:
 * Tags in Azure DevOps must be closed properly - if you leave a strikethrough (`~~`) open, then all the following ~~content will be striked through~~.
 
 ## ⚖ License
-See [license](/AzureDevOps.WikiPDFExport/License.md)
+See [license](/License.md)
 
 ## 🎯 Telemetry
 The tool uses Application Insights for basic telemetry:
