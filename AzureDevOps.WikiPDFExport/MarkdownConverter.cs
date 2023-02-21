@@ -416,9 +416,8 @@ namespace azuredevops_export_wiki
                             {
                                 //convert images to base64 and embed them in the html. Chrome/Puppeter does not show local files because of security reasons.
                                 Byte[] bytes = File.ReadAllBytes(fileInfo.FullName);
-                                String base64 = Convert.ToBase64String(bytes);
-
-                                link.Url = $"data:image/{fileInfo.Extension};base64,{base64}";
+                                var base64 = Convert.ToBase64String(bytes);
+                                link.Url = $"data:image/{(fileInfo.Extension == ".svg" ? "svg+xml" : fileInfo.Extension)};base64,{base64}";
                             }
 
                             fileInfo = new FileInfo($"{absPath}.md");

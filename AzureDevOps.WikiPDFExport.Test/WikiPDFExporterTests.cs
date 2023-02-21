@@ -20,6 +20,7 @@ namespace AzureDevOps.WikiPDFExport.Test
         [InlineData("EmptyOrderFile")]
         [InlineData("Flat")]
         [InlineData("WellFormed")]
+        [InlineData("PngSvgExport")]
         public async void ExportWiki_IncludeUnlistedPages_Succeeds(string wikiToExport)
         {
             var options = new Options
@@ -53,6 +54,7 @@ namespace AzureDevOps.WikiPDFExport.Test
         [InlineData("Flat")]
         [InlineData("WellFormed")]
         [InlineData("SingleFileNoOrder")]
+        [InlineData("PngSvgExport")]
         public async void ExportWiki_OnlyOrderListedPages_Succeeds(string wikiToExport)
         {
             var options = new Options
