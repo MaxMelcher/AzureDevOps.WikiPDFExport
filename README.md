@@ -57,7 +57,8 @@ Debug mode. Logs tons of stuff and even exports the intermediate html file
 ### --disableTelemetry
 Disables the telemetry tracking, see [Telemetry](#-telemetry)
 ### --exclude-paths
-Skip pages whose path matches the [regular expression](https://docs.microsoft.com/en-us/dotnet/standard/base-types/regular-expression-language-quick-reference) patterns.
+Skip pages whose path matches the [regular expression](https://docs.microsoft.com/en-us/dotnet/standard/base-types/regular-expression-language-quick-reference) patterns.  
+To exclude any files in the folders "Scrum" and "Release" but not the file "Released-Version.md", use `--exclude-paths /Scrum/ /Release/` (paths are internally normalized to forward slashes and the passed values will be surrounded by `.*` automatically to enable partial matches)
 ### --filter
 Filters the pages depending on the page [yaml tags](https://docs.microsoft.com/en-us/azure/devops/project/wiki/wiki-markdown-guidance?view=azure-devops#yaml-tags).
 ### --footer-template, --header-template,
