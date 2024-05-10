@@ -73,10 +73,10 @@ Headers and footers can be added to the document by the --header-* and
 ### --footer-template-path, --header-template-path
 Provide a path to html files that will be added as header and footer. See [example-footer.html](./doc/example-footer.html), [example-header.html](./doc/example-header.html).
 
-### --GlobalTOC
+### --globaltoc
 Title for a global table of content for all markdown files. When not specified each markdown creates its own toc if defined
 
-### --GlobalTOCPosition
+### --globaltocposition
 Order of TOC within all files (starting from 0). When not specified TOC will be printed on the first page
 
 ### --include-unlisted-pages
