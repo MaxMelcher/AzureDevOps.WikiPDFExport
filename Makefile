@@ -54,6 +54,3 @@ exp-pdf: build
 	cp ~/projects/AzureDevOps.WikiPDFExport-AK/AzureDevOps.WikiPDFExport/output/linux-x64/azuredevops-export-wiki ~/projects/Technology-Innovation-Architecture.wiki/
 	cd ~/projects/Technology-Innovation-Architecture.wiki/ && ./azuredevops-export-wiki --disableTelemetry -p TIA-PoC/AKS-EE-PoC/ -o "Guidelines and Best Practices for AKS EE 1.0.pdf" -b  --globaltocposition 0 --globaltoc "AKS-EE-PoC Index"
 	xdg-open ~/projects/Technology-Innovation-Architecture.wiki/"Guidelines and Best Practices for AKS EE 1.0.pdf"
-
-yyy:
-	cd AzureDevOps.WikiPDFExport &&  dotnet publish -r linux-x64 --configuration Release -p:PublishReadyToRun=true -p:PublishSingleFile=true -p:UseAppHost=true  -p:Version=4.0.0-beta5 -o output/linux-x64 --no-self-contained
