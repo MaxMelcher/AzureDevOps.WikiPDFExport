@@ -44,8 +44,10 @@ namespace azuredevops_export_wiki
                     Path = tempFolder,
                 };
 
-                var info = await new BrowserFetcher(fetcherOptions).DownloadAsync(BrowserFetcher.DefaultChromiumRevision);
-                chromePath = info.ExecutablePath;
+                var browserFetcher = new BrowserFetcher(fetcherOptions);
+                var info = await browserFetcher.DownloadAsync();
+
+                chromePath = "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe";
 
                 _logger.Log("Chrome ready.");
             }
