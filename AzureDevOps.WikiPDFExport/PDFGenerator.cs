@@ -1,6 +1,6 @@
-﻿using Microsoft.Extensions.Logging;
-using PuppeteerSharp;
+﻿using PuppeteerSharp;
 using System.IO;
+using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 
 namespace azuredevops_export_wiki
@@ -42,21 +42,23 @@ namespace azuredevops_export_wiki
                 var fetcherOptions = new BrowserFetcherOptions
                 {
                     Path = tempFolder,
+                    Browser = SupportedBrowser.Chrome,
+                    Platform = Platform.Win64
                 };
 
-                var browserFetcher = new BrowserFetcher(fetcherOptions);
-                var info = await browserFetcher.DownloadAsync();
+                var fetcher = new BrowserFetcher(fetcherOptions);
+                var downloadedRevision = await fetcher.DownloadAsync(BrowserTag.Stable);
 
-                chromePath = "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe";
+                chromePath = downloadedRevision.GetExecutablePath();
 
                 _logger.Log("Chrome ready.");
             }
-
+           
             var launchOptions = new LaunchOptions
             {
                 ExecutablePath = chromePath,
                 Headless = true, //set to false for easier debugging
-                Args = new[] { "--no-sandbox", "--single-process" }, //required to launch in linux
+                Args = GetPlatformSpecificArgs(),
                 Devtools = false,
                 Timeout = _options.ChromeTimeout * 1000
             };
@@ -146,6 +148,15 @@ namespace azuredevops_export_wiki
 
             _logger.Log($"PDF created at: {output}");
             return output;
+        }
+        private string[] GetPlatformSpecificArgs()
+        {
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+            {
+                return new[] { "--no-sandbox", "--single-process" }; //required to launch in linux
+            }
+
+            return new[] { "--no-sandbox" };
         }
     }
 }
