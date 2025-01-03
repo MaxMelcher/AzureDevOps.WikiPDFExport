@@ -29,7 +29,7 @@
     <ItemGroup>
       <_CustomFilesToDelete Include="test-data\Outputs\**" Exclude=".gitkeep" />
     </ItemGroup>
-    <Delete Files='@(_CustomFilesToDelete)' />
+    <Delete Files='@(_CustomFilesToDelete)'/>
   </Target>
     
 </Project>
