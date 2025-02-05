@@ -89,7 +89,7 @@ namespace azuredevops_export_wiki
 
                 Log($"{file.Name}", LogLevel.Information, 1);
 
-                var md = mf.Content;
+                var md = MarkdownPreprocessor.PreprocessMarkdown(mf.Content);
 
                 if (string.IsNullOrEmpty(md))
                 {
@@ -251,7 +251,11 @@ namespace azuredevops_export_wiki
 
             foreach (var content in filteredContentList)
             {
-                var headerMatches = Regex.Matches(content, "^ *#+ ?[^#].*$", RegexOptions.Multiline);
+                // Remove workItem refrences
+                var contentWithoutWorkItems = RemoveWorkItemReferences(content);
+
+                // Search for headlines
+                var headerMatches = Regex.Matches(contentWithoutWorkItems, "^ *#+ ?[^#].*$", RegexOptions.Multiline);
                 headers.AddRange(headerMatches.Select(x => x.Value.Trim()));
             }
 
@@ -261,6 +265,16 @@ namespace azuredevops_export_wiki
             var tocContent = new List<string> { "[TOC]" }; // MarkdigToc style
             tocContent.AddRange(headers);
             return tocContent;
+        }
+
+        private static string RemoveWorkItemReferences(string content)
+        {
+            // Remove workItem refrences (#123)
+            var workItemPattern = @"(^|[^#])(#\d+)($|[^#])";
+
+            // Replace workItem refrences with surrounding text
+            return Regex.Replace(content, workItemPattern, match =>
+                match.Groups[1].Value.Trim() + " " + match.Groups[3].Value.Trim());
         }
 
         private static List<string> RemoveCodeSections(List<string> contents)
