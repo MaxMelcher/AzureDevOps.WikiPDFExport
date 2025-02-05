@@ -89,7 +89,7 @@ namespace azuredevops_export_wiki
 
                 Log($"{file.Name}", LogLevel.Information, 1);
 
-                var md = MarkdownPreprocessor.PreprocessMarkdown(mf.Content);
+                var md = AzureDevopsToMarkdownConverter.ConvertAzureDevopsToStandardMarkdown(mf.Content);
 
                 if (string.IsNullOrEmpty(md))
                 {
@@ -246,35 +246,21 @@ namespace azuredevops_export_wiki
 
         internal static List<string> CreateGlobalTableOfContent(List<string> contents)
         {
-            var headers = new List<string>();
-            var filteredContentList = RemoveCodeSections(contents);
+            List<string> headlines = new List<string>();
+            List<string> filteredContentList = RemoveCodeSections(contents);
 
-            foreach (var content in filteredContentList)
+            foreach (string content in filteredContentList)
             {
-                // Remove workItem refrences
-                var contentWithoutWorkItems = RemoveWorkItemReferences(content);
-
-                // Search for headlines
-                var headerMatches = Regex.Matches(contentWithoutWorkItems, "^ *#+ ?[^#].*$", RegexOptions.Multiline);
-                headers.AddRange(headerMatches.Select(x => x.Value.Trim()));
+                MatchCollection headerMatches = Regex.Matches(content, "^ *#+ ?[^#].*$", RegexOptions.Multiline);
+                headlines.AddRange(headerMatches.Select(x => x.Value.Trim()));
             }
 
-            if (!headers.Any())
+            if (!headlines.Any())
                 return new List<string>(); // no header -> no toc
 
             var tocContent = new List<string> { "[TOC]" }; // MarkdigToc style
-            tocContent.AddRange(headers);
+            tocContent.AddRange(headlines);
             return tocContent;
-        }
-
-        private static string RemoveWorkItemReferences(string content)
-        {
-            // Remove workItem refrences (#123)
-            var workItemPattern = @"(^|[^#])(#\d+)($|[^#])";
-
-            // Replace workItem refrences with surrounding text
-            return Regex.Replace(content, workItemPattern, match =>
-                match.Groups[1].Value.Trim() + " " + match.Groups[3].Value.Trim());
         }
 
         private static List<string> RemoveCodeSections(List<string> contents)
