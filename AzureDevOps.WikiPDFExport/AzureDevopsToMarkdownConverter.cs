@@ -61,21 +61,19 @@ namespace azuredevops_export_wiki
                     isInTable = false;
                 }
 
-                // Decides if <br> tag will be added or not
-                if (!(isInCodeBlock || isInTable || string.IsNullOrWhiteSpace(line)) && // Checks if the line is neither in a code block nor in a table and is not empty.
-                    Regex.IsMatch(line, WorkItemPattern)) // If line matches workItem pattern
-                {
-                    // Adds <br> tag to insert line breaks as in the original markdown document
-                    line += "<br>";
+                // Determine if we should add a <br> tag
+                bool shouldAddBreak =
+                    !isInCodeBlock && // if line is not in CodeBlock
+                    !isInTable && // if line is not in table
+                    !string.IsNullOrWhiteSpace(line) && // if line is not empty
+                    !line.Contains("[TOC]"); // if line is not in toc
 
-                    // Adds processed line to new adjusted markdown list
-                    processedLines.Add(line);
-                }
-                else
+                if (shouldAddBreak)
                 {
-                    // Adds the skipped line (code block, table, or empty) without further processing
-                    processedLines.Add(line);
+                    line += "<br>";
                 }
+
+                processedLines.Add(line);
             }
 
             return string.Join("\n", processedLines);
