@@ -1,7 +1,6 @@
-namespace azuredevops_export_wiki
-{
-    public interface IWikiPDFExporter
-    {
+namespace AzureDevOps.WikiPdfExport;
 
-    }
+internal interface IWikiPdfExporter
+{
+
 }

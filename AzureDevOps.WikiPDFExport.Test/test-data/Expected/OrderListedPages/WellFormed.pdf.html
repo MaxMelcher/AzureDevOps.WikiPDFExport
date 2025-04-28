@@ -10,7 +10,7 @@
 <h3 id="happy-wiki-ing">Happy wiki-ing</h3>
 <p>I don't know how to say this, but its awesome</p>
 <h3 id="how-to-create-a-pdf-from-all-this">How to create a PDF from all this?</h3>
-<p><a href="https://github.com/MaxMelcher/AzureDevOps.WikiPDFExport">https://github.com/MaxMelcher/AzureDevOps.WikiPDFExport</a></p>
+<p><a href="https://github.com/MaxMelcher/AzureDevOps.WikiPdfExport">https://github.com/MaxMelcher/AzureDevOps.WikiPdfExport</a></p>
 <a id="contentsplaceholder">&nbsp;</a><h2 id="placeholder">Placeholder</h2>
 <p>This is just a page with a single header and this single line of text. Use this to see if page breaks work.
 This page also features a markdown comment block, that should not be rendered.</p>
@@ -105,8 +105,8 @@ below
 </blockquote>
 <p><strong>Example:</strong></p>
 <pre>
-Use _emphasis_ in comments to express **strong** opinions and point out ~~corrections~~  
-**_Bold, italicized text_**  
+Use _emphasis_ in comments to express **strong** opinions and point out ~~corrections~~
+**_Bold, italicized text_**
 **~~Bold, strike-through text~~**
 </pre>
 <br/>
@@ -122,9 +122,9 @@ To indicate a span of code, wrap it with three backtick quotes (<code>```</code>
 </blockquote>
 <p><strong>Example:</strong></p>
 <pre>&#96;&#96;&#96;
-sudo npm install vsoagent-installer -g  
+sudo npm install vsoagent-installer -g
 &#96;&#96;&#96;
-</pre>  
+</pre>
 <br/>
 <p><strong>Result:</strong></p>
 <pre><code>sudo npm install vsoagent-installer -g
@@ -175,10 +175,10 @@ a clear name to description mapping. You can format tables in pull requests, wik
 <li>A blank space is required before and after work item or pull request (PR) mentions inside a table cell.</li>
 </ul>
 <p><strong>Example:</strong></p>
-<pre><code class="language-markdown">| Heading 1 | Heading 2 | Heading 3 |  
-|-----------|:-----------:|-----------:|  
-| Cell A1 | Cell A2 | Cell A3 |  
-| Cell B1 | Cell B2 | Cell B3&lt;br/&gt;second line of text |  
+<pre><code class="language-markdown">| Heading 1 | Heading 2 | Heading 3 |
+|-----------|:-----------:|-----------:|
+| Cell A1 | Cell A2 | Cell A3 |
+| Cell B1 | Cell B2 | Cell B3&lt;br/&gt;second line of text |
 </code></pre>
 <p><strong>Result:</strong></p>
 <table>
@@ -238,7 +238,7 @@ a clear name to description mapping. You can format tables in pull requests, wik
 1. Second item.
    - Nested item 1
    - Nested item 2
-   - Nested item 3 
+   - Nested item 3
 </code></pre>
 <p><strong>Result:</strong></p>
 <ol>
@@ -299,7 +299,7 @@ a clear name to description mapping. You can format tables in pull requests, wik
 The ID is all lower case, and the link is case-sensitive, so be sure to use lower case, even though the heading itself uses upper case.
 <p>You can also reference headings within another Markdown file:</p>
 <pre>
-[text to display](./target.md#heading-id)  
+[text to display](./target.md#heading-id)
 </pre>
 <br/>
 In wiki, you can also reference heading in another page:
@@ -339,12 +339,12 @@ In wiki, you can also reference heading in another page:
 <p>You can Use <code>[ ]</code> or <code>[x]</code> to support checklists. Precede the checklist with either <code>-&lt;space&gt;</code> or <code>1.&lt;space&gt;</code> (any numeral).</p>
 <p><strong>Example - Format a list as a task list</strong></p>
 <pre>
-- [ ] A  
-- [ ] B  
-- [ ] C  
-- [x] A  
-- [x] B  
-- [x] C  
+- [ ] A
+- [ ] B
+- [ ] C
+- [x] A
+- [x] B
+- [x] C
 </pre>
 <p><strong>Result:</strong></p>
 <ul class="contains-task-list">
@@ -402,7 +402,7 @@ In wiki, you can also reference heading in another page:
 <p>Enter <code>&#92;&#92;</code> to get \ </p>
 <p>Enter <code>&#92;&#95;</code> to get &#95; </p>
 <p>Enter <code>&#92;# </code> to get # </p>
-<p>Enter <code>&#92;(</code> to get ( </p> 
+<p>Enter <code>&#92;(</code> to get ( </p>
 <p>Enter <code>&#92;.</code> to get . </p>
 <p>Enter <code>&#92;!</code> to get ! </p>
 <p>Enter <code>&#92;*</code> to get * </p>
@@ -428,7 +428,7 @@ In wiki, you can also reference heading in another page:
 <h4 id="example-greek-characters">Example: Greek characters</h4>
 <pre><code class="language-KaTeX">$
 \alpha, \beta, \gamma, \delta, \epsilon, \zeta, \eta, \theta, \kappa, \lambda, \mu, \nu, \omicron, \pi, \rho, \sigma, \tau, \upsilon, \phi, ...
-$  
+$
 
 
 $\Gamma,  \Delta,  \Theta, \Lambda, \Xi, \Pi, \Sigma, \Upsilon, \Phi, \Psi, \Omega$
@@ -461,7 +461,7 @@ $$
 
 $$
 \int_0^\infty \mathrm{e}^{-x}\,\mathrm{d}x
-$$     
+$$
 </code></pre>
 <p><strong>Result:</strong></p>
 <p>$$
@@ -1788,6 +1788,6 @@ A[Wiki supports Mermaid] --&gt; B[Visit https://mermaidjs.github.io/ for Mermaid
 </div>
 <h3 id="shorthand">Shorthand</h3>
 <p>Here is an example of how to render a PDF from the command line.</p>
-<pre><code> .\azuredevops-export-wiki.exe -v --debug --css .\style.css --header-url .\header.html --footer-url .\footer.html
+<pre><code> .\AzureDevOps.WikiPdfExport.exe -v --debug --css .\style.css --header-url .\header.html --footer-url .\footer.html
 </code></pre>
 <footer><style></style></footer></body></html>

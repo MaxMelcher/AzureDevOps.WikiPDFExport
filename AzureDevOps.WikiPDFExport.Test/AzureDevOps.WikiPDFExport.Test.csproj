@@ -1,8 +1,9 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net6</TargetFramework>
-
+    <TargetFramework>net9.0</TargetFramework>
+    <Nullable>Enable</Nullable>
+    <LangVersion>Latest</LangVersion>
     <IsPackable>false</IsPackable>
   </PropertyGroup>
 
@@ -12,17 +13,17 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.1.0" />
-    <PackageReference Include="NSubstitute" Version="4.3.0" />
-    <PackageReference Include="xunit" Version="2.4.1" />
-    <PackageReference Include="xunit.runner.visualstudio" Version="2.4.3">
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.13.0" />
+    <PackageReference Include="NSubstitute" Version="5.3.0" />
+    <PackageReference Include="xunit" Version="2.9.3" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="3.0.2">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\AzureDevOps.WikiPDFExport\azuredevops-export-wiki.csproj" />
+    <ProjectReference Include="..\AzureDevOps.WikiPdfExport\AzureDevOps.WikiPdfExport.csproj" />
   </ItemGroup>
 
   <Target Name="CleanIntegrationTestOuputs" BeforeTargets="CoreClean">
@@ -31,5 +32,5 @@
     </ItemGroup>
     <Delete Files='@(_CustomFilesToDelete)'/>
   </Target>
-    
+
 </Project>

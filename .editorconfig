@@ -1,2 +1,1645 @@
+# Editor configuration, see https://editorconfig.org
+root = true
+
+# General (unknown files)
 [*]
+charset = utf-8
+indent_style = tab
+indent_size = tab
+tab_width = 4
+insert_final_newline = true
+trim_trailing_whitespace = true
 end_of_line = lf
+
+# HTML
+indent_size = unset
+insert_final_newline = unset
+tab_width = unset
+indent_style = unset
+insert_final_newline = unset
+
+# XML
+[*.targets;*.xml]
+charset = utf-8
+max_line_length = off
+quote_type = double
+trim_trailing_whitespace = true
+insert_final_newline = false
+
+# YAML, JSON, Markdown
+[*.{yml,yaml,md,json,js}]
+charset = utf-8
+indent_style = space
+tab_width = 2
+max_line_length = off
+quote_type = single
+trim_trailing_whitespace = true
+insert_final_newline = false
+
+# Properties
+[.gitconfig]
+charset = utf-8
+max_line_length = off
+quote_type = double
+trim_trailing_whitespace = true
+insert_final_newline = false
+
+[*.resjson]
+insert_final_newline = false
+
+# C#
+[*.cs]
+
+charset = utf-8
+indent_style = tab
+indent_size = tab
+tab_width = 4
+insert_final_newline = true
+trim_trailing_whitespace = true
+end_of_line = crlf
+
+# Code analysis https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/overview
+
+## Configuration https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/configuration-options
+
+### Code style rules https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/code-style-rule-options
+
+#### Core EditorConfig Options
+
+##### Organize usings
+
+dotnet_stdotnet_separate_import_directive_groups = false # IDE0055
+dotnet_sort_system_directives_first     = true  # IDE0055
+file_header_template = unset # IDE0073
+
+##### this. and Me. preferences
+
+dotnet_style_qualification_for_event    = false # IDE0003, IDE0009
+dotnet_style_qualification_for_field    = false # IDE0003, IDE0009
+dotnet_style_qualification_for_method   = false # IDE0003, IDE0009
+dotnet_style_qualification_for_property = false # IDE0003, IDE0009
+
+##### Language keywords vs BCL types preferences
+
+dotnet_style_predefined_type_for_locals_parameters_members = true # IDE0049
+dotnet_style_predefined_type_for_member_access             = true # IDE0049
+
+##### Parentheses preferences
+
+dotnet_style_parentheses_in_arithmetic_binary_operators = always_for_clarity   # IDE0047, IDE0048
+dotnet_style_parentheses_in_relational_binary_operators = always_for_clarity   # IDE0047, IDE0048
+dotnet_style_parentheses_in_other_binary_operators      = always_for_clarity   # IDE0047, IDE0048
+dotnet_style_parentheses_in_other_operators             = never_if_unnecessary # IDE0047, IDE0048
+
+##### Modifier preferences
+
+dotnet_style_require_accessibility_modifiers = for_non_interface_members # IDE0040
+
+##### Expression-level preferences
+
+dotnet_style_coalesce_expression = true # IDE0029, IDE0030
+dotnet_style_collection_initializer = true # IDE0028
+dotnet_style_explicit_tuple_names = true # IDE0033
+dotnet_style_namespace_match_folder = true  # IDE0055
+dotnet_style_null_propagation = true # IDE0031
+dotnet_style_object_initializer = true # IDE0017
+dotnet_style_operator_placement_when_wrapping = beginning_of_line # Refactor setting
+dotnet_style_prefer_auto_properties = true # IDE0032
+dotnet_style_prefer_collection_expression = when_types_loosely_match # IDE0305 .NET 9 and above only
+dotnet_style_prefer_collection_expression = true # IDE0305
+dotnet_style_prefer_compound_assignment = true # IDE0054, IDE0074
+dotnet_style_prefer_conditional_expression_over_assignment = true # IDE0045
+dotnet_style_prefer_conditional_expression_over_return = false # IDE0046
+dotnet_style_prefer_foreach_explicit_cast_in_source = always # IDE0220
+dotnet_style_prefer_inferred_anonymous_type_member_names = true # IDE0037
+dotnet_style_prefer_inferred_tuple_names = true # IDE0037
+dotnet_style_prefer_is_null_check_over_reference_equality_method = true # IDE0041
+dotnet_style_prefer_simplified_boolean_expressions = true # IDE0074
+dotnet_style_prefer_simplified_interpolation = true # IDE0071
+
+##### Field preferences
+
+dotnet_style_readonly_field = true # IDE0044
+
+##### Parameter preferences
+
+dotnet_code_quality_unused_parameters = all # IDE0060
+
+##### Suppression preferences
+
+dotnet_remove_unnecessary_suppression_exclusions = all # IDE0079
+
+##### New line preferences
+
+dotnet_style_allow_multiple_blank_lines_experimental = false
+dotnet_style_allow_statement_immediately_after_block_experimental = true
+
+#### C# Coding COnventions
+
+##### var preferences
+
+csharp_style_var_elsewhere             = true # IDE0007, IDE0008
+csharp_style_var_for_built_in_types    = true # IDE0007
+csharp_style_var_when_type_is_apparent = true # IDE0007, IDE0008
+
+##### Expression-bodied members
+
+csharp_style_expression_bodied_accessors       = when_on_single_line # IDE0027
+csharp_style_expression_bodied_constructors    = never               # IDE0021
+csharp_style_expression_bodied_indexers        = when_on_single_line # IDE0026
+csharp_style_expression_bodied_lambdas         = when_on_single_line # IDE0053
+csharp_style_expression_bodied_local_functions = when_on_single_line # IDE0061
+csharp_style_expression_bodied_methods         = never               # IDE0022
+csharp_style_expression_bodied_operators       = when_on_single_line # IDE0023, IDE0024
+csharp_style_expression_bodied_properties      = when_on_single_line # IDE0025
+
+##### Pattern matching preferences
+
+csharp_style_pattern_matching_over_as_with_null_check = true # IDE0019
+csharp_style_pattern_matching_over_is_with_cast_check = true # IDE0020, IDE0038
+csharp_style_prefer_extended_property_pattern = true # IDE0170
+csharp_style_prefer_not_pattern = true # IDE0083
+csharp_style_prefer_pattern_matching = true # IDE0078
+csharp_style_prefer_switch_expression = true # IDE0066
+
+##### Null-checking preferences
+
+csharp_style_conditional_delegate_call = true # IDE1005
+
+##### Modifier preferences
+
+csharp_prefer_static_local_function = true # IDE0062
+csharp_preferred_modifier_order = public, private, protected, internal, file, static, extern, new, virtual, abstract, sealed, override, readonly, unsafe, required, volatile, async # IDE0036
+csharp_style_prefer_readonly_struct = true
+csharp_style_prefer_readonly_struct_member = true
+
+##### Code-block preferences
+
+csharp_prefer_braces = always # IDE0011
+csharp_prefer_simple_using_statement = true # IDE0063
+csharp_style_namespace_declarations = file_scoped # IDE0161
+csharp_style_prefer_method_group_conversion = true # IDE0200
+csharp_style_prefer_primary_constructors = true # IDE0290
+csharp_style_prefer_top_level_statements  = true # IDE0210
+
+##### Expression-level preferences
+
+csharp_prefer_simple_default_expression = true # IDE0034
+csharp_style_deconstructed_variable_declaration = false # IDE0042
+csharp_style_implicit_object_creation_when_type_is_apparent = false # IDE0090
+csharp_style_inlined_variable_declaration = true # IDE0018
+csharp_style_prefer_index_operator = true # IDE0056
+csharp_style_prefer_local_over_anonymous_function = true # IDE0039
+csharp_style_prefer_null_check_over_type_check = true # IDE0150
+csharp_style_prefer_range_operator = true # IDE0057
+csharp_style_prefer_tuple_swap = true # IDE0180
+csharp_style_prefer_utf8_string_literals = true
+csharp_style_throw_expression = true # IDE0016
+csharp_style_unused_value_assignment_preference = discard_variable # IDE0059
+csharp_style_unused_value_expression_statement_preference = discard_variable # IDE0058
+
+##### 'using' directive preferences
+
+csharp_using_directive_placement = outside_namespace # IDE0065
+
+# New line preferences
+
+csharp_style_allow_blank_line_after_colon_in_constructor_initializer_experimental = false
+csharp_style_allow_blank_line_after_token_in_arrow_expression_clause_experimental = false
+csharp_style_allow_blank_line_after_token_in_conditional_expression_experimental = false
+csharp_style_allow_blank_lines_between_consecutive_braces_experimental = false
+csharp_style_allow_embedded_statements_on_same_line_experimental = false
+
+#### C# Formatting Rules
+
+##### New line preferences
+
+csharp_new_line_before_catch                          = true # IDE0055
+csharp_new_line_before_else                           = true # IDE0055
+csharp_new_line_before_finally                        = true # IDE0055
+csharp_new_line_before_members_in_anonymous_types     = true # IDE0055
+csharp_new_line_before_members_in_object_initializers = true # IDE0055
+csharp_new_line_before_open_brace                     = all  # IDE0055
+csharp_new_line_between_query_expression_clauses      = true # IDE0055
+
+##### Indentation preferences
+
+csharp_indent_block_contents           = true                  # IDE0055
+csharp_indent_braces                   = false                 # IDE0055
+csharp_indent_case_contents            = true                  # IDE0055
+csharp_indent_case_contents_when_block = true                  # IDE0055
+csharp_indent_labels                   = one_less_than_current # IDE0055
+csharp_indent_switch_labels            = true                  # IDE0055
+
+##### Space preferences
+
+csharp_space_after_cast                                                  = false            # IDE0055
+csharp_space_after_colon_in_inheritance_clause                           = true             # IDE0055
+csharp_space_after_comma                                                 = true             # IDE0055
+csharp_space_after_dot                                                   = false            # IDE0055
+csharp_space_after_keywords_in_control_flow_statements                   = true             # IDE0055
+csharp_space_after_semicolon_in_for_statement                            = true             # IDE0055
+csharp_space_around_binary_operators                                     = before_and_after # IDE0055
+csharp_space_around_declaration_statements                               = do_not_ignore    # IDE0055
+csharp_space_before_colon_in_inheritance_clause                          = true             # IDE0055
+csharp_space_before_comma                                                = false            # IDE0055
+csharp_space_before_dot                                                  = false            # IDE0055
+csharp_space_before_open_square_brackets                                 = false            # IDE0055
+csharp_space_before_semicolon_in_for_statement                           = false            # IDE0055
+csharp_space_between_empty_square_brackets                               = false            # IDE0055
+csharp_space_between_method_call_empty_parameter_list_parentheses        = false            # IDE0055
+csharp_space_between_method_call_name_and_opening_parenthesis            = false            # IDE0055
+csharp_space_between_method_call_parameter_list_parentheses              = false            # IDE0055
+csharp_space_between_method_declaration_empty_parameter_list_parentheses = false            # IDE0055
+csharp_space_between_method_declaration_name_and_open_parenthesis        = false            # IDE0055
+csharp_space_between_method_declaration_parameter_list_parentheses       = false            # IDE0055
+csharp_space_between_parentheses                                         = unset            # IDE0055
+csharp_space_between_square_brackets                                     = false            # IDE0055
+
+##### Wrapping preferences
+
+csharp_preserve_single_line_blocks = true # IDE0055
+csharp_preserve_single_line_statements = false # IDE0055
+
+#### Naming styles
+
+##### Naming rules
+
+dotnet_naming_rule.interface_should_be_begins_with_i.severity = suggestion
+dotnet_naming_rule.interface_should_be_begins_with_i.symbols = interface
+dotnet_naming_rule.interface_should_be_begins_with_i.style = begins_with_i
+
+dotnet_naming_rule.types_should_be_pascal_case.severity = suggestion
+dotnet_naming_rule.types_should_be_pascal_case.symbols = types
+dotnet_naming_rule.types_should_be_pascal_case.style = pascal_case
+
+dotnet_naming_rule.non_field_members_should_be_pascal_case.severity = suggestion
+dotnet_naming_rule.non_field_members_should_be_pascal_case.symbols = non_field_members
+dotnet_naming_rule.non_field_members_should_be_pascal_case.style = pascal_case
+
+##### Symbol specifications
+
+dotnet_naming_symbols.interface.applicable_kinds = interface
+dotnet_naming_symbols.interface.applicable_accessibilities = public, internal, private, protected, protected_internal, private_protected
+dotnet_naming_symbols.interface.required_modifiers =
+
+dotnet_naming_symbols.types.applicable_kinds = class, struct, interface, enum
+dotnet_naming_symbols.types.applicable_accessibilities = public, internal, private, protected, protected_internal, private_protected
+dotnet_naming_symbols.types.required_modifiers =
+
+dotnet_naming_symbols.non_field_members.applicable_kinds = property, event, method
+dotnet_naming_symbols.non_field_members.applicable_accessibilities = public, internal, private, protected, protected_internal, private_protected
+dotnet_naming_symbols.non_field_members.required_modifiers =
+
+##### Naming style
+
+dotnet_naming_style.pascal_case.required_prefix =
+dotnet_naming_style.pascal_case.required_suffix =
+dotnet_naming_style.pascal_case.word_separator =
+dotnet_naming_style.pascal_case.capitalization = pascal_case
+
+dotnet_naming_style.begins_with_i.required_prefix = I
+dotnet_naming_style.begins_with_i.required_suffix =
+dotnet_naming_style.begins_with_i.word_separator =
+dotnet_naming_style.begins_with_i.capitalization = pascal_case
+
+## Rule reference
+
+### Code style rules https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/style-rules
+
+#### Language and unnecessary code rules https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/style-rules/language-rules
+
+dotnet_diagnostic.IDE0001.severity  = warning    # Simplify name
+dotnet_diagnostic.IDE0002.severity  = warning    # Simplify member access
+dotnet_diagnostic.IDE0003.severity  = none       # Remove `this` or `Me` qualification
+dotnet_diagnostic.IDE0004.severity  = warning    # Remove unnecessary cast
+# See: https://github.com/dotnet/aspnetcore/issues/47912
+dotnet_diagnostic.IDE0005.severity  = suggestion # Remove unnecessary import
+dotnet_diagnostic.IDE0007.severity  = warning    # Use `var` instead of explicit type
+dotnet_diagnostic.IDE0008.severity  = none       # Use explicit type instead of `var`
+dotnet_diagnostic.IDE0009.severity  = warning    # Add `this` or `Me` qualification
+dotnet_diagnostic.IDE0010.severity  = warning    # Add missing cases to switch statement
+dotnet_diagnostic.IDE0011.severity  = warning    # Add braces
+dotnet_diagnostic.IDE0016.severity  = warning    # Use throw expression
+dotnet_diagnostic.IDE0017.severity  = warning    # Use object initializers
+dotnet_diagnostic.IDE0018.severity  = warning    # Inline variable declaration
+dotnet_diagnostic.IDE0019.severity  = warning    # Use pattern matching to avoid `as` followed by a `null` check
+dotnet_diagnostic.IDE0020.severity  = warning    # Use pattern matching to avoid `is` check followed by a cast (with variable)
+dotnet_diagnostic.IDE0021.severity  = warning    # Use expression body for constructors
+dotnet_diagnostic.IDE0022.severity  = warning    # Use expression body for methods
+dotnet_diagnostic.IDE0023.severity  = warning    # Use expression body for conversion operators
+dotnet_diagnostic.IDE0024.severity  = warning    # Use expression body for operators
+dotnet_diagnostic.IDE0025.severity  = warning    # Use expression body for properties
+dotnet_diagnostic.IDE0026.severity  = warning    # Use expression body for indexers
+dotnet_diagnostic.IDE0027.severity  = warning    # Use expression body for accessors
+dotnet_diagnostic.IDE0028.severity  = warning    # Use collection initializers
+dotnet_diagnostic.IDE0029.severity  = warning    # Use coalesce expression (non-nullable types)
+dotnet_diagnostic.IDE0030.severity  = warning    # Use coalesce expression (nullable types)
+dotnet_diagnostic.IDE0031.severity  = warning    # Use null propagation
+dotnet_diagnostic.IDE0032.severity  = warning    # Use auto-implemented property
+dotnet_diagnostic.IDE0033.severity  = warning    # Use explicitly provided tuple name
+dotnet_diagnostic.IDE0034.severity  = warning    # Simplify `default` expression
+dotnet_diagnostic.IDE0035.severity  = warning    # Remove unreachable code
+dotnet_diagnostic.IDE0036.severity  = warning    # Order modifiers
+dotnet_diagnostic.IDE0037.severity  = warning    # Use inferred member name
+dotnet_diagnostic.IDE0038.severity  = warning    # Use pattern matching to avoid `is` check followed by a cast (without variable)
+dotnet_diagnostic.IDE0039.severity  = warning    # Use local function instead of lambda
+dotnet_diagnostic.IDE0040.severity  = warning    # Add accessibility modifiers
+dotnet_diagnostic.IDE0041.severity  = warning    # Use 'is null' check
+dotnet_diagnostic.IDE0042.severity  = warning    # Deconstruct variable declaration
+dotnet_diagnostic.IDE0044.severity  = warning    # Add readonly modifier
+dotnet_diagnostic.IDE0045.severity  = warning    # Use conditional expression for assignment
+dotnet_diagnostic.IDE0046.severity  = warning    # Use conditional expression for return
+dotnet_diagnostic.IDE0047.severity  = warning    # Remove unnecessary parentheses
+dotnet_diagnostic.IDE0048.severity  = warning    # Add parentheses for clarity
+dotnet_diagnostic.IDE0049.severity  = warning    # Use language keywords instead of framework type names for type references
+dotnet_diagnostic.IDE0050.severity  = warning    # Convert anonymous type to tuple
+dotnet_diagnostic.IDE0051.severity  = warning    # Remove unused private member
+dotnet_diagnostic.IDE0052.severity  = warning    # Remove unread private member
+dotnet_diagnostic.IDE0053.severity  = warning    # Use expression body for lambdas
+dotnet_diagnostic.IDE0054.severity  = warning    # Use compound assignment
+dotnet_diagnostic.IDE0056.severity  = warning    # Use index operator
+dotnet_diagnostic.IDE0057.severity  = warning    # Use range operator
+dotnet_diagnostic.IDE0058.severity  = warning    # Remove unnecessary expression value
+dotnet_diagnostic.IDE0059.severity  = warning    # Remove unnecessary value assignment
+dotnet_diagnostic.IDE0060.severity  = none       # Remove unused parameter
+dotnet_diagnostic.IDE0061.severity  = warning    # Use expression body for local functions
+dotnet_diagnostic.IDE0062.severity  = warning    # Make local function static
+dotnet_diagnostic.IDE0063.severity  = warning    # Use simple `using` statement
+dotnet_diagnostic.IDE0064.severity  = warning    # Make struct fields writable
+dotnet_diagnostic.IDE0065.severity  = warning    # `using` directive placement
+dotnet_diagnostic.IDE0066.severity  = warning    # Use switch expression
+dotnet_diagnostic.IDE0070.severity  = warning    # Use `System.HashCode.Combine`
+dotnet_diagnostic.IDE0071.severity  = warning    # Simplify interpolation
+dotnet_diagnostic.IDE0072.severity  = silent     # Add missing cases to switch expression
+dotnet_diagnostic.IDE0073.severity  = warning    # Require file header
+dotnet_diagnostic.IDE0074.severity  = warning    # Use coalesce compound assignment
+dotnet_diagnostic.IDE0075.severity  = warning    # Simplify conditional expression
+dotnet_diagnostic.IDE0078.severity  = warning    # Use pattern matching
+dotnet_diagnostic.IDE0079.severity  = warning    # Remove unnecessary suppression
+dotnet_diagnostic.IDE0080.severity  = warning    # Remove unnecessary suppression operator
+dotnet_diagnostic.IDE0081.severity  = warning    # Remove `ByVal`
+dotnet_diagnostic.IDE0082.severity  = warning    # Convert `typeof` to `nameof`
+dotnet_diagnostic.IDE0083.severity  = warning    # Use pattern matching (`not` operator)
+dotnet_diagnostic.IDE0084.severity  = warning    # Use pattern matching (`IsNot` operator)
+dotnet_diagnostic.IDE0090.severity  = warning    # Simplify `new` expression
+dotnet_diagnostic.IDE0100.severity  = warning    # Remove unnecessary equality operator
+dotnet_diagnostic.IDE0110.severity  = warning    # Remove unnecessary discard
+dotnet_diagnostic.IDE0120.severity  = warning    # Simplify LINQ expression
+dotnet_diagnostic.IDE0130.severity  = silent     # Namespace does not match folder structure
+dotnet_diagnostic.IDE0140.severity  = warning    # Simplify object creation
+dotnet_diagnostic.IDE0150.severity  = warning    # Prefer `null` check over type check
+dotnet_diagnostic.IDE0160.severity  = warning    # Use block-scoped namespace
+dotnet_diagnostic.IDE0161.severity  = warning    # Use file-scoped namespace
+dotnet_diagnostic.IDE0170.severity  = warning    # Simplify property pattern
+dotnet_diagnostic.IDE0180.severity  = warning    # Use tuple to swap values
+dotnet_diagnostic.IDE0200.severity  = warning    # Remove unnecessary lambda expression
+dotnet_diagnostic.IDE0210.severity  = warning    # Convert to top-level statements
+dotnet_diagnostic.IDE0211.severity  = warning    # Convert to 'Program.Main' style program
+dotnet_diagnostic.IDE0220.severity  = warning    # Add explicit cast in foreach loop
+dotnet_diagnostic.IDE0230.severity  = warning    # Use UTF-8 string literal
+dotnet_diagnostic.IDE0240.severity  = warning    # Nullable directive is redundant
+dotnet_diagnostic.IDE0241.severity  = warning    # Nullable directive is unnecessary
+dotnet_diagnostic.IDE0250.severity  = warning    # Struct can be made 'readonly'
+dotnet_diagnostic.IDE0251.severity  = warning    # Member can be made 'readonly'
+dotnet_diagnostic.IDE0260.severity  = warning    # Use pattern matching
+dotnet_diagnostic.IDE0270.severity  = warning    # Null check can be simplified
+dotnet_diagnostic.IDE0280.severity  = warning    # Use 'nameof'
+dotnet_diagnostic.IDE0290.severity  = warning    # Use primary constructor
+dotnet_diagnostic.IDE0300.severity  = warning    # Use collection expression for array
+dotnet_diagnostic.IDE0301.severity  = warning    # Use collection expression for empty
+dotnet_diagnostic.IDE0302.severity  = warning    # Use collection expression for stackalloc
+dotnet_diagnostic.IDE0303.severity  = warning    # Use collection expression for Create()
+dotnet_diagnostic.IDE0304.severity  = warning    # Use collection expression for builder
+dotnet_diagnostic.IDE0305.severity  = warning    # Use collection expression for fluent
+dotnet_diagnostic.IDE0320.severity  = warning    # Make anonymous function static
+dotnet_diagnostic.IDE0330.severity  = warning    # Prefer 'System.Threading.Lock'
+dotnet_diagnostic.IDE1005.severity  = warning    # Use tuple to swap values
+
+
+#### Miscellaneous rules https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/style-rules/miscellaneous-rules
+
+dotnet_diagnostic.IDE0076.severity  = warning    # Remove invalid global `SuppressMessageAttribute`
+dotnet_diagnostic.IDE0077.severity  = warning    # Avoid legacy format target in global `SuppressMessageAttribute`
+
+
+#### Formatting rules https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/style-rules/ide0055
+
+dotnet_diagnostic.IDE0055.severity  = suggestion # Formatting rule
+
+# Roslynator Options
+
+roslynator_doc_comment_summary_style                                 = multi_line                                    # rcs1253
+roslynator_enum_flag_value_style                                     = shift_operator                                # rcs1254
+roslynator_infinite_loop_style                                       = while                                         # rcs1252
+roslynator_accessibility_modifiers                                   = explicit                                      # rcs1018
+roslynator_accessor_braces_style                                     = single_line_when_expression_is_on_single_line # rcs0020
+roslynator_array_creation_type_style                                 = implicit_when_type_is_obvious                 # rcs1014
+roslynator_arrow_token_new_line                                      = before                                        # rcs0032
+roslynator_binary_operator_new_line                                  = before                                        # rcs0027
+roslynator_blank_line_between_closing_brace_and_switch_section       = false                                         # rcs0014, rcs1036
+roslynator_blank_line_between_single_line_accessors                  = false                                         # rcs0011
+roslynator_blank_line_between_using_directives                       = never                                         # rcs0015
+roslynator_block_braces_style                                        = single_line_when_empty                        # rcs0021
+roslynator_body_style                                                = expression                                    # rcs1016
+roslynator_conditional_operator_condition_parentheses_style          = omit                                          # rcs1051
+roslynator_conditional_operator_new_line                             = before                                        # rcs0028
+roslynator_configure_await                                           = true                                          # rcs1090
+roslynator_empty_string_style                                        = field                                         # rcs1078
+roslynator_enum_has_flag_style                                       = method                                        # rcs1096
+roslynator_equals_token_new_line                                     = after                                         # rcs0052
+roslynator_max_line_length                                           = 190                                           # rcs0056
+roslynator_new_line_at_end_of_file                                   = true                                          # rcs0058
+roslynator_new_line_before_while_in_do_statement                     = false                                         # rcs0051
+roslynator_null_conditional_operator_new_line                        = after                                         # rcs0059
+roslynator_null_check_style                                          = pattern_matching                              # rcs1248
+roslynator_object_creation_parentheses_style                         = omit                                          # rcs1050
+roslynator_object_creation_type_style                                = implicit_when_type_is_obvious                 # rcs1250
+roslynator_prefix_field_identifier_with_underscore                   = true                                          #
+roslynator_suppress_unity_script_methods                             = true                                          # rcs1213
+roslynator_use_anonymous_function_or_method_group                    = method_group                                  # rcs1207
+roslynator_use_block_body_when_declaration_spans_over_multiple_lines = false                                         # rcs1016
+roslynator_use_block_body_when_expression_spans_over_multiple_lines  = false                                         # rcs1016
+roslynator_use_var_instead_of_implicit_object_creation               = true                                          # rcs1250
+roslynator_trailing_comma_style                                      = omit_when_single_line                         # rcs1260
+roslynator_use_var                                                   = always                                        # rcs1264
+
+# Roslynator Analyzers
+
+dotnet_diagnostic.rcs0001.severity = none       # Add blank line after embedded statement
+dotnet_diagnostic.rcs0002.severity = none       # Add blank line after #region
+dotnet_diagnostic.rcs0003.severity = warning    # Add blank line after using directive list
+dotnet_diagnostic.rcs0005.severity = none       # Add blank line before #endregion
+dotnet_diagnostic.rcs0006.severity = none       # Add blank line before using directive list
+dotnet_diagnostic.rcs0007.severity = none       # Add blank line between accessors
+dotnet_diagnostic.rcs0008.severity = none       # Add blank line between closing brace and next statement
+dotnet_diagnostic.rcs0009.severity = none       # Add blank line between declaration and documentation comment
+dotnet_diagnostic.rcs0010.severity = none       # Add blank line between declarations
+dotnet_diagnostic.rcs0011.severity = none       # Add/remove blank line between single-line accessors #! roslynator_blank_line_between_single_line_accessors
+dotnet_diagnostic.rcs0012.severity = none       # Add blank line between single-line declarations #! roslynator_blank_line_between_single_line_accessors
+dotnet_diagnostic.rcs0013.severity = none       # Add blank line between single-line declarations of different kind
+dotnet_diagnostic.rcs0014.severity = none       # Add blank line between switch sections #! roslynator_blank_line_between_closing_brace_and_switch_section
+dotnet_diagnostic.rcs0015.severity = warning    # Add/remove blank line between using directives #! roslynator_blank_line_between_using_directives
+dotnet_diagnostic.rcs0016.severity = none       # Put attribute list on its own line
+dotnet_diagnostic.rcs0020.severity = warning    # Format accessor's braces on a single line or multiple lines #! roslynator_accessor_braces_style
+dotnet_diagnostic.rcs0021.severity = warning    # Format block's braces on a single line or multiple lines #! roslynator_block_braces_style
+dotnet_diagnostic.rcs0023.severity = warning    # Format type declaration's braces
+dotnet_diagnostic.rcs0024.severity = warning    # Add new line after switch label
+dotnet_diagnostic.rcs0025.severity = warning    # Put full accessor on its own line
+dotnet_diagnostic.rcs0027.severity = warning    # Place new line after/before binary operator #! roslynator_binary_operator_new_line
+dotnet_diagnostic.rcs0028.severity = warning    # Place new line after/before '?:' operator #! roslynator_conditional_operator_new_line
+dotnet_diagnostic.rcs0029.severity = warning    # Put constructor initializer on its own line
+dotnet_diagnostic.rcs0030.severity = warning    # Add new line before embedded statement
+dotnet_diagnostic.rcs0031.severity = warning    # Put enum member on its own line
+dotnet_diagnostic.rcs0032.severity = warning    # Place new line after/before arrow token #! roslynator_arrow_token_new_line
+dotnet_diagnostic.rcs0033.severity = warning    # Add new line before statement
+dotnet_diagnostic.rcs0034.severity = warning    # Put type parameter constraint on its own line
+dotnet_diagnostic.rcs0036.severity = warning    # Remove blank line between single-line declarations of same kind
+dotnet_diagnostic.rcs0039.severity = warning    # Remove new line before base list
+dotnet_diagnostic.rcs0041.severity = warning    # Remove new line between 'if' keyword and 'else' keyword
+dotnet_diagnostic.rcs0042.severity = warning    # Put auto-accessors on a single line
+dotnet_diagnostic.rcs0044.severity = warning    # Use carriage return + linefeed as new line
+dotnet_diagnostic.rcs0045.severity = warning    # Use linefeed as new line
+dotnet_diagnostic.rcs0046.severity = none       # Use spaces instead of tab
+dotnet_diagnostic.rcs0048.severity = warning    # Put initializer on a single line
+dotnet_diagnostic.rcs0049.severity = warning    # Add blank line after top comment
+dotnet_diagnostic.rcs0050.severity = warning    # Add blank line before top declaration
+dotnet_diagnostic.rcs0051.severity = warning    # Add/remove new line before 'while' in 'do' statement #! roslynator_new_line_before_while_in_do_statement
+dotnet_diagnostic.rcs0052.severity = warning    # Place new line after/before equals token #! roslynator_equals_token_new_line
+dotnet_diagnostic.rcs0053.severity = warning    # Fix formatting of a list
+dotnet_diagnostic.rcs0054.severity = warning    # Fix formatting of a call chain
+dotnet_diagnostic.rcs0055.severity = warning    # Fix formatting of a binary expression chain
+dotnet_diagnostic.rcs0056.severity = warning    # A line is too long #! roslynator_max_line_length
+dotnet_diagnostic.rcs0057.severity = warning    # Normalize whitespace at the beginning of a file
+dotnet_diagnostic.rcs0058.severity = warning    # Normalize whitespace at the end of a file #! roslynator_new_line_at_end_of_file
+dotnet_diagnostic.rcs0059.severity = warning    # Place new line after/before null-conditional operator #! roslynator_null_conditional_operator_new_line
+dotnet_diagnostic.rcs0060.severity = warning    # Add/remove line after file scoped namespace declaration
+dotnet_diagnostic.rcs0061.severity = warning    # Add/remove blank line between switch sections
+dotnet_diagnostic.rcs1001.severity = warning    # Add braces (when expression spans over multiple lines)
+dotnet_diagnostic.rcs1002.severity = none       # Remove braces
+dotnet_diagnostic.rcs1003.severity = warning    # Add braces to if-else (when expression spans over multiple lines)
+dotnet_diagnostic.rcs1004.severity = none       # Remove braces from if-else
+dotnet_diagnostic.rcs1005.severity = warning    # Simplify nested using statement
+dotnet_diagnostic.rcs1006.severity = warning    # Merge 'else' with nested 'if'
+dotnet_diagnostic.rcs1007.severity = warning    # Add braces
+dotnet_diagnostic.rcs1013.severity = warning    # Use predefined type
+dotnet_diagnostic.rcs1014.severity = warning    # Use explicitly/implicitly typed array #! roslynator_array_creation_type_style
+dotnet_diagnostic.rcs1015.severity = warning    # Use nameof operator
+dotnet_diagnostic.rcs1016.severity = warning    # Use block body or expression body #! roslynator_body_style, roslynator_use_block_body_when_declaration_spans_over_multiple_lines, roslynator_use_block_body_when_expression_spans_over_multiple_lines
+dotnet_diagnostic.rcs1018.severity = warning    # Add/remove accessibility modifiers
+dotnet_diagnostic.rcs1019.severity = warning    # Order modifiers #! roslynator_accessibility_modifiers
+dotnet_diagnostic.rcs1020.severity = warning    # Simplify Nullable<T> to T?
+dotnet_diagnostic.rcs1021.severity = warning    # Convert lambda expression body to expression body
+dotnet_diagnostic.rcs1031.severity = warning    # Remove unnecessary braces in switch section
+dotnet_diagnostic.rcs1032.severity = warning    # Remove redundant parentheses
+dotnet_diagnostic.rcs1033.severity = warning    # Remove redundant boolean literal
+dotnet_diagnostic.rcs1034.severity = warning    # Remove redundant 'sealed' modifier
+dotnet_diagnostic.rcs1036.severity = warning    # Remove unnecessary blank line #! roslynator_blank_line_between_closing_brace_and_switch_section
+dotnet_diagnostic.rcs1037.severity = warning    # Remove trailing white-space
+dotnet_diagnostic.rcs1039.severity = warning    # Remove argument list from attribute
+dotnet_diagnostic.rcs1042.severity = warning    # Remove enum default underlying type
+dotnet_diagnostic.rcs1043.severity = warning    # Remove 'partial' modifier from type with a single part
+dotnet_diagnostic.rcs1044.severity = warning    # Remove original exception from throw statement
+dotnet_diagnostic.rcs1046.severity = warning    # Asynchronous method name should end with 'Async'
+dotnet_diagnostic.rcs1047.severity = warning    # Non-asynchronous method name should not end with 'Async'
+dotnet_diagnostic.rcs1048.severity = warning    # Use lambda expression instead of anonymous method
+dotnet_diagnostic.rcs1049.severity = warning    # Simplify boolean comparison
+dotnet_diagnostic.rcs1050.severity = warning    # Include/omit parentheses when creating new object #! roslynator_object_creation_parentheses_style
+dotnet_diagnostic.rcs1051.severity = warning    # Add/remove parentheses from condition in conditional operator #! roslynator_conditional_operator_condition_parentheses_style
+dotnet_diagnostic.rcs1052.severity = none       # Declare each attribute separately
+dotnet_diagnostic.rcs1055.severity = warning    # Avoid semicolon at the end of declaration
+dotnet_diagnostic.rcs1056.severity = none       # Avoid usage of using alias directive
+dotnet_diagnostic.rcs1058.severity = warning    # Use compound assignment
+dotnet_diagnostic.rcs1059.severity = warning    # Avoid locking on publicly accessible instance
+dotnet_diagnostic.rcs1060.severity = silent     # Declare each type in separate file
+dotnet_diagnostic.rcs1061.severity = warning    # Merge 'if' with nested 'if'
+dotnet_diagnostic.rcs1068.severity = warning    # Simplify logical negation
+dotnet_diagnostic.rcs1069.severity = warning    # Remove unnecessary case label
+dotnet_diagnostic.rcs1070.severity = warning    # Remove redundant default switch section
+dotnet_diagnostic.rcs1071.severity = warning    # Remove redundant base constructor call
+dotnet_diagnostic.rcs1073.severity = warning    # Convert 'if' to 'return' statement
+dotnet_diagnostic.rcs1074.severity = warning    # Remove redundant constructor
+dotnet_diagnostic.rcs1075.severity = warning    # Avoid empty catch clause that catches System.Exception
+dotnet_diagnostic.rcs1077.severity = warning    # Optimize LINQ method call
+dotnet_diagnostic.rcs1078.severity = warning    # Use "" or 'string.Empty' #! roslynator_empty_string_style
+dotnet_diagnostic.rcs1079.severity = warning    # Throwing of new NotImplementedException
+dotnet_diagnostic.rcs1080.severity = warning    # Use 'Count/Length' property instead of 'Any' method
+dotnet_diagnostic.rcs1081.severity = none       # Split variable declaration
+dotnet_diagnostic.rcs1084.severity = warning    # Use coalesce expression instead of conditional expression
+dotnet_diagnostic.rcs1085.severity = warning    # Use auto-implemented property
+dotnet_diagnostic.rcs1089.severity = warning    # Use --/++ operator instead of assignment
+dotnet_diagnostic.rcs1090.severity = warning    # Add/remove 'ConfigureAwait(false)' call #! roslynator_configure_await
+dotnet_diagnostic.rcs1093.severity = warning    # Remove file with no code
+dotnet_diagnostic.rcs1094.severity = warning    # Declare using directive on top level
+dotnet_diagnostic.rcs1096.severity = warning    # Use 'HasFlag' method or bitwise operator#! roslynator_enum_has_flag_style
+dotnet_diagnostic.rcs1097.severity = warning    # Remove redundant 'ToString' call
+dotnet_diagnostic.rcs1098.severity = warning    # Constant values should be placed on right side of comparisons
+dotnet_diagnostic.rcs1099.severity = warning    # Default label should be the last label in a switch section
+dotnet_diagnostic.rcs1102.severity = warning    # Make class static
+dotnet_diagnostic.rcs1103.severity = warning    # Convert 'if' to assignment
+dotnet_diagnostic.rcs1104.severity = warning    # Simplify conditional expression
+dotnet_diagnostic.rcs1105.severity = warning    # Unnecessary interpolation
+dotnet_diagnostic.rcs1107.severity = warning    # Remove redundant 'ToCharArray' call
+dotnet_diagnostic.rcs1108.severity = warning    # Add 'static' modifier to all partial class declarations
+dotnet_diagnostic.rcs1110.severity = warning    # Declare type inside namespace
+dotnet_diagnostic.rcs1111.severity = warning    # Add braces to switch section with multiple statements
+dotnet_diagnostic.rcs1112.severity = warning    # Combine 'Enumerable.Where' method chain
+dotnet_diagnostic.rcs1113.severity = warning    # Use 'string.IsNullOrEmpty' method
+dotnet_diagnostic.rcs1114.severity = warning    # Remove redundant delegate creation
+dotnet_diagnostic.rcs1118.severity = warning    # Mark local variable as const
+dotnet_diagnostic.rcs1123.severity = warning    # Add parentheses when necessary
+dotnet_diagnostic.rcs1124.severity = silent     # Inline local variable
+dotnet_diagnostic.rcs1126.severity = warning    # Add braces to if-else
+dotnet_diagnostic.rcs1128.severity = warning    # Use coalesce expression
+dotnet_diagnostic.rcs1129.severity = warning    # Remove redundant field initialization
+dotnet_diagnostic.rcs1130.severity = warning    # Bitwise operation on enum without Flags attribute
+dotnet_diagnostic.rcs1132.severity = warning    # Remove redundant overriding member
+dotnet_diagnostic.rcs1133.severity = warning    # Remove redundant Dispose/Close call
+dotnet_diagnostic.rcs1134.severity = warning    # Remove redundant statement
+dotnet_diagnostic.rcs1135.severity = warning    # Declare enum member with zero value (when enum has FlagsAttribute)
+dotnet_diagnostic.rcs1136.severity = warning    # Merge switch sections with equivalent content
+dotnet_diagnostic.rcs1138.severity = warning    # Add summary to documentation comment
+dotnet_diagnostic.rcs1139.severity = warning    # Add summary element to documentation comment
+dotnet_diagnostic.rcs1140.severity = warning    # Add exception to documentation comment
+dotnet_diagnostic.rcs1141.severity = warning    # Add 'param' element to documentation comment
+dotnet_diagnostic.rcs1142.severity = warning    # Add 'typeparam' element to documentation comment
+dotnet_diagnostic.rcs1143.severity = warning    # Simplify coalesce expression
+dotnet_diagnostic.rcs1145.severity = warning    # Remove redundant 'as' operator
+dotnet_diagnostic.rcs1146.severity = warning    # Use conditional access
+dotnet_diagnostic.rcs1151.severity = warning    # Remove redundant cast
+dotnet_diagnostic.rcs1154.severity = warning    # Sort enum members
+dotnet_diagnostic.rcs1155.severity = warning    # Use StringComparison when comparing strings
+dotnet_diagnostic.rcs1156.severity = warning    # Use string.Length instead of comparison with empty string
+dotnet_diagnostic.rcs1157.severity = warning    # Composite enum value contains undefined flag
+dotnet_diagnostic.rcs1158.severity = warning    # Static member in generic type should use a type parameter
+dotnet_diagnostic.rcs1159.severity = warning    # Use EventHandler<T>
+dotnet_diagnostic.rcs1160.severity = warning    # Abstract type should not have public constructors
+dotnet_diagnostic.rcs1161.severity = silent     # Enum should declare explicit values
+dotnet_diagnostic.rcs1162.severity = warning    # Avoid chain of assignments
+dotnet_diagnostic.rcs1163.severity = warning    # Unused parameter
+dotnet_diagnostic.rcs1164.severity = warning    # Unused type parameter
+dotnet_diagnostic.rcs1165.severity = warning    # Unconstrained type parameter checked for null
+dotnet_diagnostic.rcs1166.severity = warning    # Value type object is never equal to null
+dotnet_diagnostic.rcs1168.severity = warning    # Parameter name differs from base name
+dotnet_diagnostic.rcs1169.severity = warning    # Make field read-only
+dotnet_diagnostic.rcs1170.severity = warning    # Use read-only auto-implemented property
+dotnet_diagnostic.rcs1171.severity = warning    # Simplify lazy initialization
+dotnet_diagnostic.rcs1172.severity = warning    # Use 'is' operator instead of 'as' operator
+dotnet_diagnostic.rcs1173.severity = warning    # Use coalesce expression instead of 'if'
+dotnet_diagnostic.rcs1174.severity = warning    # Remove redundant async/await
+dotnet_diagnostic.rcs1175.severity = warning    # Unused 'this' parameter
+dotnet_diagnostic.rcs1179.severity = warning    # Unnecessary assignment
+dotnet_diagnostic.rcs1180.severity = warning    # Inline lazy initialization
+dotnet_diagnostic.rcs1181.severity = warning    # Convert comment to documentation comment
+dotnet_diagnostic.rcs1182.severity = warning    # Remove redundant base interface
+dotnet_diagnostic.rcs1186.severity = warning    # Use Regex instance instead of static method
+dotnet_diagnostic.rcs1187.severity = warning    # Use constant instead of field
+dotnet_diagnostic.rcs1188.severity = warning    # Remove redundant auto-property initialization
+dotnet_diagnostic.rcs1189.severity = warning    # Add or remove region name
+dotnet_diagnostic.rcs1190.severity = warning    # Join string expressions
+dotnet_diagnostic.rcs1191.severity = warning    # Declare enum value as combination of names
+dotnet_diagnostic.rcs1192.severity = warning    # Unnecessary usage of verbatim string literal
+dotnet_diagnostic.rcs1193.severity = warning    # Overriding member should not change 'params' modifier
+dotnet_diagnostic.rcs1194.severity = warning    # Implement exception constructors
+dotnet_diagnostic.rcs1195.severity = warning    # Use ^ operator
+dotnet_diagnostic.rcs1196.severity = warning    # Call extension method as instance method
+dotnet_diagnostic.rcs1197.severity = warning    # Optimize StringBuilder.Append/AppendLine call
+dotnet_diagnostic.rcs1198.severity = warning    # Avoid unnecessary boxing of value type
+dotnet_diagnostic.rcs1199.severity = warning    # Unnecessary null check
+dotnet_diagnostic.rcs1200.severity = warning    # Call 'Enumerable.ThenBy' instead of 'Enumerable.OrderBy'
+dotnet_diagnostic.rcs1201.severity = warning    # Use method chaining
+dotnet_diagnostic.rcs1202.severity = warning    # Avoid NullReferenceException
+dotnet_diagnostic.rcs1203.severity = warning    # Use AttributeUsageAttribute
+dotnet_diagnostic.rcs1204.severity = warning    # Use EventArgs.Empty
+dotnet_diagnostic.rcs1205.severity = warning    # Order named arguments according to the order of parameters
+dotnet_diagnostic.rcs1206.severity = warning    # Use conditional access instead of conditional expression
+dotnet_diagnostic.rcs1207.severity = warning    # Use anonymous function or method group #! roslynator_use_anonymous_function_or_method_group
+dotnet_diagnostic.rcs1208.severity = warning    # Reduce 'if' nesting
+dotnet_diagnostic.rcs1209.severity = warning    # Order type parameter constraints
+dotnet_diagnostic.rcs1210.severity = warning    # Return completed task instead of returning null
+dotnet_diagnostic.rcs1211.severity = warning    # Remove unnecessary 'else'
+dotnet_diagnostic.rcs1212.severity = warning    # Remove redundant assignment
+dotnet_diagnostic.rcs1213.severity = warning    # Remove unused member declaration #! roslynator_suppress_unity_script_methods
+dotnet_diagnostic.rcs1214.severity = warning    # Unnecessary interpolated string
+dotnet_diagnostic.rcs1215.severity = warning    # Expression is always equal to true/false
+dotnet_diagnostic.rcs1216.severity = warning    # Unnecessary unsafe context
+dotnet_diagnostic.rcs1217.severity = warning    # Convert interpolated string to concatenation
+dotnet_diagnostic.rcs1218.severity = warning    # Simplify code branching
+dotnet_diagnostic.rcs1220.severity = warning    # Use pattern matching instead of combination of 'is' operator and cast operator
+dotnet_diagnostic.rcs1221.severity = warning    # Use pattern matching instead of combination of 'as' operator and null check
+dotnet_diagnostic.rcs1222.severity = warning    # Merge preprocessor directives
+dotnet_diagnostic.rcs1223.severity = none       # Mark publicly visible type with DebuggerDisplay attribute
+dotnet_diagnostic.rcs1224.severity = warning    # Make method an extension method
+dotnet_diagnostic.rcs1225.severity = warning    # Make class sealed
+dotnet_diagnostic.rcs1226.severity = warning    # Add paragraph to documentation comment
+dotnet_diagnostic.rcs1227.severity = warning    # Validate arguments correctly
+dotnet_diagnostic.rcs1228.severity = warning    # Unused element in documentation comment
+dotnet_diagnostic.rcs1229.severity = warning    # Use async/await when necessary
+dotnet_diagnostic.rcs1230.severity = warning    # Unnecessary explicit use of enumerator
+dotnet_diagnostic.rcs1231.severity = warning    # Make parameter ref read-only
+dotnet_diagnostic.rcs1232.severity = warning    # Order elements in documentation comment
+dotnet_diagnostic.rcs1233.severity = warning    # Use short-circuiting operator
+dotnet_diagnostic.rcs1234.severity = warning    # Duplicate enum value
+dotnet_diagnostic.rcs1235.severity = warning    # Optimize method call
+dotnet_diagnostic.rcs1236.severity = warning    # Use exception filter
+dotnet_diagnostic.rcs1238.severity = warning    # Avoid nested ?: operators
+dotnet_diagnostic.rcs1239.severity = warning    # Use 'for' statement instead of 'while' statement
+dotnet_diagnostic.rcs1240.severity = warning    # Operator is unnecessary
+dotnet_diagnostic.rcs1241.severity = warning    # Implement non-generic counterpart
+dotnet_diagnostic.rcs1242.severity = warning    # Do not pass non-read-only struct by read-only reference
+dotnet_diagnostic.rcs1243.severity = warning    # Duplicate word in a comment
+dotnet_diagnostic.rcs1244.severity = warning    # Simplify 'default' expression
+dotnet_diagnostic.rcs1246.severity = warning    # Use element access
+dotnet_diagnostic.rcs1247.severity = warning    # Fix documentation comment tag
+dotnet_diagnostic.rcs1248.severity = warning    # Normalize null check #! roslynator_null_check_style
+dotnet_diagnostic.rcs1249.severity = warning    # Unnecessary null-forgiving operator
+dotnet_diagnostic.rcs1250.severity = warning    # Use implicit/explicit object creation #! roslynator_object_creation_type_style, roslynator_use_var_instead_of_implicit_object_creation
+dotnet_diagnostic.rcs1251.severity = warning    # Remove unnecessary braces from record declaration
+dotnet_diagnostic.rcs1252.severity = warning    # Normalize usage of infinite loop #! roslynator_infinite_loop_style
+dotnet_diagnostic.rcs1253.severity = warning    # Format documentation comment summary #! roslynator_doc_comment_summary_style
+dotnet_diagnostic.rcs1254.severity = warning    # Normalize format of enum flag value #! roslynator_enum_flag_value_style
+dotnet_diagnostic.rcs1255.severity = warning    # Simplify argument null check
+dotnet_diagnostic.rcs1256.severity = warning    # Invalid argument null check
+dotnet_diagnostic.rcs1257.severity = warning    # Use enum field explicitly
+dotnet_diagnostic.rcs1258.severity = warning    # Unnecessary enum flag
+dotnet_diagnostic.rcs1259.severity = warning    # Remove empty syntax
+dotnet_diagnostic.rcs1260.severity = warning    # Add/remove trailing comma #! roslynator_trailing_comma_style
+dotnet_diagnostic.rcs1261.severity = warning    # Resource can be disposed asynchronously
+dotnet_diagnostic.rcs1262.severity = warning    # Unnecessary raw string literal
+dotnet_diagnostic.rcs1263.severity = warning    # Invalid reference in a documentation comment
+dotnet_diagnostic.rcs1264.severity = warning    # Use 'var' or explicit type
+dotnet_diagnostic.rcs1265.severity = warning    # Remove redundant catch block
+dotnet_diagnostic.rcs1266.severity = warning    # Use raw string literal
+dotnet_diagnostic.rcs1267.severity = warning    # Use string interpolation instead of 'string.Concat'
+dotnet_diagnostic.rcs1268.severity = warning    # Simplify numeric comparison
+dotnet_diagnostic.rcs9001.severity = warning    # Use pattern matching
+dotnet_diagnostic.rcs9002.severity = warning    # Use property SyntaxNode.SpanStart
+dotnet_diagnostic.rcs9003.severity = warning    # Unnecessary conditional access
+dotnet_diagnostic.rcs9004.severity = warning    # Call 'Any' instead of accessing 'Count'
+dotnet_diagnostic.rcs9005.severity = warning    # Unnecessary null check
+dotnet_diagnostic.rcs9006.severity = warning    # Use element access
+dotnet_diagnostic.rcs9007.severity = warning    # Use return value
+dotnet_diagnostic.rcs9008.severity = warning    # Call 'Last' instead of using []
+dotnet_diagnostic.rcs9009.severity = warning    # Unknown language name
+dotnet_diagnostic.rcs9010.severity = warning    # Specify ExportCodeRefactoringProviderAttribute.Name
+dotnet_diagnostic.rcs9011.severity = warning    # Specify ExportCodeFixProviderAttribute.Name
+
+# Roslynator Refactorings
+
+roslynator_refactoring.add_all_properties_to_initializer.enabled                            = true
+roslynator_refactoring.add_argument_name.enabled                                            = true
+roslynator_refactoring.add_braces.enabled                                                   = true
+roslynator_refactoring.add_braces_to_if_else.enabled                                        = true
+roslynator_refactoring.add_braces_to_switch_section.enabled                                 = true
+roslynator_refactoring.add_braces_to_switch_sections.enabled                                = true
+roslynator_refactoring.add_default_value_to_parameter.enabled                               = true
+roslynator_refactoring.add_empty_line_between_declarations.enabled                          = true
+roslynator_refactoring.add_exception_element_to_documentation_comment.enabled               = true
+roslynator_refactoring.add_generic_parameter_to_declaration.enabled                         = true
+roslynator_refactoring.add_member_to_interface.enabled                                      = true
+roslynator_refactoring.add_missing_cases_to_switch.enabled                                  = true
+roslynator_refactoring.add_parameter_to_interface_member.enabled                            = true
+roslynator_refactoring.add_tag_to_documentation_comment.enabled                             = true
+roslynator_refactoring.add_using_directive.enabled                                          = true
+roslynator_refactoring.add_using_static_directive.enabled                                   = true
+roslynator_refactoring.call_extension_method_as_instance_method.enabled                     = true
+roslynator_refactoring.call_indexof_instead_of_contains.enabled                             = true
+roslynator_refactoring.comment_out_member_declaration.enabled                               = true
+roslynator_refactoring.comment_out_statement.enabled                                        = true
+roslynator_refactoring.convert_auto_property_to_full_property.enabled                       = true
+roslynator_refactoring.convert_auto_property_to_full_property_without_backing_field.enabled = true
+roslynator_refactoring.convert_block_body_to_expression_body.enabled                        = true
+roslynator_refactoring.convert_comment_to_documentation_comment.enabled                     = true
+roslynator_refactoring.convert_conditional_expression_to_if_else.enabled                    = true
+roslynator_refactoring.convert_do_to_while.enabled                                          = true
+roslynator_refactoring.convert_expression_body_to_block_body.enabled                        = true
+roslynator_refactoring.convert_for_to_foreach.enabled                                       = true
+roslynator_refactoring.convert_for_to_while.enabled                                         = true
+roslynator_refactoring.convert_foreach_to_for.enabled                                       = true
+roslynator_refactoring.convert_foreach_to_for_and_reverse_loop.enabled                      = false
+roslynator_refactoring.convert_hasflag_call_to_bitwise_operation.enabled                    = true
+roslynator_refactoring.convert_hexadecimal_literal_to_decimal_literal.enabled               = true
+roslynator_refactoring.convert_if_to_conditional_expression.enabled                         = true
+roslynator_refactoring.convert_if_to_switch.enabled                                         = true
+roslynator_refactoring.convert_interpolated_string_to_concatenation.enabled                 = true
+roslynator_refactoring.convert_interpolated_string_to_string_format.enabled                 = true
+roslynator_refactoring.convert_interpolated_string_to_string_literal.enabled                = true
+roslynator_refactoring.convert_lambda_block_body_to_expression_body.enabled                 = true
+roslynator_refactoring.convert_lambda_expression_body_to_block_body.enabled                 = true
+roslynator_refactoring.convert_method_group_to_lambda.enabled                               = true
+roslynator_refactoring.convert_regular_string_literal_to_verbatim_string_literal.enabled    = true
+roslynator_refactoring.convert_return_statement_to_if.enabled                               = true
+roslynator_refactoring.convert_statements_to_if_else.enabled                                = true
+roslynator_refactoring.convert_string_format_to_interpolated_string.enabled                 = true
+roslynator_refactoring.convert_switch_expression_to_switch_statement.enabled                = true
+roslynator_refactoring.convert_switch_to_if.enabled                                         = true
+roslynator_refactoring.convert_verbatim_string_literal_to_regular_string_literal.enabled    = true
+roslynator_refactoring.convert_verbatim_string_literal_to_regular_string_literals.enabled   = true
+roslynator_refactoring.convert_while_to_do.enabled                                          = true
+roslynator_refactoring.convert_while_to_for.enabled                                         = true
+roslynator_refactoring.copy_argument.enabled                                                = true
+roslynator_refactoring.copy_documentation_comment_from_base_member.enabled                  = true
+roslynator_refactoring.copy_member_declaration.enabled                                      = true
+roslynator_refactoring.copy_parameter.enabled                                               = true
+roslynator_refactoring.copy_statement.enabled                                               = true
+roslynator_refactoring.copy_switch_section.enabled                                          = true
+roslynator_refactoring.deconstruct_foreach_variable.enabled                                 = true
+roslynator_refactoring.expand_coalesce_expression.enabled                                   = true
+roslynator_refactoring.expand_compound_assignment.enabled                                   = true
+roslynator_refactoring.expand_event_declaration.enabled                                     = true
+roslynator_refactoring.expand_initializer.enabled                                           = false
+roslynator_refactoring.expand_positional_constructor.enabled                                = true
+roslynator_refactoring.extract_event_handler_method.enabled                                 = true
+roslynator_refactoring.extract_expression_from_condition.enabled                            = true
+roslynator_refactoring.extract_type_declaration_to_new_file.enabled                         = true
+roslynator_refactoring.generate_base_constructors.enabled                                   = true
+roslynator_refactoring.generate_combined_enum_member.enabled                                = true
+roslynator_refactoring.generate_enum_member.enabled                                         = true
+roslynator_refactoring.generate_enum_values.enabled                                         = true
+roslynator_refactoring.generate_event_invoking_method.enabled                               = true
+roslynator_refactoring.generate_property_for_debuggerdisplay_attribute.enabled              = true
+roslynator_refactoring.change_accessibility.enabled                                         = true
+roslynator_refactoring.change_method_return_type_to_void.enabled                            = true
+roslynator_refactoring.change_type_according_to_expression.enabled                          = true
+roslynator_refactoring.check_expression_for_null.enabled                                    = true
+roslynator_refactoring.check_parameter_for_null.enabled                                     = true
+roslynator_refactoring.implement_custom_enumerator.enabled                                  = true
+roslynator_refactoring.implement_iequatable.enabled                                         = true
+roslynator_refactoring.initialize_field_from_constructor.enabled                            = true
+roslynator_refactoring.initialize_local_variable_with_default_value.enabled                 = true
+roslynator_refactoring.inline_alias_expression.enabled                                      = true
+roslynator_refactoring.inline_constant.enabled                                              = true
+roslynator_refactoring.inline_constant_value.enabled                                        = true
+roslynator_refactoring.inline_method.enabled                                                = true
+roslynator_refactoring.inline_property.enabled                                              = true
+roslynator_refactoring.inline_using_static.enabled                                          = true
+roslynator_refactoring.insert_string_interpolation.enabled                                  = true
+roslynator_refactoring.introduce_and_initialize_field.enabled                               = true
+roslynator_refactoring.introduce_and_initialize_property.enabled                            = true
+roslynator_refactoring.introduce_constructor.enabled                                        = false
+roslynator_refactoring.introduce_field_to_lock_on.enabled                                   = true
+roslynator_refactoring.introduce_local_variable.enabled                                     = true
+roslynator_refactoring.invert_binary_expression.enabled                                     = true
+roslynator_refactoring.invert_boolean_literal.enabled                                       = true
+roslynator_refactoring.invert_conditional_expression.enabled                                = true
+roslynator_refactoring.invert_if.enabled                                                    = true
+roslynator_refactoring.invert_if_else.enabled                                               = true
+roslynator_refactoring.invert_is_expression.enabled                                         = true
+roslynator_refactoring.invert_linq_method_call.enabled                                      = true
+roslynator_refactoring.invert_operator.enabled                                              = true
+roslynator_refactoring.invert_prefix_or_postfix_unary_expression.enabled                    = true
+roslynator_refactoring.join_string_expressions.enabled                                      = true
+roslynator_refactoring.make_member_abstract.enabled                                         = true
+roslynator_refactoring.make_member_virtual.enabled                                          = true
+roslynator_refactoring.merge_attributes.enabled                                             = true
+roslynator_refactoring.merge_if_statements.enabled                                          = true
+roslynator_refactoring.merge_if_with_parent_if.enabled                                      = true
+roslynator_refactoring.merge_local_declarations.enabled                                     = true
+roslynator_refactoring.merge_switch_sections.enabled                                        = true
+roslynator_refactoring.move_unsafe_context_to_containing_declaration.enabled                = true
+roslynator_refactoring.notify_when_property_changes.enabled                                 = true
+roslynator_refactoring.parenthesize_expression.enabled                                      = true
+roslynator_refactoring.promote_local_variable_to_parameter.enabled                          = true
+roslynator_refactoring.remove_all_comments.enabled                                          = true
+roslynator_refactoring.remove_all_comments_except_documentation_comments.enabled            = true
+roslynator_refactoring.remove_all_documentation_comments.enabled                            = false
+roslynator_refactoring.remove_all_member_declarations.enabled                               = true
+roslynator_refactoring.remove_all_preprocessor_directives.enabled                           = true
+roslynator_refactoring.remove_all_region_directives.enabled                                 = true
+roslynator_refactoring.remove_all_statements.enabled                                        = true
+roslynator_refactoring.remove_all_switch_sections.enabled                                   = true
+roslynator_refactoring.remove_argument_name.enabled                                         = true
+roslynator_refactoring.remove_async_await.enabled                                           = true
+roslynator_refactoring.remove_braces.enabled                                                = true
+roslynator_refactoring.remove_braces_from_if_else.enabled                                   = true
+roslynator_refactoring.remove_braces_from_switch_section.enabled                            = true
+roslynator_refactoring.remove_braces_from_switch_sections.enabled                           = true
+roslynator_refactoring.remove_comment.enabled                                               = true
+roslynator_refactoring.remove_condition_from_last_else.enabled                              = true
+roslynator_refactoring.remove_containing_statement.enabled                                  = true
+roslynator_refactoring.remove_empty_lines.enabled                                           = true
+roslynator_refactoring.remove_enum_member_value.enabled                                     = true
+roslynator_refactoring.remove_instantiation_of_local_variable.enabled                       = true
+roslynator_refactoring.remove_interpolation.enabled                                         = true
+roslynator_refactoring.remove_member_declaration.enabled                                    = true
+roslynator_refactoring.remove_member_declarations_above_or_below.enabled                    = true
+roslynator_refactoring.remove_parentheses.enabled                                           = true
+roslynator_refactoring.remove_preprocessor_directive.enabled                                = true
+roslynator_refactoring.remove_property_initializer.enabled                                  = true
+roslynator_refactoring.remove_region.enabled                                                = true
+roslynator_refactoring.remove_statement.enabled                                             = true
+roslynator_refactoring.remove_unnecessary_assignment.enabled                                = true
+roslynator_refactoring.rename_identifier_according_to_type_name.enabled                     = true
+roslynator_refactoring.rename_method_according_to_type_name.enabled                         = true
+roslynator_refactoring.rename_parameter_according_to_type_name.enabled                      = true
+roslynator_refactoring.rename_property_according_to_type_name.enabled                       = true
+roslynator_refactoring.replace_as_expression_with_explicit_cast.enabled                     = true
+roslynator_refactoring.replace_conditional_expression_with_true_or_false_branch.enabled     = true
+roslynator_refactoring.replace_equality_operator_with_string_equals.enabled                 = true
+roslynator_refactoring.replace_equality_operator_with_string_isnullorempty.enabled          = true
+roslynator_refactoring.replace_equality_operator_with_string_isnullorwhitespace.enabled     = true
+roslynator_refactoring.replace_explicit_cast_with_as_expression.enabled                     = true
+roslynator_refactoring.replace_interpolated_string_with_interpolation_expression.enabled    = true
+roslynator_refactoring.replace_method_with_property.enabled                                 = false
+roslynator_refactoring.replace_null_literal_with_default_expression.enabled                 = true
+roslynator_refactoring.replace_prefix_operator_with_postfix_operator.enabled                = true
+roslynator_refactoring.replace_property_with_method.enabled                                 = true
+roslynator_refactoring.reverse_for_statement.enabled                                        = true
+roslynator_refactoring.simplify_if.enabled                                                  = true
+roslynator_refactoring.sort_case_labels.enabled                                             = true
+roslynator_refactoring.sort_member_declarations.enabled                                     = true
+roslynator_refactoring.split_attributes.enabled                                             = true
+roslynator_refactoring.split_if.enabled                                                     = true
+roslynator_refactoring.split_if_else.enabled                                                = true
+roslynator_refactoring.split_local_declaration_and_assignment.enabled                       = true
+roslynator_refactoring.split_switch_labels.enabled                                          = true
+roslynator_refactoring.split_variable_declaration.enabled                                   = true
+roslynator_refactoring.swap_binary_operands.enabled                                         = true
+roslynator_refactoring.swap_member_declarations.enabled                                     = true
+roslynator_refactoring.sync_property_name_and_backing_field_name.enabled                    = true
+roslynator_refactoring.uncomment_multiline_comment.enabled                                  = true
+roslynator_refactoring.uncomment_singleline_comment.enabled                                 = true
+roslynator_refactoring.use_coalesce_expression_instead_of_if.enabled                        = true
+roslynator_refactoring.use_constant_instead_of_readonly_field.enabled                       = true
+roslynator_refactoring.use_element_access_instead_of_linq_method.enabled                    = true
+roslynator_refactoring.use_enumerator_explicitly.enabled                                    = true
+roslynator_refactoring.use_explicit_type.enabled                                            = false
+roslynator_refactoring.use_implicit_type.enabled                                            = true
+roslynator_refactoring.use_index_initializer.enabled                                        = true
+roslynator_refactoring.use_lambda_instead_of_anonymous_method.enabled                       = true
+roslynator_refactoring.use_list_instead_of_yield.enabled                                    = true
+roslynator_refactoring.use_object_initializer.enabled                                       = true
+roslynator_refactoring.use_readonly_field_instead_of_constant.enabled                       = true
+roslynator_refactoring.use_string_empty_instead_of_empty_string_literal.enabled             = false
+roslynator_refactoring.use_stringbuilder_instead_of_concatenation.enabled                   = true
+roslynator_refactoring.wrap_arguments.enabled                                               = true
+roslynator_refactoring.wrap_binary_expression.enabled                                       = true
+roslynator_refactoring.wrap_call_chain.enabled                                              = true
+roslynator_refactoring.wrap_conditional_expression.enabled                                  = true
+roslynator_refactoring.wrap_constraint_clauses.enabled                                      = true
+roslynator_refactoring.wrap_initializer_expressions.enabled                                 = true
+roslynator_refactoring.wrap_lines_in_preprocessor_directive.enabled                         = true
+roslynator_refactoring.wrap_lines_in_region.enabled                                         = true
+roslynator_refactoring.wrap_lines_in_try_catch.enabled                                      = true
+roslynator_refactoring.wrap_parameters.enabled                                              = true
+roslynator_refactoring.wrap_statements_in_condition.enabled                                 = true
+roslynator_refactoring.wrap_statements_in_using_statement.enabled                           = true
+
+# Roslynator Compiler diagnostic fixes
+
+roslynator_compiler_diagnostic_fix.cs0019.enabled = true
+roslynator_compiler_diagnostic_fix.cs0021.enabled = true
+roslynator_compiler_diagnostic_fix.cs0023.enabled = true
+roslynator_compiler_diagnostic_fix.cs0029.enabled = true
+roslynator_compiler_diagnostic_fix.cs0030.enabled = true
+roslynator_compiler_diagnostic_fix.cs0037.enabled = true
+roslynator_compiler_diagnostic_fix.cs0069.enabled = true
+roslynator_compiler_diagnostic_fix.cs0077.enabled = true
+roslynator_compiler_diagnostic_fix.cs0080.enabled = true
+roslynator_compiler_diagnostic_fix.cs0101.enabled = true
+roslynator_compiler_diagnostic_fix.cs0102.enabled = true
+roslynator_compiler_diagnostic_fix.cs0103.enabled = true
+roslynator_compiler_diagnostic_fix.cs0106.enabled = true
+roslynator_compiler_diagnostic_fix.cs0107.enabled = true
+roslynator_compiler_diagnostic_fix.cs0108.enabled = true
+roslynator_compiler_diagnostic_fix.cs0109.enabled = true
+roslynator_compiler_diagnostic_fix.cs0112.enabled = true
+roslynator_compiler_diagnostic_fix.cs0114.enabled = true
+roslynator_compiler_diagnostic_fix.cs0115.enabled = true
+roslynator_compiler_diagnostic_fix.cs0119.enabled = true
+roslynator_compiler_diagnostic_fix.cs0120.enabled = true
+roslynator_compiler_diagnostic_fix.cs0123.enabled = true
+roslynator_compiler_diagnostic_fix.cs0126.enabled = true
+roslynator_compiler_diagnostic_fix.cs0127.enabled = true
+roslynator_compiler_diagnostic_fix.cs0128.enabled = true
+roslynator_compiler_diagnostic_fix.cs0131.enabled = true
+roslynator_compiler_diagnostic_fix.cs0132.enabled = true
+roslynator_compiler_diagnostic_fix.cs0133.enabled = true
+roslynator_compiler_diagnostic_fix.cs0136.enabled = true
+roslynator_compiler_diagnostic_fix.cs0139.enabled = true
+roslynator_compiler_diagnostic_fix.cs0152.enabled = true
+roslynator_compiler_diagnostic_fix.cs0161.enabled = true
+roslynator_compiler_diagnostic_fix.cs0162.enabled = true
+roslynator_compiler_diagnostic_fix.cs0163.enabled = true
+roslynator_compiler_diagnostic_fix.cs0164.enabled = true
+roslynator_compiler_diagnostic_fix.cs0165.enabled = true
+roslynator_compiler_diagnostic_fix.cs0168.enabled = true
+roslynator_compiler_diagnostic_fix.cs0173.enabled = true
+roslynator_compiler_diagnostic_fix.cs0177.enabled = true
+roslynator_compiler_diagnostic_fix.cs0191.enabled = true
+roslynator_compiler_diagnostic_fix.cs0192.enabled = true
+roslynator_compiler_diagnostic_fix.cs0201.enabled = true
+roslynator_compiler_diagnostic_fix.cs0214.enabled = true
+roslynator_compiler_diagnostic_fix.cs0216.enabled = true
+roslynator_compiler_diagnostic_fix.cs0219.enabled = true
+roslynator_compiler_diagnostic_fix.cs0221.enabled = true
+roslynator_compiler_diagnostic_fix.cs0225.enabled = true
+roslynator_compiler_diagnostic_fix.cs0238.enabled = true
+roslynator_compiler_diagnostic_fix.cs0246.enabled = true
+roslynator_compiler_diagnostic_fix.cs0260.enabled = true
+roslynator_compiler_diagnostic_fix.cs0262.enabled = true
+roslynator_compiler_diagnostic_fix.cs0266.enabled = true
+roslynator_compiler_diagnostic_fix.cs0267.enabled = true
+roslynator_compiler_diagnostic_fix.cs0272.enabled = true
+roslynator_compiler_diagnostic_fix.cs0275.enabled = true
+roslynator_compiler_diagnostic_fix.cs0305.enabled = true
+roslynator_compiler_diagnostic_fix.cs0401.enabled = true
+roslynator_compiler_diagnostic_fix.cs0403.enabled = true
+roslynator_compiler_diagnostic_fix.cs0405.enabled = true
+roslynator_compiler_diagnostic_fix.cs0407.enabled = true
+roslynator_compiler_diagnostic_fix.cs0409.enabled = true
+roslynator_compiler_diagnostic_fix.cs0428.enabled = true
+roslynator_compiler_diagnostic_fix.cs0441.enabled = true
+roslynator_compiler_diagnostic_fix.cs0442.enabled = true
+roslynator_compiler_diagnostic_fix.cs0449.enabled = true
+roslynator_compiler_diagnostic_fix.cs0450.enabled = true
+roslynator_compiler_diagnostic_fix.cs0451.enabled = true
+roslynator_compiler_diagnostic_fix.cs0472.enabled = true
+roslynator_compiler_diagnostic_fix.cs0500.enabled = true
+roslynator_compiler_diagnostic_fix.cs0501.enabled = true
+roslynator_compiler_diagnostic_fix.cs0507.enabled = true
+roslynator_compiler_diagnostic_fix.cs0508.enabled = true
+roslynator_compiler_diagnostic_fix.cs0513.enabled = true
+roslynator_compiler_diagnostic_fix.cs0515.enabled = true
+roslynator_compiler_diagnostic_fix.cs0524.enabled = true
+roslynator_compiler_diagnostic_fix.cs0525.enabled = true
+roslynator_compiler_diagnostic_fix.cs0527.enabled = true
+roslynator_compiler_diagnostic_fix.cs0531.enabled = true
+roslynator_compiler_diagnostic_fix.cs0539.enabled = true
+roslynator_compiler_diagnostic_fix.cs0541.enabled = true
+roslynator_compiler_diagnostic_fix.cs0549.enabled = true
+roslynator_compiler_diagnostic_fix.cs0558.enabled = true
+roslynator_compiler_diagnostic_fix.cs0567.enabled = true
+roslynator_compiler_diagnostic_fix.cs0568.enabled = true
+roslynator_compiler_diagnostic_fix.cs0573.enabled = true
+roslynator_compiler_diagnostic_fix.cs0574.enabled = true
+roslynator_compiler_diagnostic_fix.cs0575.enabled = true
+roslynator_compiler_diagnostic_fix.cs0579.enabled = true
+roslynator_compiler_diagnostic_fix.cs0592.enabled = true
+roslynator_compiler_diagnostic_fix.cs0621.enabled = true
+roslynator_compiler_diagnostic_fix.cs0628.enabled = true
+roslynator_compiler_diagnostic_fix.cs0659.enabled = true
+roslynator_compiler_diagnostic_fix.cs0660.enabled = true
+roslynator_compiler_diagnostic_fix.cs0661.enabled = true
+roslynator_compiler_diagnostic_fix.cs0678.enabled = true
+roslynator_compiler_diagnostic_fix.cs0693.enabled = true
+roslynator_compiler_diagnostic_fix.cs0708.enabled = true
+roslynator_compiler_diagnostic_fix.cs0710.enabled = true
+roslynator_compiler_diagnostic_fix.cs0713.enabled = true
+roslynator_compiler_diagnostic_fix.cs0714.enabled = true
+roslynator_compiler_diagnostic_fix.cs0718.enabled = true
+roslynator_compiler_diagnostic_fix.cs0750.enabled = true
+roslynator_compiler_diagnostic_fix.cs0751.enabled = true
+roslynator_compiler_diagnostic_fix.cs0753.enabled = true
+roslynator_compiler_diagnostic_fix.cs0756.enabled = true
+roslynator_compiler_diagnostic_fix.cs0759.enabled = true
+roslynator_compiler_diagnostic_fix.cs0766.enabled = true
+roslynator_compiler_diagnostic_fix.cs0815.enabled = true
+roslynator_compiler_diagnostic_fix.cs0819.enabled = true
+roslynator_compiler_diagnostic_fix.cs0822.enabled = true
+roslynator_compiler_diagnostic_fix.cs1002.enabled = true
+roslynator_compiler_diagnostic_fix.cs1003.enabled = true
+roslynator_compiler_diagnostic_fix.cs1004.enabled = true
+roslynator_compiler_diagnostic_fix.cs1012.enabled = true
+roslynator_compiler_diagnostic_fix.cs1023.enabled = true
+roslynator_compiler_diagnostic_fix.cs1031.enabled = true
+roslynator_compiler_diagnostic_fix.cs1057.enabled = true
+roslynator_compiler_diagnostic_fix.cs1061.enabled = true
+roslynator_compiler_diagnostic_fix.cs1100.enabled = true
+roslynator_compiler_diagnostic_fix.cs1105.enabled = true
+roslynator_compiler_diagnostic_fix.cs1106.enabled = true
+roslynator_compiler_diagnostic_fix.cs1503.enabled = true
+roslynator_compiler_diagnostic_fix.cs1522.enabled = true
+roslynator_compiler_diagnostic_fix.cs1526.enabled = true
+roslynator_compiler_diagnostic_fix.cs1527.enabled = true
+roslynator_compiler_diagnostic_fix.cs1591.enabled = true
+roslynator_compiler_diagnostic_fix.cs1597.enabled = true
+roslynator_compiler_diagnostic_fix.cs1609.enabled = true
+roslynator_compiler_diagnostic_fix.cs1615.enabled = true
+roslynator_compiler_diagnostic_fix.cs1620.enabled = true
+roslynator_compiler_diagnostic_fix.cs1621.enabled = true
+roslynator_compiler_diagnostic_fix.cs1622.enabled = true
+roslynator_compiler_diagnostic_fix.cs1623.enabled = true
+roslynator_compiler_diagnostic_fix.cs1624.enabled = true
+roslynator_compiler_diagnostic_fix.cs1643.enabled = true
+roslynator_compiler_diagnostic_fix.cs1674.enabled = true
+roslynator_compiler_diagnostic_fix.cs1689.enabled = true
+roslynator_compiler_diagnostic_fix.cs1715.enabled = true
+roslynator_compiler_diagnostic_fix.cs1717.enabled = true
+roslynator_compiler_diagnostic_fix.cs1722.enabled = true
+roslynator_compiler_diagnostic_fix.cs1737.enabled = true
+roslynator_compiler_diagnostic_fix.cs1741.enabled = true
+roslynator_compiler_diagnostic_fix.cs1743.enabled = true
+roslynator_compiler_diagnostic_fix.cs1750.enabled = true
+roslynator_compiler_diagnostic_fix.cs1751.enabled = true
+roslynator_compiler_diagnostic_fix.cs1955.enabled = true
+roslynator_compiler_diagnostic_fix.cs1983.enabled = true
+roslynator_compiler_diagnostic_fix.cs1988.enabled = true
+roslynator_compiler_diagnostic_fix.cs1994.enabled = true
+roslynator_compiler_diagnostic_fix.cs1997.enabled = true
+roslynator_compiler_diagnostic_fix.cs3000.enabled = true
+roslynator_compiler_diagnostic_fix.cs3001.enabled = true
+roslynator_compiler_diagnostic_fix.cs3002.enabled = true
+roslynator_compiler_diagnostic_fix.cs3003.enabled = true
+roslynator_compiler_diagnostic_fix.cs3005.enabled = true
+roslynator_compiler_diagnostic_fix.cs3006.enabled = true
+roslynator_compiler_diagnostic_fix.cs3007.enabled = true
+roslynator_compiler_diagnostic_fix.cs3008.enabled = true
+roslynator_compiler_diagnostic_fix.cs3009.enabled = true
+roslynator_compiler_diagnostic_fix.cs3016.enabled = true
+roslynator_compiler_diagnostic_fix.cs3024.enabled = true
+roslynator_compiler_diagnostic_fix.cs3027.enabled = true
+roslynator_compiler_diagnostic_fix.cs7036.enabled = true
+roslynator_compiler_diagnostic_fix.cs8050.enabled = true
+roslynator_compiler_diagnostic_fix.cs8070.enabled = true
+roslynator_compiler_diagnostic_fix.cs8112.enabled = true
+roslynator_compiler_diagnostic_fix.cs8139.enabled = true
+roslynator_compiler_diagnostic_fix.cs8340.enabled = true
+roslynator_compiler_diagnostic_fix.cs8403.enabled = true
+roslynator_compiler_diagnostic_fix.cs8602.enabled = true
+roslynator_compiler_diagnostic_fix.cs8604.enabled = true
+roslynator_compiler_diagnostic_fix.cs8618.enabled = true
+roslynator_compiler_diagnostic_fix.cs8625.enabled = true
+roslynator_compiler_diagnostic_fix.cs8632.enabled = true
+
+# CA Analyzers
+
+# Design rules
+
+dotnet_diagnostic.CA1000.severity = warning    # Do not declare static members on generic types
+dotnet_diagnostic.CA1001.severity = warning    # Types that own disposable fields should be disposable
+dotnet_diagnostic.CA1002.severity = warning    # Do not expose generic lists
+dotnet_diagnostic.CA1003.severity = warning    # Use generic event handler instances
+dotnet_diagnostic.CA1005.severity = warning    # Avoid excessive parameters on generic types
+dotnet_diagnostic.CA1008.severity = warning    # Enums should have zero value
+dotnet_diagnostic.CA1010.severity = warning    # Collections should implement generic interface
+dotnet_diagnostic.CA1012.severity = warning    # Abstract types should not have public constructors
+dotnet_diagnostic.CA1014.severity = warning    # Mark assemblies with CLSCompliantAttribute
+dotnet_diagnostic.CA1016.severity = warning    # Mark assemblies with AssemblyVersionAttribute
+dotnet_diagnostic.CA1017.severity = warning    # Mark assemblies with ComVisibleAttribute
+dotnet_diagnostic.CA1018.severity = warning    # Mark attributes with AttributeUsageAttribute
+dotnet_diagnostic.CA1019.severity = warning    # Define accessors for attribute arguments
+dotnet_diagnostic.CA1021.severity = warning    # Avoid out parameters
+dotnet_diagnostic.CA1024.severity = warning    # Use properties where appropriate
+dotnet_diagnostic.CA1027.severity = warning    # Mark enums with FlagsAttribute
+dotnet_diagnostic.CA1028.severity = warning    # Enum storage should be Int32
+dotnet_diagnostic.CA1030.severity = warning    # Use events where appropriate
+dotnet_diagnostic.CA1031.severity = warning    # Do not catch general exception types
+dotnet_diagnostic.CA1032.severity = warning    # Implement standard exception constructors
+dotnet_diagnostic.CA1033.severity = warning    # Interface methods should be callable by child types
+dotnet_diagnostic.CA1034.severity = warning    # Nested types should not be visible
+dotnet_diagnostic.CA1036.severity = warning    # Override methods on comparable types
+dotnet_diagnostic.CA1040.severity = silent     # Avoid empty interfaces
+dotnet_diagnostic.CA1041.severity = warning    # Provide ObsoleteAttribute message
+dotnet_diagnostic.CA1043.severity = warning    # Use integral or string argument for indexers
+dotnet_diagnostic.CA1044.severity = warning    # Properties should not be write only
+dotnet_diagnostic.CA1045.severity = warning    # Do not pass types by reference
+dotnet_diagnostic.CA1046.severity = warning    # Do not overload operator equals on reference types
+dotnet_diagnostic.CA1047.severity = warning    # Do not declare protected members in sealed types
+dotnet_diagnostic.CA1050.severity = warning    # Declare types in namespaces
+dotnet_diagnostic.CA1051.severity = warning    # Do not declare visible instance fields
+dotnet_diagnostic.CA1052.severity = warning    # Static holder types should be Static or NotInheritable
+dotnet_diagnostic.CA1053.severity = warning    # Static holder types should not have default constructors
+dotnet_diagnostic.CA1054.severity = warning    # URI parameters should not be strings
+dotnet_diagnostic.CA1055.severity = warning    # URI return values should not be strings
+dotnet_diagnostic.CA1056.severity = warning    # URI properties should not be strings
+dotnet_diagnostic.CA1058.severity = warning    # Types should not extend certain base types
+dotnet_diagnostic.CA1060.severity = warning    # Move P/Invokes to NativeMethods class
+dotnet_diagnostic.CA1061.severity = warning    # Do not hide base class methods
+dotnet_diagnostic.CA1062.severity = none       # Validate arguments of public methods
+dotnet_diagnostic.CA1063.severity = warning    # Implement IDisposable correctly
+dotnet_diagnostic.CA1064.severity = warning    # Exceptions should be public
+dotnet_diagnostic.CA1065.severity = warning    # Do not raise exceptions in unexpected locations
+dotnet_diagnostic.CA1066.severity = warning    # Implement IEquatable when overriding Equals
+dotnet_diagnostic.CA1067.severity = warning    # Override Equals when implementing IEquatable
+dotnet_diagnostic.CA1068.severity = warning    # CancellationToken parameters must come last
+dotnet_diagnostic.CA1069.severity = warning    # Enums should not have duplicate values
+dotnet_diagnostic.CA1070.severity = warning    # Do not declare event fields as virtual
+
+# Documentation rules
+
+dotnet_diagnostic.CA1200.severity = warning    # Avoid using cref tags with a prefix
+
+# Globalization rules
+
+dotnet_diagnostic.CA1303.severity = silent # Do not pass literals as localized parameters
+dotnet_code_quality.CA1303.use_naming_heuristic = true
+dotnet_diagnostic.CA1304.severity = warning    # Specify CultureInfo
+dotnet_diagnostic.CA1305.severity = warning    # Specify IFormatProvider
+dotnet_diagnostic.CA1307.severity = warning    # Specify StringComparison for clarity
+dotnet_diagnostic.CA1308.severity = warning    # Normalize strings to uppercase
+dotnet_diagnostic.CA1309.severity = warning    # Use ordinal StringComparison
+dotnet_diagnostic.CA1310.severity = warning    # Specify StringComparison for correctness
+dotnet_diagnostic.CA1311.severity = warning    # Specify a culture or use an invariant version
+dotnet_diagnostic.CA2101.severity = warning    # Specify marshalling for P/Invoke string arguments
+
+# Portability and interoperability rules
+
+dotnet_diagnostic.CA1401.severity = warning    # P/Invokes should not be visible
+dotnet_diagnostic.CA1416.severity = warning    # Validate platform compatibility
+dotnet_diagnostic.CA1417.severity = warning    # Do not use `OutAttribute` on string parameters for P/Invokes
+dotnet_diagnostic.CA1418.severity = warning    # Validate platform compatibility
+dotnet_diagnostic.CA1419.severity = warning    # Provide a parameterless constructor that is as visible as the containing type for concrete types derived from 'System.Runtime.InteropServices.SafeHandle'
+dotnet_diagnostic.CA1420.severity = warning    # Property, type, or attribute requires runtime marshalling
+dotnet_diagnostic.CA1421.severity = warning    # Method uses runtime marshalling when DisableRuntimeMarshallingAttribute is applied
+dotnet_diagnostic.CA1422.severity = warning    # Validate platform compatibility - obsoleted APIs
+
+# Maintainability rules
+
+dotnet_diagnostic.CA1501.severity = warning    # Avoid excessive inheritance
+dotnet_diagnostic.CA1502.severity = warning    # Avoid excessive complexity
+dotnet_diagnostic.CA1505.severity = warning    # Avoid unmaintainable code
+dotnet_diagnostic.CA1506.severity = warning    # Avoid excessive class coupling
+dotnet_diagnostic.CA1507.severity = warning    # Use `nameof` in place of string
+dotnet_diagnostic.CA1508.severity = warning    # Avoid dead conditional code
+dotnet_diagnostic.CA1509.severity = warning    # Invalid entry in code metrics configuration file
+dotnet_diagnostic.CA1510.severity = warning    # Use ArgumentNullException throw helper
+dotnet_diagnostic.CA1511.severity = warning    # Use ArgumentException throw helper
+dotnet_diagnostic.CA1512.severity = warning    # Use ArgumentOutOfRangeException throw helper
+dotnet_diagnostic.CA1513.severity = warning    # Use ObjectDisposedException throw helper
+dotnet_diagnostic.CA1514.severity = warning    # Avoid redundant length argument
+dotnet_diagnostic.CA1515.severity = warning    # Consider making public types internal
+
+# Naming rules
+
+dotnet_diagnostic.CA1700.severity = warning    # Do not name enum values 'Reserved'
+dotnet_diagnostic.CA1707.severity = warning    # Identifiers should not contain underscores
+dotnet_diagnostic.CA1708.severity = warning    # Identifiers should differ by more than case
+dotnet_diagnostic.CA1710.severity = warning    # Identifiers should have correct suffix
+dotnet_diagnostic.CA1711.severity = warning    # Identifiers should not have incorrect suffix
+dotnet_diagnostic.CA1712.severity = warning    # Do not prefix enum values with type name
+dotnet_diagnostic.CA1713.severity = warning    # Events should not have before or after prefix
+dotnet_diagnostic.CA1714.severity = warning    # Flags enums should have plural names
+dotnet_diagnostic.CA1715.severity = warning    # Identifiers should have correct prefix
+dotnet_diagnostic.CA1716.severity = none    # Identifiers should not match keywords
+dotnet_diagnostic.CA1717.severity = warning    # Only FlagsAttribute enums should have plural names
+dotnet_diagnostic.CA1720.severity = warning    # Identifiers should not contain type names
+dotnet_diagnostic.CA1721.severity = warning    # Property names should not match get methods
+dotnet_diagnostic.CA1724.severity = warning    # Type names should not match namespaces
+dotnet_diagnostic.CA1725.severity = warning    # Parameter names should match base declaration
+dotnet_diagnostic.CA1727.severity = warning    # Use PascalCase for named placeholders
+
+# Performance rules
+
+dotnet_diagnostic.CA1802.severity = warning    # Use Literals Where Appropriate
+dotnet_diagnostic.CA1805.severity = warning    # Do not initialize unnecessarily.
+dotnet_diagnostic.CA1806.severity = warning    # Do not ignore method results
+dotnet_diagnostic.CA1810.severity = warning    # Initialize reference type static fields inline
+dotnet_diagnostic.CA1812.severity = warning    # Avoid uninstantiated internal classes
+dotnet_diagnostic.CA1813.severity = warning    # Avoid unsealed attributes
+dotnet_diagnostic.CA1814.severity = warning    # Prefer jagged arrays over multidimensional
+dotnet_diagnostic.CA1815.severity = warning    # Override equals and operator equals on value types
+dotnet_diagnostic.CA1819.severity = warning    # Properties should not return arrays
+dotnet_diagnostic.CA1820.severity = warning    # Test for empty strings using string length
+dotnet_diagnostic.CA1821.severity = warning    # Remove empty finalizers
+dotnet_diagnostic.CA1822.severity = warning    # Make member static
+dotnet_diagnostic.CA1823.severity = warning    # Avoid unused private fields
+dotnet_diagnostic.CA1824.severity = warning    # Mark assemblies with NeutralResourcesLanguageAttribute
+dotnet_diagnostic.CA1825.severity = warning    # Avoid zero-length array allocations
+dotnet_diagnostic.CA1826.severity = warning    # Use property instead of Linq Enumerable method
+dotnet_diagnostic.CA1827.severity = warning    # Do not use Count/LongCount when Any can be used
+dotnet_diagnostic.CA1828.severity = warning    # Do not use CountAsync/LongCountAsync when AnyAsync can be used
+dotnet_diagnostic.CA1829.severity = warning    # Use Length/Count property instead of Enumerable.Count method
+dotnet_diagnostic.CA1830.severity = warning    # Prefer strongly-typed Append and Insert method overloads on StringBuilder.
+dotnet_diagnostic.CA1831.severity = warning    # Use AsSpan instead of Range-based indexers for string when appropriate
+dotnet_diagnostic.CA1832.severity = warning    # Use AsSpan or AsMemory instead of Range-based indexers for getting ReadOnlySpan or ReadOnlyMemory portion of an array
+dotnet_diagnostic.CA1833.severity = warning    # Use AsSpan or AsMemory instead of Range-based indexers for getting Span or Memory portion of an array
+dotnet_diagnostic.CA1834.severity = warning    # Use StringBuilder.Append(char) for single character strings
+dotnet_diagnostic.CA1835.severity = warning    # Prefer the memory-based overloads of ReadAsync/WriteAsync methods in stream-based classes
+dotnet_diagnostic.CA1836.severity = warning    # Prefer IsEmpty over Count when available
+dotnet_diagnostic.CA1837.severity = warning    # Use Environment.ProcessId instead of Process.GetCurrentProcess().Id
+dotnet_diagnostic.CA1838.severity = warning    # Avoid `StringBuilder` parameters for P/Invokes
+dotnet_diagnostic.CA1839.severity = warning    # Use Environment.ProcessPath instead of Process.GetCurrentProcess().MainModule.FileName
+dotnet_diagnostic.CA1840.severity = warning    # Use Environment.CurrentManagedThreadId instead of Thread.CurrentThread.ManagedThreadId
+dotnet_diagnostic.CA1841.severity = warning    # Prefer Dictionary Contains methods
+dotnet_diagnostic.CA1842.severity = warning    # Do not use 'WhenAll' with a single task
+dotnet_diagnostic.CA1843.severity = warning    # Do not use 'WaitAll' with a single task
+dotnet_diagnostic.CA1844.severity = warning    # Provide memory-based overrides of async methods when subclassing 'Stream'
+dotnet_diagnostic.CA1845.severity = warning    # Use span-based 'string.Concat'
+dotnet_diagnostic.CA1846.severity = warning    # Prefer `AsSpan` over `Substring`
+dotnet_diagnostic.CA1847.severity = warning    # Use string.Contains(char) instead of string.Contains(string) with single characters
+dotnet_diagnostic.CA1848.severity = silent     # Use the LoggerMessage delegates
+dotnet_diagnostic.CA1849.severity = warning    # Call async methods when in an async method
+dotnet_diagnostic.CA1850.severity = warning    # Prefer static `HashData` method over ComputeHash
+dotnet_diagnostic.CA1851.severity = warning    # Possible multiple enumerations of `IEnumerable` collection
+dotnet_diagnostic.CA1854.severity = warning    # Prefer the `IDictionary.TryGetValue(TKey, out TValue)` method
+dotnet_diagnostic.CA1855.severity = warning    # Use Span<T>.Clear() instead of Span<T>.Fill()
+dotnet_diagnostic.CA1856.severity = warning    # Incorrect usage of ConstantExpected attribute
+dotnet_diagnostic.CA1857.severity = warning    # The parameter expects a constant for optimal performance
+dotnet_diagnostic.CA1858.severity = warning    # Use StartsWith instead of IndexOf
+dotnet_diagnostic.CA1859.severity = warning    # Use concrete types when possible for improved performance
+dotnet_diagnostic.CA1860.severity = warning    # Avoid using 'Enumerable.Any()' extension method
+dotnet_diagnostic.CA1861.severity = warning    # Avoid constant arrays as arguments
+dotnet_diagnostic.CA1862.severity = warning    # Use the 'StringComparison' method overloads to perform case-insensitive string comparisons
+dotnet_diagnostic.CA1863.severity = warning    # Use 'CompositeFormat'
+dotnet_diagnostic.CA1864.severity = warning    # Prefer the 'IDictionary.TryAdd(TKey, TValue)' method
+dotnet_diagnostic.CA1865.severity = warning    # Use 'string.Method(char)' instead of 'string.Method(string)' for string with single char
+dotnet_diagnostic.CA1866.severity = warning    # Use 'string.Method(char)' instead of 'string.Method(string)' for string with single char
+dotnet_diagnostic.CA1867.severity = warning    # Use 'string.Method(char)' instead of 'string.Method(string)' for string with single char
+dotnet_diagnostic.CA1868.severity = warning    # Unnecessary call to 'Contains' for sets
+dotnet_diagnostic.CA1869.severity = warning    # Cache and reuse 'JsonSerializerOptions' instances
+dotnet_diagnostic.CA1870.severity = warning    # Use a cached 'SearchValues' instance
+dotnet_diagnostic.CA1871.severity = warning    # Do not pass a nullable struct to 'ArgumentNullException.ThrowIfNull'
+dotnet_diagnostic.CA1872.severity = warning    # Prefer 'Convert.ToHexString' and 'Convert.ToHexStringLower' over call chains based on 'BitConverter.ToString'
+
+# SingleFile rules
+
+dotnet_diagnostic.IL3000.severity = warning    # Avoid accessing Assembly file path when publishing as a single file
+dotnet_diagnostic.IL3001.severity = warning    # Avoid accessing Assembly file path when publishing as a single file
+dotnet_diagnostic.IL3002.severity = warning    # Avoid calling members annotated with 'RequiresAssemblyFilesAttribute' when publishing as a single file.
+dotnet_diagnostic.IL3003.severity = warning    # 'RequiresAssemblyFilesAttribute' annotations must match across all interface implementations or overrides
+dotnet_diagnostic.IL3005.severity = warning    # RequiresAssemblyFilesAttribute cannot be placed directly on application entry point
+
+# Reliability rules
+
+dotnet_diagnostic.CA2000.severity = warning    # Dispose objects before losing scope
+dotnet_diagnostic.CA2002.severity = warning    # Do not lock on objects with weak identity
+dotnet_diagnostic.CA2007.severity = warning    # Do not directly await a Task
+dotnet_diagnostic.CA2008.severity = warning    # Do not create tasks without passing a TaskScheduler
+dotnet_diagnostic.CA2009.severity = warning    # Do not call ToImmutableCollection on an ImmutableCollection value
+dotnet_diagnostic.CA2011.severity = warning    # Do not assign property within its setter
+dotnet_diagnostic.CA2012.severity = warning    # Use ValueTasks correctly
+dotnet_diagnostic.CA2013.severity = warning    # Do not use ReferenceEquals with value types
+dotnet_diagnostic.CA2014.severity = warning    # Do not use stackalloc in loops
+dotnet_diagnostic.CA2015.severity = warning    # Do not define finalizers for types derived from MemoryManager<T>
+dotnet_diagnostic.CA2016.severity = warning    # Forward the CancellationToken parameter to methods that take one
+dotnet_diagnostic.CA2017.severity = warning    # Parameter count mismatch
+dotnet_diagnostic.CA2018.severity = warning    # The `count` argument to `Buffer.BlockCopy` should specify the number of bytes to copy
+dotnet_diagnostic.CA2020.severity = warning    # Prevent behavioral change caused by built-in operators of IntPtr/UIntPtr
+dotnet_diagnostic.CA2021.severity = warning    # Don't call Enumerable.Cast<T> or Enumerable.OfType<T> with incompatible types
+dotnet_diagnostic.CA2022.severity = warning    # Avoid inexact read with Stream.Read
+dotnet_diagnostic.CA2024.severity = warning    # Do not use StreamReader.EndOfStream in async methods
+
+# Security rules
+
+dotnet_diagnostic.CA2100.severity = warning    # Review SQL queries for security vulnerabilities
+dotnet_diagnostic.CA2119.severity = warning    # Seal methods that satisfy private interfaces
+dotnet_diagnostic.CA2153.severity = warning    # Avoid Handling Corrupted State Exceptions
+dotnet_diagnostic.CA2300.severity = warning    # Do not use insecure deserializer BinaryFormatter
+dotnet_diagnostic.CA2301.severity = warning    # Do not call BinaryFormatter.Deserialize without first setting BinaryFormatter.Binder
+dotnet_diagnostic.CA2302.severity = warning    # Ensure BinaryFormatter.Binder is set before calling BinaryFormatter.Deserialize
+dotnet_diagnostic.CA2305.severity = warning    # Do not use insecure deserializer LosFormatter
+dotnet_diagnostic.CA2310.severity = warning    # Do not use insecure deserializer NetDataContractSerializer
+dotnet_diagnostic.CA2311.severity = warning    # Do not deserialize without first setting NetDataContractSerializer.Binder
+dotnet_diagnostic.CA2312.severity = warning    # Ensure NetDataContractSerializer.Binder is set before deserializing
+dotnet_diagnostic.CA2315.severity = warning    # Do not use insecure deserializer ObjectStateFormatter
+dotnet_diagnostic.CA2321.severity = warning    # Do not deserialize with JavaScriptSerializer using a SimpleTypeResolver
+dotnet_diagnostic.CA2322.severity = warning    # Ensure JavaScriptSerializer is not initialized with SimpleTypeResolver before deserializing
+dotnet_diagnostic.CA2326.severity = warning    # Do not use TypeNameHandling values other than None
+dotnet_diagnostic.CA2327.severity = warning    # Do not use insecure JsonSerializerSettings
+dotnet_diagnostic.CA2328.severity = warning    # Ensure that JsonSerializerSettings are secure
+dotnet_diagnostic.CA2329.severity = warning    # Do not deserialize with JsonSerializer using an insecure configuration
+dotnet_diagnostic.CA2330.severity = warning    # Ensure that JsonSerializer has a secure configuration when deserializing
+dotnet_diagnostic.CA2350.severity = warning    # Ensure DataTable.ReadXml()'s input is trusted
+dotnet_diagnostic.CA2351.severity = warning    # Ensure DataSet.ReadXml()'s input is trusted
+dotnet_diagnostic.CA2352.severity = warning    # Unsafe DataSet or DataTable in serializable type can be vulnerable to remote code execution attacks
+dotnet_diagnostic.CA2353.severity = warning    # Unsafe DataSet or DataTable in serializable type
+dotnet_diagnostic.CA2354.severity = warning    # Unsafe DataSet or DataTable in deserialized object graph can be vulnerable to remote code execution attack
+dotnet_diagnostic.CA2355.severity = warning    # Unsafe DataSet or DataTable in deserialized object graph
+dotnet_diagnostic.CA2356.severity = warning    # Unsafe DataSet or DataTable in web deserialized object graph
+dotnet_diagnostic.CA2361.severity = warning    # Ensure autogenerated class containing DataSet.ReadXml() is not used with untrusted data
+dotnet_diagnostic.CA2362.severity = warning    # Unsafe DataSet or DataTable in autogenerated serializable type can be vulnerable to remote code execution attacks
+dotnet_diagnostic.CA3001.severity = warning    # Review code for SQL injection vulnerabilities
+dotnet_diagnostic.CA3002.severity = warning    # Review code for XSS vulnerabilities
+dotnet_diagnostic.CA3003.severity = warning    # Review code for file path injection vulnerabilities
+dotnet_diagnostic.CA3004.severity = warning    # Review code for information disclosure vulnerabilities
+dotnet_diagnostic.CA3005.severity = warning    # Review code for LDAP injection vulnerabilitie
+dotnet_diagnostic.CA3006.severity = warning    # Review code for process command injection vulnerabilities
+dotnet_diagnostic.CA3007.severity = warning    # Review code for open redirect vulnerabilities
+dotnet_diagnostic.CA3008.severity = warning    # Review code for XPath injection vulnerabilities
+dotnet_diagnostic.CA3009.severity = warning    # Review code for XML injection vulnerabilities
+dotnet_diagnostic.CA3010.severity = warning    # Review code for XAML injection vulnerabilities
+dotnet_diagnostic.CA3011.severity = warning    # Review code for DLL injection vulnerabilities
+dotnet_diagnostic.CA3012.severity = warning    # Review code for regex injection vulnerabilities
+dotnet_diagnostic.CA3061.severity = warning    # Do not add schema by URL
+dotnet_diagnostic.CA3075.severity = warning    # Insecure DTD Processing
+dotnet_diagnostic.CA3076.severity = warning    # Insecure XSLT Script Execution
+dotnet_diagnostic.CA3077.severity = warning    # Insecure Processing in API Design, XML Document and XML Text Reader
+dotnet_diagnostic.CA3147.severity = warning    # Mark verb handlers with ValidateAntiForgeryToken
+dotnet_diagnostic.CA5350.severity = warning    # Do Not Use Weak Cryptographic Algorithms
+dotnet_diagnostic.CA5351.severity = warning    # Do Not Use Broken Cryptographic Algorithms
+dotnet_diagnostic.CA5358.severity = warning    # Do Not Use Unsafe Cipher Modes
+dotnet_diagnostic.CA5359.severity = warning    # Do not disable certificate validation
+dotnet_diagnostic.CA5360.severity = warning    # Do not call dangerous methods in deserialization
+dotnet_diagnostic.CA5361.severity = warning    # Do not disable SChannel use of strong crypto
+dotnet_diagnostic.CA5362.severity = warning    # Potential reference cycle in deserialized object graph
+dotnet_diagnostic.CA5363.severity = warning    # Do not disable request validation
+dotnet_diagnostic.CA5364.severity = warning    # Do not use deprecated security protocols
+dotnet_diagnostic.CA5365.severity = warning    # Do Not Disable HTTP Header Checking
+dotnet_diagnostic.CA5366.severity = warning    # Use XmlReader For DataSet Read XML
+dotnet_diagnostic.CA5367.severity = warning    # Do Not Serialize Types With Pointer Fields
+dotnet_diagnostic.CA5368.severity = warning    # Set ViewStateUserKey For Classes Derived From Page
+dotnet_diagnostic.CA5369.severity = warning    # Use XmlReader for Deserialize
+dotnet_diagnostic.CA5370.severity = warning    # Use XmlReader for validating reader
+dotnet_diagnostic.CA5371.severity = warning    # Use XmlReader for schema read
+dotnet_diagnostic.CA5372.severity = warning    # Use XmlReader for XPathDocument
+dotnet_diagnostic.CA5373.severity = warning    # Do not use obsolete key derivation function
+dotnet_diagnostic.CA5374.severity = warning    # Do Not Use XslTransform
+dotnet_diagnostic.CA5375.severity = warning    # Do not use account shared access signature
+dotnet_diagnostic.CA5376.severity = warning    # Use SharedAccessProtocol HttpsOnly
+dotnet_diagnostic.CA5377.severity = warning    # Use container level access policy
+dotnet_diagnostic.CA5378.severity = warning    # Do not disable ServicePointManagerSecurityProtocols
+dotnet_diagnostic.CA5379.severity = warning    # Ensure key derivation function algorithm is sufficiently strong
+dotnet_diagnostic.CA5380.severity = warning    # Do not add certificates to root store
+dotnet_diagnostic.CA5381.severity = warning    # Ensure certificates are not added to root store
+dotnet_diagnostic.CA5382.severity = warning    # Use secure cookies in ASP.NET Core
+dotnet_diagnostic.CA5383.severity = warning    # Ensure use secure cookies in ASP.NET Core
+dotnet_diagnostic.CA5384.severity = warning    # Do not use digital signature algorithm (DSA)
+dotnet_diagnostic.CA5385.severity = warning    # Use Rivest–Shamir–Adleman (RSA) algorithm with sufficient key size
+dotnet_diagnostic.CA5386.severity = warning    # Avoid hardcoding SecurityProtocolType value
+dotnet_diagnostic.CA5387.severity = warning    # Do not use weak key derivation function with insufficient iteration count
+dotnet_diagnostic.CA5388.severity = warning    # Ensure sufficient iteration count when using weak key derivation function
+dotnet_diagnostic.CA5389.severity = warning    # Do not add archive item's path to the target file system path
+dotnet_diagnostic.CA5390.severity = warning    # Do not hard-code encryption key
+dotnet_diagnostic.CA5391.severity = warning    # Use antiforgery tokens in ASP.NET Core MVC controllers
+dotnet_diagnostic.CA5392.severity = warning    # Use DefaultDllImportSearchPaths attribute for P/Invokes
+dotnet_diagnostic.CA5393.severity = warning    # Do not use unsafe DllImportSearchPath value
+dotnet_diagnostic.CA5394.severity = warning    # Do not use insecure randomness
+dotnet_diagnostic.CA5395.severity = warning    # Miss HttpVerb attribute for action methods
+dotnet_diagnostic.CA5396.severity = warning    # Set HttpOnly to true for HttpCookie
+dotnet_diagnostic.CA5397.severity = warning    # Do not use deprecated SslProtocols values
+dotnet_diagnostic.CA5398.severity = warning    # Avoid hardcoded SslProtocols values
+dotnet_diagnostic.CA5399.severity = warning    # Definitely disable HttpClient certificate revocation list check
+dotnet_diagnostic.CA5400.severity = warning    # Ensure HttpClient certificate revocation list check is not disabled
+dotnet_diagnostic.CA5401.severity = warning    # Do not use CreateEncryptor with non-default IV
+dotnet_diagnostic.CA5402.severity = warning    # Use CreateEncryptor with the default IV
+dotnet_diagnostic.CA5403.severity = warning    # Do not hard-code certificate
+dotnet_diagnostic.CA5404.severity = warning    # Do not disable token validation checks
+dotnet_diagnostic.CA5405.severity = warning    # Do not always skip token validation in delegates
+
+# Usage rules
+
+dotnet_diagnostic.CA1801.severity = warning    # Review unused parameters
+dotnet_diagnostic.CA1816.severity = warning    # Call GC.SuppressFinalize correctly  call GC.SuppressFinalize(object)
+dotnet_diagnostic.CA2200.severity = warning    # Rethrow to preserve stack details
+dotnet_diagnostic.CA2201.severity = warning    # Do not raise reserved exception types
+dotnet_diagnostic.CA2207.severity = warning    # Initialize value type static fields inline
+dotnet_diagnostic.CA2208.severity = warning    # Instantiate argument exceptions correctly
+dotnet_diagnostic.CA2211.severity = warning    # Non-constant fields should not be visible
+dotnet_diagnostic.CA2213.severity = warning    # Disposable fields should be disposed
+dotnet_diagnostic.CA2214.severity = warning    # Do not call overridable methods in constructors
+dotnet_diagnostic.CA2215.severity = warning    # Dispose methods should call base class dispose
+dotnet_diagnostic.CA2216.severity = warning    # Disposable types should declare finalizer
+dotnet_diagnostic.CA2217.severity = warning    # Do not mark enums with FlagsAttribute
+dotnet_diagnostic.CA2218.severity = warning    # Override GetHashCode on overriding Equals
+dotnet_diagnostic.CA2219.severity = warning    # Do not raise exceptions in exception clauses
+dotnet_diagnostic.CA2224.severity = warning    # Override equals on overloading operator equals
+dotnet_diagnostic.CA2225.severity = warning    # Operator overloads have named alternates
+dotnet_diagnostic.CA2226.severity = warning    # Operators should have symmetrical overloads
+dotnet_diagnostic.CA2227.severity = warning    # Collection properties should be read only
+dotnet_diagnostic.CA2231.severity = warning    # Overload operator equals on overriding ValueType.Equals
+dotnet_diagnostic.CA2234.severity = warning    # Pass System.Uri objects instead of strings
+dotnet_diagnostic.CA2235.severity = warning    # Mark all non-serializable fields
+dotnet_diagnostic.CA2237.severity = warning    # Mark ISerializable types with SerializableAttribute
+dotnet_diagnostic.CA2241.severity = warning    # Provide correct arguments to formatting methods
+dotnet_diagnostic.CA2242.severity = warning    # Test for NaN correctly
+dotnet_diagnostic.CA2243.severity = warning    # Attribute string literals should parse correctly
+dotnet_diagnostic.CA2244.severity = warning    # Do not duplicate indexed element initializations
+dotnet_diagnostic.CA2245.severity = warning    # Do not assign a property to itself
+dotnet_diagnostic.CA2246.severity = warning    # Do not assign a symbol and its member in the same statement
+dotnet_diagnostic.CA2247.severity = warning    # Argument passed to TaskCompletionSource constructor should be TaskCreationOptions enum instead of TaskContinuationOptions enum
+dotnet_diagnostic.CA2248.severity = warning    # Provide correct 'enum' argument to 'Enum.HasFlag'
+dotnet_diagnostic.CA2249.severity = warning    # Consider using String.Contains instead of String.IndexOf
+dotnet_diagnostic.CA2250.severity = warning    # Use `ThrowIfCancellationRequested`
+dotnet_diagnostic.CA2251.severity = warning    # Use `String.Equals` over `String.Compare`
+dotnet_diagnostic.CA2252.severity = warning    # Opt in to preview features
+dotnet_diagnostic.CA2253.severity = warning    # Named placeholders should not be numeric values
+dotnet_diagnostic.CA2254.severity = warning    # Template should be a static expression
+dotnet_diagnostic.CA2255.severity = warning    # The `ModuleInitializer` attribute should not be used in libraries
+dotnet_diagnostic.CA2256.severity = warning    # All members declared in parent interfaces must have an implementation in a DynamicInterfaceCastableImplementation-attributed interface
+dotnet_diagnostic.CA2257.severity = warning    # Members defined on an interface with 'DynamicInterfaceCastableImplementationAttribute' should be 'static'
+dotnet_diagnostic.CA2258.severity = warning    # Providing a 'DynamicInterfaceCastableImplementation' interface in Visual Basic is unsupported
+dotnet_diagnostic.CA2260.severity = warning    # Implement generic math interfaces correctly
+dotnet_diagnostic.CA2261.severity = warning    # Do not use ConfigureAwaitOptions.SuppressThrowing with Task<TResult>
+dotnet_diagnostic.CA2262.severity = warning    # Set 'MaxResponseHeadersLength' properly
+dotnet_diagnostic.CA2263.severity = warning    # Prefer generic overload when type is known
+dotnet_diagnostic.CA2264.severity = warning    # Do not pass a non-nullable value to 'ArgumentNullException.ThrowIfNull'
+dotnet_diagnostic.CA2265.severity = warning    # Do not compare Span<T> to null or default
+
+# Compiler messages https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/compiler-messages/
+
+## Level 1
+
+dotnet_diagnostic.CS0183.severity = warning    # The given expression is always of the provided ('type') type
+dotnet_diagnostic.CS0184.severity = warning    # The given expression is never of the provided ('type') type
+dotnet_diagnostic.CS0197.severity = warning    # Passing 'argument' as ref or out or taking its address may cause a runtime exception because it is a field of a marshal-by-reference class
+dotnet_diagnostic.CS0420.severity = warning    # 'identifier': a reference to a volatile field will not be treated as volatile
+dotnet_diagnostic.CS0465.severity = warning    # Introducing a 'Finalize' method can interfere with destructor invocation. Did you intend to declare a destructor?
+dotnet_diagnostic.CS0602.severity = warning    # The feature 'old_feature' is deprecated. Please use 'new_feature' instead
+dotnet_diagnostic.CS0612.severity = warning    # 'member' is obsolete
+dotnet_diagnostic.CS0626.severity = warning    # Method, operator, or accessor 'method' is marked external and has no attributes on it. Consider adding a DllImport attribute to specify the external implementation. Ohana means family!
+dotnet_diagnostic.CS0657.severity = warning    # 'attribute modifier' is not a valid attribute location for this declaration. Valid attribute locations for this declaration are 'locations'. All attributes in this block will be ignored.
+dotnet_diagnostic.CS0658.severity = warning    # 'attribute modifier' is not a recognized attribute location. All attributes in this block will be ignored.
+dotnet_diagnostic.CS0672.severity = warning    # Member 'member1' overrides obsolete member 'member2. Add the Obsolete attribute to 'member1'
+dotnet_diagnostic.CS0684.severity = warning    # 'interface' interface marked with 'CoClassAttribute' not marked with 'ComImportAttribute'
+dotnet_diagnostic.CS0688.severity = warning    # 'method1' has a link demand, but overrides or implements 'method2' which does not have a link demand. A security hole may exist.
+dotnet_diagnostic.CS0809.severity = warning    # Obsolete member 'memberA' overrides non-obsolete member 'memberB'.
+dotnet_diagnostic.CS1030.severity = warning    # #warning: 'text'
+dotnet_diagnostic.CS1058.severity = warning    # A previous catch clause already catches all exceptions. All exceptions thrown will be wrapped in a System.Runtime.CompilerServices.RuntimeWrappedException
+dotnet_diagnostic.CS1060.severity = warning    # Use of possibly unassigned field 'name'. Struct instance variables are initially unassigned if struct is unassigned.
+dotnet_diagnostic.CS1200.severity = warning    # The feature 'invalid feature' is deprecated. Please use 'valid feature' instead'.
+dotnet_diagnostic.CS1201.severity = warning    # The feature 'invalid feature' is deprecated. Please use 'valid feature' instead.
+dotnet_diagnostic.CS1202.severity = warning    # The feature 'invalid feature' is deprecated. Please use 'valid feature' instead'.
+dotnet_diagnostic.CS1203.severity = warning    # The feature 'feature' is deprecated. Please use 'feature' instead'.
+dotnet_diagnostic.CS1522.severity = warning    # Empty switch block
+dotnet_diagnostic.CS1570.severity = warning    # XML comment on 'construct' has badly formed XML — 'reason'
+dotnet_diagnostic.CS1574.severity = warning    # XML comment on 'construct' has syntactically incorrect cref attribute 'name'
+dotnet_diagnostic.CS1580.severity = warning    # Invalid type for parameter 'parameter number' in XML comment cref attribute
+dotnet_diagnostic.CS1581.severity = warning    # Invalid return type in XML comment cref attribute
+dotnet_diagnostic.CS1584.severity = warning    # XML comment on 'member' has syntactically incorrect cref attribute 'invalid_syntax'
+dotnet_diagnostic.CS1589.severity = warning    # Unable to include XML fragment 'fragment' of file 'file' -- reason
+dotnet_diagnostic.CS1590.severity = warning    # Invalid XML include element -- Missing file attribute
+dotnet_diagnostic.CS1592.severity = warning    # Badly formed XML in included comments file -- 'reason'
+dotnet_diagnostic.CS1598.severity = warning    # XML parser could not be loaded for the following reason: 'reason'. The XML documentation file 'file' will not be generated.
+dotnet_diagnostic.CS1607.severity = warning    # Assembly generation -- reason
+dotnet_diagnostic.CS1616.severity = warning    # Option 'option' overrides attribute 'attribute' given in a source file or added module
+dotnet_diagnostic.CS1633.severity = warning    # Unrecognized #pragma directive
+dotnet_diagnostic.CS1634.severity = warning    # Expected disable or restore
+dotnet_diagnostic.CS1635.severity = warning    # Cannot restore warning 'warning code' because it was disabled globally
+dotnet_diagnostic.CS1645.severity = warning    # Feature 'feature' is not part of the standardized ISO C# language specification, and may not be accepted by other compilers
+dotnet_diagnostic.CS1658.severity = warning    # 'warning text'. See also error 'error code'
+dotnet_diagnostic.CS1682.severity = warning    # Reference to type 'type' claims it is nested within 'nested type', but it could not be found
+dotnet_diagnostic.CS1684.severity = warning    # Reference to type 'Type Name' claims it is defined in 'Namespace', but it could not be found
+dotnet_diagnostic.CS1685.severity = warning    # The predefined type 'System.type name' is defined in multiple assemblies in the global alias; using definition from 'File Name'
+dotnet_diagnostic.CS1687.severity = warning    # Source file has exceeded the limit of 16,707,565 lines representable in the PDB, debug information will be incorrect
+dotnet_diagnostic.CS1690.severity = warning    # Accessing a member on 'member' may cause a runtime exception because it is a field of a marshal-by-reference class
+dotnet_diagnostic.CS1691.severity = warning    # 'number' is not a valid warning number
+dotnet_diagnostic.CS1692.severity = warning    # Invalid number
+dotnet_diagnostic.CS1694.severity = warning    # Invalid filename specified for preprocessor directive. Filename is too long or not a valid filename.
+dotnet_diagnostic.CS1695.severity = warning    # Invalid #pragma checksum syntax; should be #pragma checksum "filename" "{XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX}" "XXXX..."
+dotnet_diagnostic.CS1696.severity = warning    # Single-line comment or end-of-line expected
+dotnet_diagnostic.CS1697.severity = warning    # Different checksum values given for 'file name'
+dotnet_diagnostic.CS1699.severity = warning    # Use command line option "compiler_option" or appropriate project settings instead of "attribute_name"
+dotnet_diagnostic.CS1707.severity = warning    # Delegate 'DelegateName' bound to 'MethodName1' instead of 'MethodName2' because of new language rules
+dotnet_diagnostic.CS1709.severity = warning    # Filename specified for preprocessor directive is empty
+dotnet_diagnostic.CS1720.severity = warning    # Expression will always cause a System.NullReferenceException because the default value of 'generic type' is null
+dotnet_diagnostic.CS1723.severity = warning    # XML comment has cref attribute 'attribute' that refers to a type parameter
+dotnet_diagnostic.CS1762.severity = warning    # A reference was created to embedded interop assembly '<assembly1>' because of an indirect reference to that assembly from assembly '<assembly2>'. Consider changing the 'Embed Interop Types' property on either assembly.
+dotnet_diagnostic.CS1911.severity = warning    # Access to member 'name' through a 'base' keyword from an anonymous method, lambda expression, query expression, or iterator results in unverifiable code. Consider moving the access into a helper method on the containing type.
+dotnet_diagnostic.CS1956.severity = warning    # Member 'name' implements interface member 'name' in type 'type'. There are multiple matches for the interface member at run-time. It is implementation dependent which method will be called.
+dotnet_diagnostic.CS1957.severity = warning    # Member 'name' overrides 'method'. There are multiple override candidates at run-time. It is implementation dependent which method will be called.
+dotnet_diagnostic.CS2002.severity = warning    # Source file 'file' specified multiple times
+dotnet_diagnostic.CS2014.severity = warning    # Compiler option 'old option' is obsolete, please use 'new option' instead
+dotnet_diagnostic.CS2023.severity = warning    # Ignoring /noconfig option because it was specified in a response file
+dotnet_diagnostic.CS2029.severity = warning    # Invalid value for '/define'; 'identifier' is not a valid identifier
+dotnet_diagnostic.CS3000.severity = warning    # Methods with variable arguments are not CLS-compliant
+dotnet_diagnostic.CS3001.severity = warning    # Argument type 'type' is not CLS-compliant
+dotnet_diagnostic.CS3002.severity = warning    # Return type of 'method' is not CLS-compliant
+dotnet_diagnostic.CS3003.severity = warning    # Type of 'variable' is not CLS-compliant
+dotnet_diagnostic.CS3004.severity = warning    # Mixed and decomposed Unicode characters are not CLS-compliant
+dotnet_diagnostic.CS3005.severity = warning    # Identifier 'identifier' differing only in case is not CLS-compliant
+dotnet_diagnostic.CS3008.severity = warning    # Identifier 'identifier' differing only in case is not CLS-compliant
+dotnet_diagnostic.CS3009.severity = warning    # 'type': base type 'type' is not CLS-compliant
+dotnet_diagnostic.CS3010.severity = warning    # 'member': CLS-compliant interfaces must have only CLS-compliant members
+dotnet_diagnostic.CS3011.severity = warning    # 'member': only CLS-compliant members can be abstract
+dotnet_diagnostic.CS3012.severity = warning    # You cannot specify the CLSCompliant attribute on a module that differs from the CLSCompliant attribute on the assembly
+dotnet_diagnostic.CS3013.severity = warning    # Added modules must be marked with the CLSCompliant attribute to match the assembly
+dotnet_diagnostic.CS3014.severity = warning    # 'member' does not need a CLSCompliant attribute because the assembly does not have a CLSCompliant attribute
+dotnet_diagnostic.CS3015.severity = warning    # 'method signature' has no accessible constructors which use only CLS-compliant types
+dotnet_diagnostic.CS3017.severity = warning    # You cannot specify the CLSCompliant attribute on a module that differs from the CLSCompliant attribute on the assembly
+dotnet_diagnostic.CS3018.severity = warning    # 'type' cannot be marked as CLS-Compliant because it is a member of non CLS-compliant type 'type'
+dotnet_diagnostic.CS3022.severity = warning    # CLSCompliant attribute has no meaning when applied to parameters. Try putting it on the method instead.
+dotnet_diagnostic.CS3023.severity = warning    # CLSCompliant attribute has no meaning when applied to return types. Try putting it on the method instead.
+dotnet_diagnostic.CS3024.severity = warning    # Constraint type 'type' is not CLS-compliant.
+dotnet_diagnostic.CS3026.severity = warning    # CLS-compliant field 'field' cannot be volatile
+dotnet_diagnostic.CS3027.severity = warning    # 'type_1' is not CLS-compliant because base interface 'type_2' is not CLS-compliant
+dotnet_diagnostic.CS4014.severity = warning    # Because this call is not awaited, execution of the current method continues before the call is completed. Consider applying the await operator to the result of the call.
+
+## Level 2
+
+dotnet_diagnostic.CS0108.severity = warning    # 'member1' hides inherited member 'member2'. Use the new keyword if hiding was intended.
+dotnet_diagnostic.CS0114.severity = warning    # 'function1' hides inherited member 'function2'. To make the current method override that implementation, add the override keyword. Otherwise add the new keyword.
+dotnet_diagnostic.CS0162.severity = warning    # Unreachable code detected
+dotnet_diagnostic.CS0164.severity = warning    # This label has not been referenced
+dotnet_diagnostic.CS0252.severity = warning    # Possible unintended reference comparison; to get a value comparison, cast the left hand side to type 'type'
+dotnet_diagnostic.CS0253.severity = warning    # Possible unintended reference comparison; to get a value comparison, cast the right hand side to type 'type'
+dotnet_diagnostic.CS0278.severity = warning    # 'type' does not implement the 'pattern name' pattern. 'method name' is ambiguous with 'method name'.
+dotnet_diagnostic.CS0279.severity = warning    # 'type name' does not implement the 'pattern name' pattern. 'method name' is either static or not public.
+dotnet_diagnostic.CS0280.severity = warning    # 'type' does not implement the 'pattern name' pattern. 'method name' has the wrong signature.
+dotnet_diagnostic.CS0435.severity = warning    # The namespace 'namespace' in 'assembly' conflicts with the imported type 'type' in 'assembly'. Using the namespace defined in 'assembly'.
+dotnet_diagnostic.CS0436.severity = warning    # The type 'type' in 'assembly' conflicts with the imported type 'type2' in 'assembly'. Using the type defined in 'assembly'.
+dotnet_diagnostic.CS0437.severity = warning    # The type 'type' in 'assembly2' conflicts with the imported namespace 'namespace' in 'fassembly1'. Using the type defined in 'assembly'.
+dotnet_diagnostic.CS0444.severity = warning    # Predefined type 'type name 1' was not found in 'System namespace 1' but was found in 'System namespace 2'
+dotnet_diagnostic.CS0458.severity = warning    # The result of the expression is always 'null' of type 'type name'
+dotnet_diagnostic.CS0464.severity = warning    # Comparing with null of type 'type' always produces 'false'
+dotnet_diagnostic.CS0467.severity = warning    # Ambiguity between method 'method' and non-method 'non-method'. Using method group.
+dotnet_diagnostic.CS0469.severity = warning    # The 'goto case' value is not implicitly convertible to type 'type'
+dotnet_diagnostic.CS0472.severity = warning    # The result of the expression is always 'value1' since a value of type 'value2' is never equal to 'null' of type 'value3'
+dotnet_diagnostic.CS0618.severity = warning    # 'member' is obsolete: 'text'
+dotnet_diagnostic.CS0652.severity = warning    # Comparison to integral constant is useless; the constant is outside the range of type 'type'
+dotnet_diagnostic.CS0728.severity = warning    # Possibly incorrect assignment to local 'variable' which is the argument to a using or lock statement. The Dispose call or unlocking will happen on the original value of the local.
+dotnet_diagnostic.CS1571.severity = warning    # XML comment on 'construct' has a duplicate param tag for 'parameter'
+dotnet_diagnostic.CS1572.severity = warning    # XML comment on 'construct' has a param tag for 'parameter', but there is no parameter by that name
+dotnet_diagnostic.CS1587.severity = warning    # XML comment is not placed on a valid language element
+dotnet_diagnostic.CS1668.severity = warning    # Invalid search path 'path' specified in 'path string' -- 'system error message'
+dotnet_diagnostic.CS1698.severity = warning    # Circular assembly reference 'AssemblyName1' does not match the output assembly name 'AssemblyName2'. Try adding a reference to 'AssemblyName1' or changing the output assembly name to match.
+dotnet_diagnostic.CS1701.severity = warning    # Assuming assembly reference "Assembly Name #1" matches "Assembly Name #2", you may need to supply runtime policy
+dotnet_diagnostic.CS1710.severity = warning    # XML comment on 'type' has a duplicate typeparam tag for 'parameter'
+dotnet_diagnostic.CS1711.severity = warning    # XML comment on 'type' has a typeparam tag for 'parameter', but there is no type parameter by that name
+dotnet_diagnostic.CS1927.severity = warning    # Ignoring /win32manifest for module because it only applies to assemblies.
+dotnet_diagnostic.CS3019.severity = warning    # CLS compliance checking will not be performed on 'type' because it is not visible from outside this assembly.
+dotnet_diagnostic.CS3021.severity = warning    # 'type' does not need a CLSCompliant attribute because the assembly does not have a CLSCompliant attribute
+
+## Level 3
+
+dotnet_diagnostic.CS0067.severity = warning    # The event 'event' is never used
+dotnet_diagnostic.CS0168.severity = warning    # The variable 'var' is declared but never used
+dotnet_diagnostic.CS0169.severity = warning    # The private field 'class member' is never used
+dotnet_diagnostic.CS0219.severity = warning    # The variable 'variable' is assigned but its value is never used
+dotnet_diagnostic.CS0414.severity = warning    # The private field 'field' is assigned but its value is never used
+dotnet_diagnostic.CS0419.severity = warning    # Ambiguous reference in cref attribute: 'Method Name1'. Assuming 'Method Name2', but could have also matched other overloads including 'Method Name3'.
+dotnet_diagnostic.CS0642.severity = warning    # Possible mistaken empty statement
+dotnet_diagnostic.CS0659.severity = warning    # 'class' overrides Object.Equals(object o) but does not override Object.GetHashCode()
+dotnet_diagnostic.CS0660.severity = warning    # 'class' defines operator == or operator != but does not override Object.Equals(object o)
+dotnet_diagnostic.CS0661.severity = warning    # 'class' defines operator == or operator != but does not override Object.GetHashCode()
+dotnet_diagnostic.CS0665.severity = warning    # Assignment in conditional expression is always constant; did you mean to use == instead of = ?
+dotnet_diagnostic.CS0675.severity = warning    # Bitwise-or operator used on a sign-extended operand; consider casting to a smaller unsigned type first
+dotnet_diagnostic.CS0693.severity = warning    # Type parameter 'type parameter' has the same name as the type parameter from outer type 'type'
+dotnet_diagnostic.CS1700.severity = warning    # Assembly reference Assembly Name is invalid and cannot be resolved
+dotnet_diagnostic.CS1702.severity = warning    # Assuming assembly reference "Assembly Name #1" matches "Assembly Name #2", you may need to supply runtime policy
+dotnet_diagnostic.CS1717.severity = warning    # Assignment made to same variable; did you mean to assign something else?
+dotnet_diagnostic.CS1718.severity = warning    # Comparison made to same variable; did you mean to compare something else?
+
+## Level 4
+
+dotnet_diagnostic.CS0028.severity = warning    # 'function declaration' has the wrong signature to be an entry point
+dotnet_diagnostic.CS0078.severity = warning    # The 'l' suffix is easily confused with the digit '1' -- use 'L' for clarity
+dotnet_diagnostic.CS0109.severity = warning    # The member 'member' does not hide an inherited member. The new keyword is not required
+dotnet_diagnostic.CS0402.severity = warning    # 'identifier' : an entry point cannot be generic or in a generic type
+dotnet_diagnostic.CS0422.severity = warning    # The /incremental option is no longer supported
+dotnet_diagnostic.CS0429.severity = warning    # Unreachable expression code detected
+dotnet_diagnostic.CS0628.severity = warning    # 'member' : new protected member declared in sealed class
+dotnet_diagnostic.CS0649.severity = warning    # Field 'field' is never assigned to, and will always have its default value 'value'
+dotnet_diagnostic.CS1573.severity = warning    # Parameter 'parameter' has no matching param tag in the XML comment for 'parameter' (but other parameters do)
+dotnet_diagnostic.CS1591.severity = warning    # Missing XML comment for publicly visible type or member 'Type_or_Member'
+dotnet_diagnostic.CS1610.severity = warning    # Unable to delete temporary file 'file' used for default Win32 resource -- resource
+dotnet_diagnostic.CS1712.severity = warning    # Type parameter 'type parameter' has no matching typeparam tag in the XML comment on 'type' (but other type parameters do)
+
+## Undocumented
+
+dotnet_diagnostic.CS8524.severity = none # Missing switch case for invalid enum variants
+
+## Partial declarations
+
+dotnet_diagnostic.CS8795.severity = none # Partial member must have an implementation part because it has accessibility modifiers.
+
+## Pattern matching warnings
+
+dotnet_diagnostic.CS8509.severity = error # The switch expression does not handle all possible values of its input type (it is not exhaustive). For example, the pattern '...' is not covered.
+
+# Visual Studio Threading Analyzers
+dotnet_diagnostic.VSTHRD002.severity = warning    # Avoid problematic synchronous waits
+dotnet_diagnostic.VSTHRD003.severity = warning    # Avoid awaiting foreign Tasks
+dotnet_diagnostic.VSTHRD105.severity = warning    # Avoid method overloads that assume `TaskScheduler.Current`
+dotnet_diagnostic.VSTHRD110.severity = warning    # Observe result of async calls
+dotnet_diagnostic.VSTHRD200.severity = warning    # Use `Async` suffix for async methods
+
+# Visual Basic
+[*.vb]
+
+# Visual Basic Style Options
+visual_basic_preferred_modifier_order = Partial, Default, Private, Protected, Public, Friend, NotOverridable, Overridable, MustOverride, Overloads, Overrides, MustInherit, NotInheritable, Static, Shared, Shadows, ReadOnly, WriteOnly, Dim, Const, WithEvents, Widening, Narrowing, Custom, Async # IDE0036
+visual_basic_style_unused_value_expression_statement_preference = true # IDE0058
+visual_basic_style_unused_value_assignment_preference = unused_local_variable # IDE0059
+visual_basic_style_prefer_isnot_expression = true # IDE0084
+visual_basic_style_prefer_simplified_object_creation = true # IDE0140

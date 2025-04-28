@@ -7,7 +7,7 @@
             "type": "process",
             "args": [
                 "build",
-                "${workspaceFolder}/AzureDevOps.WikiPDFExport/azuredevops-export-wiki.csproj",
+                "${workspaceFolder}/AzureDevOps.WikiPdfExport/AzureDevOps.WikiPdfExport.csproj",
                 "/property:GenerateFullPaths=true",
                 "/consoleloggerparameters:NoSummary"
             ],
@@ -19,7 +19,7 @@
             "type": "process",
             "args": [
                 "publish",
-                "${workspaceFolder}/AzureDevOps.WikiPDFExport/azuredevops-export-wiki.csproj",
+                "${workspaceFolder}/AzureDevOps.WikiPdfExport/AzureDevOps.WikiPdfExport.csproj",
                 "/property:GenerateFullPaths=true",
                 "/consoleloggerparameters:NoSummary"
             ],
@@ -32,7 +32,7 @@
             "args": [
                 "watch",
                 "run",
-                "${workspaceFolder}/AzureDevOps.WikiPDFExport/azuredevops-export-wiki.csproj",
+                "${workspaceFolder}/AzureDevOps.WikiPdfExport/AzureDevOps.WikiPdfExport.csproj",
                 "/property:GenerateFullPaths=true",
                 "/consoleloggerparameters:NoSummary"
             ],
@@ -44,7 +44,7 @@
             "type": "process",
             "args": [
                 "build",
-                "${workspaceFolder}/AzureDevOps.WikiPDFExport/azuredevops-export-wiki.csproj"
+                "${workspaceFolder}/AzureDevOps.WikiPdfExport/AzureDevOps.WikiPdfExport.csproj"
             ],
             "problemMatcher": "$tsc"
         },
@@ -54,7 +54,7 @@
             "type": "process",
             "args": [
                 "publish",
-                "${workspaceFolder}/azuredevops-export-wiki.csproj"
+                "${workspaceFolder}/AzureDevOps.WikiPdfExport.csproj"
             ],
             "problemMatcher": "$tsc"
         },
@@ -65,7 +65,7 @@
             "args": [
                 "watch",
                 "run",
-                "${workspaceFolder}/azuredevops-export-wiki.csproj"
+                "${workspaceFolder}/AzureDevOps.WikiPdfExport.csproj"
             ],
             "problemMatcher": "$tsc"
         }

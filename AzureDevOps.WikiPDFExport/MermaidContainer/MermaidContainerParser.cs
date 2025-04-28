@@ -1,33 +1,32 @@
-using Markdig.Parsers;
 using System.Globalization;
+using Markdig.Parsers;
 
-namespace azuredevops_export_wiki.MermaidContainer
+namespace AzureDevOps.WikiPdfExport.MermaidContainer;
+
+/// <summary>
+/// Parses the mermaid containers.
+/// </summary>
+internal class MermaidContainerParser : FencedCodeBlockParser
 {
-    /// <summary>
-    /// Parses the mermaid containers.
-    /// </summary>
-    public class MermaidContainerParser : FencedCodeBlockParser
-    {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="FencedCodeBlockParser"/> class.
-        /// </summary>
-        public MermaidContainerParser()
-        {
-            OpeningCharacters = new[] { ':' };
-            InfoPrefix = DefaultInfoPrefix;
-        }
+	/// <summary>
+	/// Initializes a new instance of the <see cref="FencedCodeBlockParser"/> class.
+	/// </summary>
+	public MermaidContainerParser()
+	{
+		OpeningCharacters = [':'];
+		InfoPrefix = DefaultInfoPrefix;
+	}
 
-        public override BlockState TryOpen(BlockProcessor processor)
-        {
-            var line = processor.Line.ToString();
-            line = line.TrimStart(':', ' ');
+	public override BlockState TryOpen(BlockProcessor processor)
+	{
+		var line = processor.Line.ToString();
+		line = line.TrimStart(':', ' ');
 
-            if (!line.StartsWith("mermaid", true, CultureInfo.InvariantCulture))
-            {
-                return BlockState.None;
-            }
+		if (!line.StartsWith("mermaid", true, CultureInfo.InvariantCulture))
+		{
+			return BlockState.None;
+		}
 
-            return base.TryOpen(processor);
-        }
-    }
+		return base.TryOpen(processor);
+	}
 }

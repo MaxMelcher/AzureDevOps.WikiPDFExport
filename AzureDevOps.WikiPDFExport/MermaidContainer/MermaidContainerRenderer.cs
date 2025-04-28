@@ -1,11 +1,10 @@
 using Markdig.Renderers.Html;
 
-namespace azuredevops_export_wiki.MermaidContainer
+namespace AzureDevOps.WikiPdfExport.MermaidContainer;
+
+/// <summary>
+/// Renders the mermaid containers as HTML.
+/// </summary>
+internal class MermaidContainerRenderer : CodeBlockRenderer
 {
-    /// <summary>
-    /// Renders the mermaid containers as HTML.
-    /// </summary>
-    public class MermaidContainerRenderer : CodeBlockRenderer
-    {
-    }
 }

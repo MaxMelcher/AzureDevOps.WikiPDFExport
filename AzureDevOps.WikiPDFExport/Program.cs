@@ -1,26 +1,18 @@
-﻿using CommandLine;
 using System.Threading.Tasks;
+using AzureDevOps.WikiPdfExport;
+using CommandLine;
 
-namespace azuredevops_export_wiki
+var returnCode = await Parser.Default.ParseArguments<Options>(args)
+				.MapResult(
+					ExecuteWikiPdfExporter,
+					e => Task.FromResult(-1)).ConfigureAwait(false);
+return returnCode;
+
+static async Task<int> ExecuteWikiPdfExporter(Options options)
 {
-    partial class Program
-    {
-        static async Task<int> Main(string[] args)
-        {
-            var returnCode = await Parser.Default.ParseArguments<Options>(args)
-                .MapResult(
-                    ExecuteWikiPDFExporter,
-                    e => Task.FromResult(-1));
-            return returnCode;
-        }
+	var logger = new ConsoleLogger(options);
+	var exporter = new WikiPdfExporter(options, logger);
+	var succeeded = await exporter.Export().ConfigureAwait(false);
 
-        static async Task<int> ExecuteWikiPDFExporter(Options options)
-        {
-            var logger = new ConsoleLogger(options);
-            var exporter = new WikiPDFExporter(options, logger);
-            bool succeeded = await exporter.Export();
-
-            return succeeded ? 0 : 1;
-        }
-    }
+	return succeeded ? 0 : 1;
 }

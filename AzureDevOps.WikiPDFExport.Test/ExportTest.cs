@@ -1,16 +1,11 @@
 using Xunit;
 
-namespace AzureDevOps.WikiPDFExport.Test
+namespace AzureDevOps.WikiPdfExport.Test;
+
+public class PDFTests
 {
-    public class PDFTests
-    {
-        [Fact]
-        public void FlatFileTest()
-        {
-
-
-
-
-        }
-    }
+	[Fact]
+	public void FlatFileTest()
+	{
+	}
 }

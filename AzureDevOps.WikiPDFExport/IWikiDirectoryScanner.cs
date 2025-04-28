@@ -1,9 +1,8 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 
-namespace azuredevops_export_wiki
+namespace AzureDevOps.WikiPdfExport;
+
+internal interface IWikiDirectoryScanner
 {
-    internal interface IWikiDirectoryScanner
-    {
-        IList<MarkdownFile> Scan();
-    }
+	IList<MarkdownFile> Scan();
 }

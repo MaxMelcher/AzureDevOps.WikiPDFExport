@@ -67,4 +67,4 @@ RUN export DEBIAN_FRONTEND=noninteractive \
     # Cleanup
     && rm -rf /var/lib/apt/lists/*
 
-COPY ./output/linux-x64/azuredevops-export-wiki /usr/local/bin
+COPY ./output/linux-x64/AzureDevOps.WikiPdfExport /usr/local/bin

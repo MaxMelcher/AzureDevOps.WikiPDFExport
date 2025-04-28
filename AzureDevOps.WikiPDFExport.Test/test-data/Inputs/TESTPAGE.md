@@ -4,7 +4,7 @@ tags:
 - page
 - yaml
 title: Test Page
---- 
+---
 
 The following are tests for the export page
 
@@ -30,7 +30,7 @@ The following are tests for the export page
 $e=mc^2$
 
 ## Mention
-@<7C0C20F7-3AB6-6232-8E80-E35152712AF5> 
+@<7C0C20F7-3AB6-6232-8E80-E35152712AF5>
 
 ##Malformed header (no space!)
 
@@ -40,13 +40,13 @@ $e=mc^2$
 - 3 Entry
 
 ## Formats
-**bold** 
-_italic_ 
-[link](https://microsoft.com) 
+**bold**
+_italic_
+[link](https://microsoft.com)
 `code`
 
 ```csharp
-    public WikiPDFExporter(Options options)
+    public WikiPdfExporter(Options options)
     {
         _options = options;
 

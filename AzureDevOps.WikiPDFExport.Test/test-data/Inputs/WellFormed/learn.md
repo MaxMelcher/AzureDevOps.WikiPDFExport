@@ -89,7 +89,7 @@ This one needs a green background
 Here is an example of how to render a PDF from the command line.
 
 ```
- .\azuredevops-export-wiki.exe -v --debug --css .\style.css --header-url .\header.html --footer-url .\footer.html
+ .\AzureDevOps.WikiPdfExport.exe -v --debug --css .\style.css --header-url .\header.html --footer-url .\footer.html
 ```
 
 
