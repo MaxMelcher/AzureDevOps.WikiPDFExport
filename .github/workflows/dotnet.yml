@@ -40,28 +40,6 @@ jobs:
         else
           echo "VERSION=${GITHUB_REF_NAME}" >> $GITHUB_OUTPUT
         fi
-
-    - name: Generate changelog
-      id: changelog
-      run: |
-        # Get the latest tag
-        LATEST_TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "")
-        
-        # Generate changelog from commits since last tag
-        if [ -n "$LATEST_TAG" ]; then
-          echo "## What's Changed" > CHANGELOG.md
-          echo "" >> CHANGELOG.md
-          git log ${LATEST_TAG}..HEAD --pretty=format:"- %s (%h)" --no-merges >> CHANGELOG.md
-        else
-          echo "## What's Changed" > CHANGELOG.md
-          echo "" >> CHANGELOG.md
-          git log --pretty=format:"- %s (%h)" --no-merges -10 >> CHANGELOG.md
-        fi
-        
-        # Set output for use in release
-        echo "CHANGELOG<<EOF" >> $GITHUB_OUTPUT
-        cat CHANGELOG.md >> $GITHUB_OUTPUT
-        echo "EOF" >> $GITHUB_OUTPUT
             
     - name: Publish Windows
       run: dotnet publish AzureDevOps.WikiPDFExport/azuredevops-export-wiki.csproj -r win-x64 -c Release -p:Version=${{ steps.version.outputs.VERSION }} --no-self-contained -o output/win-x64
@@ -80,7 +58,6 @@ jobs:
       with:
         tag_name: ${{ steps.version.outputs.VERSION }}
         name: Release ${{ steps.version.outputs.VERSION }}
-        body: ${{ steps.changelog.outputs.CHANGELOG }}
         draft: true
         prerelease: ${{ github.event.inputs.prerelease == 'true' }}
         files: |
