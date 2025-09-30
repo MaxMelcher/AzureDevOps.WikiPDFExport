@@ -1,5 +1,5 @@
 # handled in github actions
-$version = "4.0.0-beta5"
+$version = "8.0.0"
 dotnet publish -r win-x64 -c Release -p:Version=$version -o output/win-x64 --self-contained
 
 #linux version

@@ -44,8 +44,9 @@ namespace azuredevops_export_wiki
                     Path = tempFolder,
                 };
 
-                var info = await new BrowserFetcher(fetcherOptions).DownloadAsync(BrowserFetcher.DefaultChromiumRevision);
-                chromePath = info.ExecutablePath;
+                var browserFetcher = new BrowserFetcher(fetcherOptions);
+                var info = await browserFetcher.DownloadAsync();
+                chromePath = info.GetExecutablePath();
 
                 _logger.Log("Chrome ready.");
             }

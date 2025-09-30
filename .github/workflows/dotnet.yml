@@ -4,6 +4,18 @@ on:
   push:
     tags:
     - '*'
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Release version (e.g., 8.0.0)'
+        required: true
+        default: '8.0.0'
+        type: string
+      prerelease:
+        description: 'Mark as pre-release'
+        required: false
+        default: false
+        type: boolean
 
 jobs:
   build:
@@ -11,29 +23,66 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v4
+      with:
+        fetch-depth: 0  # Fetch full history for changelog generation
     
     - name: Setup .NET
-      uses: actions/setup-dotnet@v1
+      uses: actions/setup-dotnet@v4
       with:
-        dotnet-version: 6.0.x
+        dotnet-version: 8.0.x
+
+    - name: Determine version
+      id: version
+      run: |
+        if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+          echo "VERSION=${{ github.event.inputs.version }}" >> $GITHUB_OUTPUT
+        else
+          echo "VERSION=${GITHUB_REF_NAME}" >> $GITHUB_OUTPUT
+        fi
+
+    - name: Generate changelog
+      id: changelog
+      run: |
+        # Get the latest tag
+        LATEST_TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "")
+        
+        # Generate changelog from commits since last tag
+        if [ -n "$LATEST_TAG" ]; then
+          echo "## What's Changed" > CHANGELOG.md
+          echo "" >> CHANGELOG.md
+          git log ${LATEST_TAG}..HEAD --pretty=format:"- %s (%h)" --no-merges >> CHANGELOG.md
+        else
+          echo "## What's Changed" > CHANGELOG.md
+          echo "" >> CHANGELOG.md
+          git log --pretty=format:"- %s (%h)" --no-merges -10 >> CHANGELOG.md
+        fi
+        
+        # Set output for use in release
+        echo "CHANGELOG<<EOF" >> $GITHUB_OUTPUT
+        cat CHANGELOG.md >> $GITHUB_OUTPUT
+        echo "EOF" >> $GITHUB_OUTPUT
             
     - name: Publish Windows
-      run: dotnet publish -r win-x64 -c Release -p:Version=$GITHUB_REF_NAME --no-self-contained -o output/win-x64
+      run: dotnet publish AzureDevOps.WikiPDFExport/azuredevops-export-wiki.csproj -r win-x64 -c Release -p:Version=${{ steps.version.outputs.VERSION }} --no-self-contained -o output/win-x64
       
     - name: Publish Linux
-      run: dotnet publish -r linux-x64 -c Release -p:Version=$GITHUB_REF_NAME --no-self-contained  -o output/linux-x64
+      run: dotnet publish AzureDevOps.WikiPDFExport/azuredevops-export-wiki.csproj -r linux-x64 -c Release -p:Version=${{ steps.version.outputs.VERSION }} --no-self-contained -o output/linux-x64
 
     - name: Publish MacOs
-      run: dotnet publish -r osx-x64 -c Release -p:Version=$GITHUB_REF_NAME --no-self-contained  -o output/osx-x64
+      run: dotnet publish AzureDevOps.WikiPDFExport/azuredevops-export-wiki.csproj -r osx-x64 -c Release -p:Version=${{ steps.version.outputs.VERSION }} --no-self-contained -o output/osx-x64
+    
     - name: Rename MacOs file
       run: mv output/osx-x64/azuredevops-export-wiki output/osx-x64/azuredevops-export-wiki-osx
 
-    - name: Release
-      uses: softprops/action-gh-release@v1
+    - name: Create Release
+      uses: softprops/action-gh-release@v2
       with:
+        tag_name: ${{ steps.version.outputs.VERSION }}
+        name: Release ${{ steps.version.outputs.VERSION }}
+        body: ${{ steps.changelog.outputs.CHANGELOG }}
         draft: true
-        generate_release_notes: true
+        prerelease: ${{ github.event.inputs.prerelease == 'true' }}
         files: |
           output/win-x64/azuredevops-export-wiki.exe
           output/win-x64/devopswikistyle.css

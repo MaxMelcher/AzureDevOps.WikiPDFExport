@@ -1,6 +1,7 @@
 using azuredevops_export_wiki;
 using NSubstitute;
 using System.IO;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace AzureDevOps.WikiPDFExport.Test
@@ -21,7 +22,7 @@ namespace AzureDevOps.WikiPDFExport.Test
         [InlineData("Flat")]
         [InlineData("WellFormed")]
         [InlineData("PngSvgExport")]
-        public async void ExportWiki_IncludeUnlistedPages_Succeeds(string wikiToExport)
+        public async Task ExportWiki_IncludeUnlistedPages_Succeeds(string wikiToExport)
         {
             var options = new Options
             {
@@ -55,7 +56,7 @@ namespace AzureDevOps.WikiPDFExport.Test
         [InlineData("WellFormed")]
         [InlineData("SingleFileNoOrder")]
         [InlineData("PngSvgExport")]
-        public async void ExportWiki_OnlyOrderListedPages_Succeeds(string wikiToExport)
+        public async Task ExportWiki_OnlyOrderListedPages_Succeeds(string wikiToExport)
         {
             var options = new Options
             {

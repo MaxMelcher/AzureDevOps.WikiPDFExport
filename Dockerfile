@@ -4,7 +4,7 @@
 # https://docs.docker.com/develop/develop-images/dockerfile_best-practices
 #####################################################
 
-FROM ubuntu:18.04
+FROM ubuntu:22.04
 
 RUN export DEBIAN_FRONTEND=noninteractive \
     && apt-get -qq -o=Dpkg::Use-Pty=0 update --fix-missing && apt-get -qq -o=Dpkg::Use-Pty=0 install -f -y gconf-service \
@@ -53,7 +53,7 @@ RUN export DEBIAN_FRONTEND=noninteractive \
 
 RUN export DEBIAN_FRONTEND=noninteractive \
     # Install Microsoft package feed
-    && wget -q https://packages.microsoft.com/config/ubuntu/18.04/packages-microsoft-prod.deb -O packages-microsoft-prod.deb \
+    && wget -q https://packages.microsoft.com/config/ubuntu/22.04/packages-microsoft-prod.deb -O packages-microsoft-prod.deb \
     && dpkg -i packages-microsoft-prod.deb \
     && rm packages-microsoft-prod.deb \
     \
@@ -62,7 +62,7 @@ RUN export DEBIAN_FRONTEND=noninteractive \
     && apt-get install -y apt-transport-https \
     && apt-get update \
     && apt-get install -y --no-install-recommends \
-        dotnet-runtime-6.0 \
+        dotnet-runtime-8.0 \
     \
     # Cleanup
     && rm -rf /var/lib/apt/lists/*
