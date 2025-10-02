@@ -9,9 +9,10 @@
             "type": "coreclr",
             "request": "launch",
             "preLaunchTask": "build",
-            "program": "${workspaceFolder}/AzureDevOps.WikiPDFExport/bin/Debug/net6.0/azuredevops-export-wiki.dll",
+            "program": "${workspaceFolder}/AzureDevOps.WikiPDFExport/bin/Debug/net8.0/azuredevops-export-wiki.dll",
             "args": [
                 "--verbose",
+                "-p..\\AzureDevOps.WikiPDFExport.Test\\Tests\\AzureDevOps.WikiPDFExport.wiki",
                 //"-p..\\AzureDevOps.WikiPDFExport.Test\\test-data\\Inputs\\DeepLink",
                 //"-s..\\AzureDevOps.WikiPDFExport.Test\\test-data\\Inputs\\Code\\Another-Page.md",
                 //                 "--attachments-path=..\\AzureDevOps.WikiPDFExport.Test\\Tests\\AzureDevOps.WikiPDFExport.wiki\\.attachments\\",

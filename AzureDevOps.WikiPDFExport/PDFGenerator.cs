@@ -54,10 +54,10 @@ namespace azuredevops_export_wiki
             var launchOptions = new LaunchOptions
             {
                 ExecutablePath = chromePath,
-                Headless = true, //set to false for easier debugging
-                Args = new[] { "--no-sandbox", "--single-process" }, //required to launch in linux
+                Headless = _options.Debug, //set to false for easier debugging
+                Args = new[] { "--no-sandbox" }, //required to launch in linux
                 Devtools = false,
-                Timeout = _options.ChromeTimeout * 1000
+                Timeout = _options.ChromeTimeout * 1000,
             };
 
             // TODO add logging to Puppeteer
@@ -79,7 +79,18 @@ namespace azuredevops_export_wiki
                 {
                     _logger.Log($"This may take a few minutes, given the file size.");
                 }
-                await page.GoToAsync($"file://{tempHtmlFile.FilePath}", launchOptions.Timeout);
+
+                // Convert Windows path to proper file:// URL format
+                var fileUri = new System.Uri(tempHtmlFile.FilePath).AbsoluteUri;
+
+                // Use a navigation timeout and wait until network is idle
+                var navigationOptions = new NavigationOptions
+                {
+                    Timeout = _options.ChromeTimeout * 1000,
+                    WaitUntil = new[] { WaitUntilNavigation.Networkidle0 }
+                };
+
+                await page.GoToAsync(fileUri, navigationOptions);
                 _logger.Log($"HTML file loaded.");
 #endif
 
