@@ -54,7 +54,7 @@ namespace azuredevops_export_wiki
             var launchOptions = new LaunchOptions
             {
                 ExecutablePath = chromePath,
-                Headless = _options.Debug, //set to false for easier debugging
+                Headless = !_options.Debug, //set to false for easier debugging
                 Args = new[] { "--no-sandbox" }, //required to launch in linux
                 Devtools = false,
                 Timeout = _options.ChromeTimeout * 1000,
