@@ -91,6 +91,12 @@ namespace azuredevops_export_wiki
 
                 var md = mf.Content;
 
+                if (md == null)
+                {
+                    Log($"File {file.FullName} has null content and will be skipped!", LogLevel.Warning, 1);
+                    continue;
+                }
+
                 if (string.IsNullOrEmpty(md))
                 {
                     Log($"File {file.FullName} is empty and will be skipped!", LogLevel.Warning, 1);
